@@ -1,0 +1,16 @@
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\bin\Debug\FrbaHotel.exe
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\bin\Debug\FrbaHotel.pdb
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.Properties.Resources.resources
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.csproj.GenerateResource.Cache
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.exe
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.pdb
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.ABM_de_Cliente.Form1.resources
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.ABM_de_Cliente.Form2.resources
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.ABM_de_Rol.Form1.resources
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.ABM_de_Rol.Form2.resources
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.Form1.resources
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.Login.Form1.resources
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.Login.Form2.resources
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.ABM_de_Usuario.Form1.resources
+C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.ABM_de_Usuario.Form2.resources
