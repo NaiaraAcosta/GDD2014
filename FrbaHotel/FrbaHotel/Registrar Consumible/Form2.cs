@@ -9,16 +9,11 @@ using System.Windows.Forms;
 
 namespace FrbaHotel.Registrar_Consumible
 {
-    public partial class Form1 : Form
+    public partial class Form2 : Form
     {
-        public Form1()
+        public Form2()
         {
             InitializeComponent();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }
