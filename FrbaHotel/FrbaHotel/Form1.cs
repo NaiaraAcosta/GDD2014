@@ -102,6 +102,94 @@ namespace FrbaHotel
             Form f = new Login.Form1();
             f.Show();
         }
+
+        private void asdToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            Form f = new Login.Form1();
+            f.Show();
+        }
+
+        private void estadísticasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new Listado_Estadistico.Form1();
+            f.Show();
+            this.Hide();
+        }
+
+        private void gfdToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void altaClienteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new ABM_de_Cliente.Form1();
+            f.Show();
+            this.Hide();
+        }
+
+        private void bajaModificacionClienteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new ABM_de_Cliente.Form2();
+            f.Show();
+            this.Hide();
+        }
+
+        private void modificacionBajaDeClienteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new ABM_de_Habitacion.Form2();
+            f.Show();
+            this.Hide();
+        }
+
+        private void aBMDeHotelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new ABM_de_Hotel.Form2();
+            f.Show();
+            this.Hide();
+        }
+
+        private void aBMDeRolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new ABM_de_Rol.Form2();
+            f.Show();
+            this.Hide();
+        }
+
+        private void aBMDeUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new ABM_de_Usuario.Form2();
+            f.Show();
+            this.Hide();
+        }
+
+        private void generarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new Generar_Modificar_Reserva.Form1();
+            f.Show();
+            this.Hide();
+        }
+
+        private void cancelarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new Cancelar_Reserva.Form1();
+            f.Show();
+            this.Hide();
+        }
+
+        private void registarEstadiaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new Registrar_Estadia.Form1();
+            f.Show();
+            this.Hide();
+        }
+
+        private void registrarConsumibleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new Registrar_Consumible.Form2();
+            f.Show();
+            this.Hide();
+        }
    
     }
 }

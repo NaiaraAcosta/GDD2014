@@ -20,5 +20,12 @@ namespace FrbaHotel.ABM_de_Cliente
         {
 
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form f = new FrbaHotel.Form1();
+            f.Show();
+            this.Hide();
+        }
     }
 }
