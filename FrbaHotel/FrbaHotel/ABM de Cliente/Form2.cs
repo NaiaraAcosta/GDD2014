@@ -35,7 +35,75 @@ namespace FrbaHotel.ABM_de_Cliente
             string sCnn;
             sCnn = @"data source = Gonzalo-PC\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
 
-            string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[CLIENTE] where CLIENTE_DOC = '{0}'", textBox3.Text);
+            string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[CLIENTE]");
+            bool first = true;
+
+            if (textBox1.Text != "")
+            {
+                if (first)
+                {
+                    sSel = String.Format("{0} where CLIENTE_NOMBRE like '%, {1}%'", sSel, textBox1.Text);
+                    first = false;
+                }
+                else
+                {
+                    sSel = String.Format("{0} and CLIENTE_NOMBRE like '%, {1}%'", sSel, textBox1.Text);
+                }
+            }
+            
+            if (textBox2.Text != "")
+            {
+                if (first)
+                {
+                    sSel = String.Format("{0} where CLIENTE_NOMBRE like '{1}%, %'", sSel, textBox2.Text);
+                    first = false;
+                }
+                else
+                {
+                    sSel = String.Format("{0} and CLIENTE_NOMBRE like '{1}%, %'", sSel, textBox2.Text);
+                }
+            }
+
+            if (textBox3.Text != "")
+            {
+                if (first)
+                {
+                    sSel = String.Format("{0} where CLIENTE_DOC = '{1}'", sSel, textBox3.Text);
+                    first = false;
+                }
+                else
+                {
+                    sSel = String.Format("{0} and CLIENTE_DOC = '{1}'", sSel, textBox3.Text);
+                }
+            }
+
+            if (textBox4.Text != "")
+            {
+                if (first)
+                {
+                    sSel = String.Format("{0} where CLIENTE_MAIL like '{1}%'", sSel, textBox4.Text);
+                    first = false;
+                }
+                else
+                {
+                    sSel = String.Format("{0} and CLIENTE_MAIL like '{1}%'", sSel, textBox4.Text);
+                }
+            }
+
+            if (comboBox1.Text != "")
+            {
+                if (first)
+                {
+                    sSel = String.Format("{0} where CLIENTE_ID_TIPO_DOC = {1}", sSel, comboBox1.Text);
+                    first = false;
+                }
+                else
+                {
+                    sSel = String.Format("{0} and CLIENTE_ID_TIPO_DOC = {1}", sSel, comboBox1.Text);
+                }
+            }
+
+
 
             SqlDataAdapter da;
             DataTable dt = new DataTable();
@@ -58,6 +126,13 @@ namespace FrbaHotel.ABM_de_Cliente
         private void Form2_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Form f = new FrbaHotel.Form1();
+            f.Show();
+            this.Hide();
         }
     }
 }
