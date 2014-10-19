@@ -134,5 +134,24 @@ namespace FrbaHotel.ABM_de_Cliente
             f.Show();
             this.Hide();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string[] stringSeparators = new string[] { ", " };
+            string[] result = dataGridView1.SelectedCells[1].Value.ToString().Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+            Form f = new ABM_de_Cliente.Form1(result[1], result[0], 
+                dataGridView1.SelectedCells[2].Value.ToString(), 
+                dataGridView1.SelectedCells[3].Value.ToString(),
+                dataGridView1.SelectedCells[4].Value.ToString(),
+                dataGridView1.SelectedCells[5].Value.ToString(),
+                dataGridView1.SelectedCells[8].Value.ToString(),
+                dataGridView1.SelectedCells[6].Value.ToString(),
+                dataGridView1.SelectedCells[7].Value.ToString(),
+                dataGridView1.SelectedCells[12].Value.ToString(),
+                dataGridView1.SelectedCells[14].Value.ToString());
+            f.Show();
+            //this.Hide();
+            label6.Text = dataGridView1.SelectedCells[0].Value.ToString();
+        }
     }
 }

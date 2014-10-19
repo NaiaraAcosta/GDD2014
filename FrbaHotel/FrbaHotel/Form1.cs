@@ -33,6 +33,8 @@ namespace FrbaHotel
             }
             reader.Close();
             conn.Close(); 
+
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -94,7 +96,25 @@ namespace FrbaHotel
             {
                 label1.Text = "Error: " + ex.Message;
             }
-          
+
+
+            string sCnn2 = @"data source = Gonzalo-PC\SQLSERVER2008; initial catalog = AdventureWorks2008; user id = gd; password = gd2014";
+            string sSel2 = @"uspGetAddress";
+            SqlDataAdapter da2;
+            DataTable dt2 = new DataTable();
+            try
+            {
+                da2 = new SqlDataAdapter(sSel2, sCnn2);
+                da2.Fill(dt2);
+
+                this.dataGridView2.DataSource = dt2;
+                //this.dataGridView1.DataBind();
+                label2.Text = String.Format("Total datos en la tabla: {0}", dt2.Rows.Count);
+            }
+            catch (Exception ex)
+            {
+                label2.Text = "Error: " + ex.Message;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
