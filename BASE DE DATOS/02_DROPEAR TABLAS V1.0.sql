@@ -238,6 +238,16 @@ DROP TABLE [CONTROL_ZETA].[RESERVA]
 GO
 
 
+-- ESTADO RESERVA
+USE [GD2C2014]
+GO
+
+/****** Object:  Table [CONTROL_ZETA].[ESTADO_RESERVA]    Script Date: 10/19/2014 04:16:38 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[CONTROL_ZETA].[ESTADO_RESERVA]') AND type in (N'U'))
+DROP TABLE [CONTROL_ZETA].[ESTADO_RESERVA]
+GO
+
+
 
 -- HABITACION
 
@@ -444,17 +454,4 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[CONTROL_ZETA].[PAIS]') AND type in (N'U'))
 DROP TABLE [CONTROL_ZETA].[PAIS]
 GO
-
-
-
-
-
-
-
-
-
-
-
-
-
 
