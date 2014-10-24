@@ -272,29 +272,37 @@ WHERE M.RESERVA_CODIGO = E.EST_RESERVA_ID
 AND FACTURA_NRO IS NOT NULL
   --89603
  
+ 
+ 
+ --select * from gd_esquema.Maestra where factura_nro = 2396745 
   
 -- SELECT * FROM CONTROL_ZETA.ITEM_FACTURA
- --delete CONTROL_ZETA.ITEM_FACTURA
- INSERT INTO CONTROL_ZETA.ITEM_FACTURA (FACTURA_NRO, ITEM_FACTURA_CANTIDAD, ITEM_FACTURA_MONTO)
- SELECT  M.FACTURA_NRO, M.ITEM_FACTURA_CANTIDAD ITEM_FACTURA_CANTIDAD, M.ITEM_FACTURA_MONTO 
+-- delete CONTROL_ZETA.ITEM_FACTURA
+ --select * from CONTROL_ZETA.ITEM_FACTURA
+ 
+ INSERT INTO CONTROL_ZETA.ITEM_FACTURA (FACTURA_NRO, ITEM_FACTURA_CANTIDAD, ITEM_FACTURA_MONTO, ITEM_DESCRIPCION)
+  SELECT  M.FACTURA_NRO, M.ITEM_FACTURA_CANTIDAD ITEM_FACTURA_CANTIDAD, M.ITEM_FACTURA_MONTO, 'COSTO POR ESTADIA' 
+ FROM GD_ESQUEMA.MAESTRA M
+ WHERE M.FACTURA_NRO IS NOT NULL AND ITEM_FACTURA_CANTIDAD IS NOT NULL 
+ AND Consumible_Codigo IS  NULL --and factura_nro = 2396782
+  UNION all
+ SELECT  M.FACTURA_NRO,  1 ITEM_FACTURA_CANTIDAD, M.Consumible_Precio as ITEM_FACTURA_MONTO, 'CONSUMIBLES'
+ FROM GD_ESQUEMA.MAESTRA M
+ WHERE M.FACTURA_NRO IS NOT NULL AND ITEM_FACTURA_CANTIDAD IS NOT NULL 
+   AND  Consumible_Codigo IS NOT NULL
+ --AND factura_nro = 2396782
+ UNION all
+ SELECT  M.FACTURA_NRO,  count(Consumible_Codigo) ITEM_FACTURA_CANTIDAD, 
+ -M.Factura_Total as ITEM_FACTURA_MONTO, 'DESCUENTO ALL INCLUSIVE'
  FROM GD_ESQUEMA.MAESTRA M
  WHERE M.FACTURA_NRO IS NOT NULL AND ITEM_FACTURA_CANTIDAD IS NOT NULL
- UNION 
- SELECT  M.FACTURA_NRO,  count(Consumible_Codigo) ITEM_FACTURA_CANTIDAD, M.Factura_Total as ITEM_FACTURA_MONTO
- FROM GD_ESQUEMA.MAESTRA M
- WHERE M.FACTURA_NRO IS NOT NULL AND ITEM_FACTURA_CANTIDAD IS NOT NULL
+ and M.Regimen_Descripcion = 'All inclusive' --AND factura_nro = 2396782
  group by M.FACTURA_NRO, M.Factura_Total 
- UNION 
- SELECT  M.FACTURA_NRO,  count(Consumible_Codigo) ITEM_FACTURA_CANTIDAD, -M.Factura_Total as ITEM_FACTURA_MONTO
- FROM GD_ESQUEMA.MAESTRA M
- WHERE M.FACTURA_NRO IS NOT NULL AND ITEM_FACTURA_CANTIDAD IS NOT NULL
- and M.Regimen_Descripcion = 'All inclusive'
- group by M.FACTURA_NRO, M.Factura_Total 
- ORDER BY M.FACTURA_NRO  -- 409107
+ ORDER BY M.FACTURA_NRO  -- 380972
  
  
  
- select factura_nro, SUM(item_factura_monto) 
+ /*select factura_nro, SUM(item_factura_monto) 
  from CONTROL_ZETA.ITEM_FACTURA
  --where factura_nro = F.factura_nro
  group by factura_nro
@@ -303,12 +311,12 @@ AND FACTURA_NRO IS NOT NULL
  
  
  SELECT * FROM CONTROL_ZETA.FACTURA
+ */
  
+ --UPDATE CONTROL_ZETA.FACTURA
+  --SET FACTURA_TOTAL = NULL --89603
  
- UPDATE CONTROL_ZETA.FACTURA
-  SET FACTURA_TOTAL = NULL --89603
- 
- SELECT * FROM CONTROL_ZETA.FACTURA
+-- SELECT * FROM CONTROL_ZETA.FACTURA
  
  UPDATE CONTROL_ZETA.FACTURA 
   SET CONTROL_ZETA.FACTURA.FACTURA_TOTAL =
@@ -317,27 +325,7 @@ AND FACTURA_NRO IS NOT NULL
  where IFA.factura_nro = CONTROL_ZETA.FACTURA.factura_nro) -- 89603
  
  
- UPDATE CONTROL_ZETA.FACTURA 
- SET CONTROL_ZETA.FACTURA.FACTURA_TOTAL
- 
- 
- 
- select * from  CONTROL_ZETA.FACTURA F
- WHERE 1040 =
- (select SUM(IFA.item_factura_monto) AS MONTO
- from CONTROL_ZETA.ITEM_FACTURA IFA
- where IFA.factura_nro = F.factura_nro)
- 
- select *
- from CONTROL_ZETA.ITEM_FACTURA
- 
- 
- select * from gd_esquema.Maestra
- 
- 
- 
- 
- 
+
  -- sumar un item por factura con el campo facturo_monto (suma de consumibles)
  -- y ponerle la leyenda "descuento por regimen de estadia" --> all inclusive
  -- otro items con el total de los consumibles
@@ -353,33 +341,17 @@ AND FACTURA_NRO IS NOT NULL
   AND F.EST_ID = E.EST_ID ) -- 100740
   
  -- HAY 358412  FACTURAS
- SELECT M.Factura_Nro, R.REG_ID 
+ /*SELECT M.Factura_Nro, R.REG_ID 
  FROM CONTROL_ZETA.FACTURA F,
       gd_esquema.Maestra M,
       CONTROL_ZETA.REGIMEN R
  WHERE F.FACTURA_NRO = M.Factura_Nro
  AND F.FACTURA_NRO IS NOT NULL
- AND M.Regimen_Descripcion = R.REG_DESCRIPCION
+ AND M.Regimen_Descripcion = R.REG_DESCRIPCION*/
 
- 
- SELECT * FROM CONTROL_ZETA.REGIMEN R
- 
- SELECT * FROM CONTROL_ZETA.ITEM_FACTURA
- WHERE FACTURA_NRO = 2396745
- 
- SELECT * FROM CONTROL_ZETA.FACTURA
- WHERE FACTURA_NRO = 2396745
- 
- 
- SELECT * FROM gd_esquema.Maestra  WHERE Factura_Nro = 2396745
- 
- 
- SELECT * FROM gd_esquema.Maestra  WHERE Factura_Nro = 2396887
- 
- SELECT * FROM gd_esquema.Maestra  WHERE Regimen_Descripcion = 'Media Pensión' 
- and Factura_Nro is not null and Consumible_Precio is not null
- 
- SELECT factura_nro, (Habitacion_Tipo_Porcentual * Regimen_Precio) + (Hotel_Recarga_Estrella *Hotel_CantEstrella ) as cuenta, 
+
+
+/* SELECT factura_nro, (Habitacion_Tipo_Porcentual * Regimen_Precio) + (Hotel_Recarga_Estrella *Hotel_CantEstrella ) as cuenta, 
  Item_Factura_Monto,
  Regimen_Descripcion, Factura_Total, 
  (Item_Factura_Monto - ((Habitacion_Tipo_Porcentual * Regimen_Precio) + (Hotel_Recarga_Estrella *Hotel_CantEstrella ))) as diferencia
@@ -387,26 +359,4 @@ AND FACTURA_NRO IS NOT NULL
   WHERE Consumible_Descripcion is null and Item_Factura_Monto is not null
  -- and Regimen_Descripcion = 'Media Pensión'
  
- 
- select * from CONTROL_ZETA.regimen
- 
- Pension Completa	100.00
- Media Pensión	150.00
- All inclusive	250.00
- All Inclusive moderado	200.00
- 
- select * from CONTROL_ZETA.consumible
- 
- select * from CONTROL_ZETA.item_factura
- 
- 2324	Coca Cola	50.00
- 2325	Whisky	65.00
- 2326	Bonbones	100.00
- 2327	Agua Mineral	45.00
- 
- 
-  SELECT *   FROM gd_esquema.Maestra 
-      
- 
- 
- 
+*/ 
