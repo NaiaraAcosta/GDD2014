@@ -104,17 +104,13 @@ namespace FrbaHotel.ABM_de_Cliente
             }
 
 
-
             SqlDataAdapter da;
             DataTable dt = new DataTable();
-
             try
             {
                 da = new SqlDataAdapter(sSel, sCnn);
                 da.Fill(dt);
-
                 this.dataGridView1.DataSource = dt;
-                //this.dataGridView1.DataBind();
                 label6.Text = String.Format("Total datos en la tabla: {0}", dt.Rows.Count);
             }
             catch (Exception ex)
@@ -160,6 +156,11 @@ namespace FrbaHotel.ABM_de_Cliente
             }
             
             //this.Hide();
+            
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
             
         }
     }

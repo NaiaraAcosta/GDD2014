@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Security.Cryptography;  
 
 
 namespace FrbaHotel
@@ -210,6 +211,25 @@ namespace FrbaHotel
             f.Show();
             this.Hide();
         }
-   
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            textBox2.Text = SHA256Encrypt(textBox1.Text);
+        }
+
+        public string SHA256Encrypt(string input)
+        {
+            SHA256CryptoServiceProvider provider = new SHA256CryptoServiceProvider();
+
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] hashedBytes = provider.ComputeHash(inputBytes);
+
+            StringBuilder output = new StringBuilder();
+
+            for (int i = 0; i < hashedBytes.Length; i++)
+                output.Append(hashedBytes[i].ToString("x2").ToLower());
+
+            return output.ToString();
+        }  
     }
 }
