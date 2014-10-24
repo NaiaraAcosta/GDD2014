@@ -65,9 +65,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(9, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(126, 13);
+            this.label1.Size = new System.Drawing.Size(160, 13);
             this.label1.TabIndex = 4;
-            this.label1.Text = "Seleccione el rol a utilizar";
+            this.label1.Text = "Seleccione el hotel y rol a utilizar";
             // 
             // Form1
             // 
@@ -79,7 +79,8 @@
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.label1);
             this.Name = "Form1";
-            this.Text = "Seleccion de rol";
+            this.Text = "Seleccion de hotel-rol";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

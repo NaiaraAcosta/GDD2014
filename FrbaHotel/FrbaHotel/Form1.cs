@@ -120,7 +120,7 @@ namespace FrbaHotel
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Form f = new Login.Form1();
+            Form f = new Login.Form2();
             f.Show();
         }
 

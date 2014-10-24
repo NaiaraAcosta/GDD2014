@@ -13,9 +13,15 @@ namespace FrbaHotel.ABM_de_Habitacion
 {
     public partial class Form2 : Form
     {
+        string hotel;
         public Form2()
         {
             InitializeComponent();
+        }
+        public Form2(string idHotel)
+        {
+            InitializeComponent();
+            hotel = idHotel;
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -23,7 +29,7 @@ namespace FrbaHotel.ABM_de_Habitacion
             string sCnn;
             sCnn = @"data source = Gonzalo-PC\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
 
-            string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[CLIENTE]");
+            string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HABITACION] where HAB_ID_HOTEL = '{0}'", hotel);
             SqlDataAdapter da;
             DataTable dt = new DataTable();
             try
