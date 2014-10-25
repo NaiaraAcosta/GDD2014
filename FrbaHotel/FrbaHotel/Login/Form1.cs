@@ -41,5 +41,25 @@ namespace FrbaHotel.Login
             reader.Close();
             conn.Close(); 
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form f = new Login.Form2();
+            f.Show();
+            this.Hide();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            logicaModo();
+            Form f = new FrbaHotel.Form1();
+            f.Show();
+            this.Hide();
+        }
+        private void logicaModo()
+        {
+            label1.Text = listBox1.SelectedItems.ToString();
+            Login.Class1.mode = 1;
+        }
     }
 }

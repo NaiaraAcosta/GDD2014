@@ -18,10 +18,17 @@ namespace FrbaHotel
         private SqlDataAdapter dataAdapter = new SqlDataAdapter();
         public Form1()
         {
-            
-            
             InitializeComponent();
+            if (Login.Class1.mode == 1)//modo usuario
+            { 
+                this.qweToolStripMenuItem1.Visible = false;
+                this.estadíaToolStripMenuItem.Visible = false;
+                this.estadísticasToolStripMenuItem.Visible = false;
+            }
+        }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
             string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
 
             SqlConnection conn = new SqlConnection(ConnStr);
@@ -35,11 +42,6 @@ namespace FrbaHotel
             reader.Close();
             conn.Close(); 
 
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
             string sCnn;
             sCnn = @"data source = Gonzalo-PC\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
 
