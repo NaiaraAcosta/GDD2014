@@ -13,9 +13,11 @@ namespace FrbaHotel.ABM_de_Cliente
 {
     public partial class Form2 : Form
     {
-        public Form2()
+        Form back = null;
+        public Form2(Form atras)
         {
             InitializeComponent();
+            back = atras;
             string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
 
             SqlConnection conn = new SqlConnection(ConnStr);
@@ -42,12 +44,12 @@ namespace FrbaHotel.ABM_de_Cliente
             {
                 if (first)
                 {
-                    sSel = String.Format("{0} where CLIENTE_NOMBRE like '%, {1}%'", sSel, textBox1.Text);
+                    sSel = String.Format("{0} where CLIENTE_NOMBRE like '{1}%'", sSel, textBox1.Text);
                     first = false;
                 }
                 else
                 {
-                    sSel = String.Format("{0} and CLIENTE_NOMBRE like '%, {1}%'", sSel, textBox1.Text);
+                    sSel = String.Format("{0} and CLIENTE_NOMBRE like '{1}%'", sSel, textBox1.Text);
                 }
             }
             
@@ -55,12 +57,12 @@ namespace FrbaHotel.ABM_de_Cliente
             {
                 if (first)
                 {
-                    sSel = String.Format("{0} where CLIENTE_NOMBRE like '{1}%, %'", sSel, textBox2.Text);
+                    sSel = String.Format("{0} where CLIENTE_APELLIDO like '{1}%'", sSel, textBox2.Text);
                     first = false;
                 }
                 else
                 {
-                    sSel = String.Format("{0} and CLIENTE_NOMBRE like '{1}%, %'", sSel, textBox2.Text);
+                    sSel = String.Format("{0} and CLIENTE_APELLIDO like '{1}%'", sSel, textBox2.Text);
                 }
             }
 
@@ -126,27 +128,36 @@ namespace FrbaHotel.ABM_de_Cliente
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Form f = new FrbaHotel.Form1();
-            f.Show();
+            if (back != null)
+            {
+                back.Show();
+            }
+            else
+            {
+                Form f = new FrbaHotel.Form1();
+                f.Show();
+            }
             this.Hide();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string[] stringSeparators = new string[] { ", " };
+            
             if (dataGridView1.SelectedCells.Count != 0)
             {
-                string[] result = dataGridView1.SelectedCells[1].Value.ToString().Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                Form f = new ABM_de_Cliente.Form1(result[1], result[0],
-                    dataGridView1.SelectedCells[2].Value.ToString(),
-                    dataGridView1.SelectedCells[3].Value.ToString(),
-                    dataGridView1.SelectedCells[4].Value.ToString(),
-                    dataGridView1.SelectedCells[5].Value.ToString(),
-                    dataGridView1.SelectedCells[8].Value.ToString(),
-                    dataGridView1.SelectedCells[6].Value.ToString(),
-                    dataGridView1.SelectedCells[7].Value.ToString(),
-                    dataGridView1.SelectedCells[12].Value.ToString(),
-                    dataGridView1.SelectedCells[14].Value.ToString());
+                //string[] result = dataGridView1.SelectedCells[1].Value.ToString().Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+                Form f = new ABM_de_Cliente.Form1(this,
+                    dataGridView1.SelectedCells[1].Value.ToString(), //nombre
+                    dataGridView1.SelectedCells[2].Value.ToString(), //apellido
+                    dataGridView1.SelectedCells[3].Value.ToString(), //tipo doc
+                    dataGridView1.SelectedCells[4].Value.ToString(), //numero
+                    dataGridView1.SelectedCells[5].Value.ToString(), //mail
+                    dataGridView1.SelectedCells[6].Value.ToString(), //telefono
+                    dataGridView1.SelectedCells[9].Value.ToString(), //calle
+                    dataGridView1.SelectedCells[7].Value.ToString(), //localidad
+                    dataGridView1.SelectedCells[8].Value.ToString(), //pais
+                    dataGridView1.SelectedCells[13].Value.ToString(), //nacionalidad
+                    dataGridView1.SelectedCells[15].Value.ToString()); //nacimiento
                 f.Show();
             }
             else

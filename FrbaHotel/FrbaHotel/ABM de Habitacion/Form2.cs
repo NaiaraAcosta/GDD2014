@@ -14,6 +14,7 @@ namespace FrbaHotel.ABM_de_Habitacion
     public partial class Form2 : Form
     {
         string hotel;
+        Form back = null;
         public Form2()
         {
             InitializeComponent();
@@ -23,7 +24,11 @@ namespace FrbaHotel.ABM_de_Habitacion
             InitializeComponent();
             hotel = idHotel;
         }
-
+        public Form2(Form atras)
+        {
+            InitializeComponent();
+            back = atras;
+        }
         private void Form2_Load(object sender, EventArgs e)
         {
             string sCnn;
@@ -43,6 +48,43 @@ namespace FrbaHotel.ABM_de_Habitacion
             {
                 label1.Text = "Error: " + ex.Message;
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form f;
+            if (dataGridView1.SelectedCells.Count != 0)
+
+            {
+                f = new ABM_de_Habitacion.Form1(this,
+                    int.Parse(dataGridView1.SelectedCells[1].Value.ToString()),
+                    int.Parse(dataGridView1.SelectedCells[3].Value.ToString()),
+                    char.Parse(dataGridView1.SelectedCells[4].Value.ToString()),
+                    int.Parse(dataGridView1.SelectedCells[5].Value.ToString()),
+                    "");
+            }
+            else
+            {
+                f = new ABM_de_Habitacion.Form1(this);
+            }
+
+            f.Show();
+
+           
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (back != null)
+            {
+                back.Show();
+            }
+            else
+            {
+                new FrbaHotel.Form1().Show();
+            }
+            this.Hide();
         }
     }
 }

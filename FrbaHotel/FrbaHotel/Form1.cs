@@ -122,7 +122,7 @@ namespace FrbaHotel
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Form f = new Login.Form2();
+            Form f = new Login.Form2(this);
             f.Show();
         }
 
@@ -146,14 +146,14 @@ namespace FrbaHotel
 
         private void altaClienteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form f = new ABM_de_Cliente.Form1();
+            Form f = new ABM_de_Cliente.Form1(this);
             f.Show();
             this.Hide();
         }
 
         private void bajaModificacionClienteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form f = new ABM_de_Cliente.Form2();
+            Form f = new ABM_de_Cliente.Form2(this);
             f.Show();
             this.Hide();
         }
@@ -232,6 +232,11 @@ namespace FrbaHotel
                 output.Append(hashedBytes[i].ToString("x2").ToLower());
 
             return output.ToString();
-        }  
+        }
+
+        public void mostar()
+        {
+            this.Show();
+        }
     }
 }

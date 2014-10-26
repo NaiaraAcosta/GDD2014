@@ -11,10 +11,12 @@ namespace FrbaHotel.ABM_de_Cliente
 {
     public partial class Form1 : Form
     {
-        public Form1(string nombre, string apellido, string tipo, string numero, string mail, string telefono, string calle,
+        Form back = null;
+        public Form1(Form atras,string nombre, string apellido, string tipo, string numero, string mail, string telefono, string calle,
             string localidad, string pais, string nacionalidad, string nacimiento)
         {
             InitializeComponent();
+            back = atras;
             textBox1.Text = nombre;
             textBox2.Text = apellido;
             textBox3.Text = tipo;
@@ -31,6 +33,11 @@ namespace FrbaHotel.ABM_de_Cliente
         {
             InitializeComponent();
         }
+        public Form1(Form atras)
+        {
+            InitializeComponent();
+            back = atras;
+        }
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -39,8 +46,15 @@ namespace FrbaHotel.ABM_de_Cliente
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Form f = new ABM_de_Cliente.Form2();
-            f.Show();
+            /*if (back != null)
+            {
+                back.Show();
+            }
+            else
+            {
+                Form f = new ABM_de_Cliente.Form2(this);
+                f.Show();
+            }*/
             this.Hide();
         }
 

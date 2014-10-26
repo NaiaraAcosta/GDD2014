@@ -14,15 +14,17 @@ namespace FrbaHotel.Login
     public partial class Form1 : Form
     {
         string username;
+        Form back;
         public Form1()
         {
             InitializeComponent();
         }
 
-        public Form1(string user)
+        public Form1(Form atras, string user)
         {
             InitializeComponent();
             username = user;
+            back = atras;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -30,7 +32,7 @@ namespace FrbaHotel.Login
             string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
 
             SqlConnection conn = new SqlConnection(ConnStr);
-            string sSel = string.Format("SELECT [ROL_ID], [HOTEL_ID] FROM [GD2C2014].[CONTROL_ZETA].[USR_ROL] r1, [GD2C2014].[CONTROL_ZETA].[USR_HOTEL] r2 where r1.USR_USERNAME = '{0}' and r1.USR_USERNAME = r2.USR_USERNAME", username);
+            string sSel = string.Format("SELECT [ROL_ID], [HOTEL_ID] FROM [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] where USR_USERNAME = '{0}'", username);
             SqlCommand cmd = new SqlCommand(sSel, conn);
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
@@ -44,8 +46,7 @@ namespace FrbaHotel.Login
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Form f = new Login.Form2();
-            f.Show();
+            back.Show();
             this.Hide();
         }
 
