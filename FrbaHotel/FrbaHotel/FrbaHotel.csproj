@@ -48,53 +48,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ABM de Cliente\Form1.cs">
+    <Compile Include="ABM de Cliente\AltaCliente.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ABM de Cliente\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="ABM de Cliente\AltaCliente.Designer.cs">
+      <DependentUpon>AltaCliente.cs</DependentUpon>
     </Compile>
-    <Compile Include="ABM de Cliente\Form2.cs">
+    <Compile Include="ABM de Cliente\BajaCliente.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ABM de Cliente\Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <Compile Include="ABM de Cliente\BajaCliente.Designer.cs">
+      <DependentUpon>BajaCliente.cs</DependentUpon>
     </Compile>
-    <Compile Include="ABM de Habitacion\Form1.cs">
+    <Compile Include="ABM de Habitacion\AltaHabitacion.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ABM de Habitacion\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="ABM de Habitacion\AltaHabitacion.Designer.cs">
+      <DependentUpon>AltaHabitacion.cs</DependentUpon>
     </Compile>
-    <Compile Include="ABM de Habitacion\Form2.cs">
+    <Compile Include="ABM de Habitacion\ABMHabitacion.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ABM de Habitacion\Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <Compile Include="ABM de Habitacion\ABMHabitacion.Designer.cs">
+      <DependentUpon>ABMHabitacion.cs</DependentUpon>
     </Compile>
-    <Compile Include="ABM de Habitacion\Form3.cs">
+    <Compile Include="ABM de Hotel\AltaHotel.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ABM de Habitacion\Form3.Designer.cs">
-      <DependentUpon>Form3.cs</DependentUpon>
+    <Compile Include="ABM de Hotel\AltaHotel.Designer.cs">
+      <DependentUpon>AltaHotel.cs</DependentUpon>
     </Compile>
-    <Compile Include="ABM de Hotel\Form1.cs">
+    <Compile Include="ABM de Hotel\ABMHotel.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ABM de Hotel\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="ABM de Hotel\ABMHotel.Designer.cs">
+      <DependentUpon>ABMHotel.cs</DependentUpon>
     </Compile>
-    <Compile Include="ABM de Hotel\Form2.cs">
+    <Compile Include="ABM de Hotel\BajaHotel.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ABM de Hotel\Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ABM de Hotel\Form3.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ABM de Hotel\Form3.Designer.cs">
-      <DependentUpon>Form3.cs</DependentUpon>
+    <Compile Include="ABM de Hotel\BajaHotel.Designer.cs">
+      <DependentUpon>BajaHotel.cs</DependentUpon>
     </Compile>
     <Compile Include="ABM de Regimen\Form1.cs">
       <SubType>Form</SubType>
@@ -189,29 +183,26 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="ABM de Cliente\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="ABM de Cliente\AltaCliente.resx">
+      <DependentUpon>AltaCliente.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ABM de Cliente\Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <EmbeddedResource Include="ABM de Cliente\BajaCliente.resx">
+      <DependentUpon>BajaCliente.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ABM de Habitacion\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="ABM de Habitacion\AltaHabitacion.resx">
+      <DependentUpon>AltaHabitacion.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ABM de Habitacion\Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <EmbeddedResource Include="ABM de Habitacion\ABMHabitacion.resx">
+      <DependentUpon>ABMHabitacion.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ABM de Habitacion\Form3.resx">
-      <DependentUpon>Form3.cs</DependentUpon>
+    <EmbeddedResource Include="ABM de Hotel\AltaHotel.resx">
+      <DependentUpon>AltaHotel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ABM de Hotel\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="ABM de Hotel\ABMHotel.resx">
+      <DependentUpon>ABMHotel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ABM de Hotel\Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ABM de Hotel\Form3.resx">
-      <DependentUpon>Form3.cs</DependentUpon>
+    <EmbeddedResource Include="ABM de Hotel\BajaHotel.resx">
+      <DependentUpon>BajaHotel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ABM de Rol\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
