@@ -13,7 +13,7 @@ namespace FrbaHotel.ABM_de_Habitacion
 {
     public partial class ABMHabitacion : Form
     {
-        string hotel;
+        string hotel = "1";
         Form back = null;
         public ABMHabitacion()
         {

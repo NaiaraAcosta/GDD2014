@@ -167,7 +167,7 @@ namespace FrbaHotel
 
         private void aBMDeHotelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form f = new ABM_de_Hotel.ABMHotel();
+            Form f = new ABM_de_Hotel.ABMHotel(this);
             f.Show();
             this.Hide();
         }
