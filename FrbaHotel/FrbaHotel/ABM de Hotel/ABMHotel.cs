@@ -84,5 +84,62 @@ namespace FrbaHotel.ABM_de_Hotel
                 label6.Text = "Error: " + ex.Message;
             }
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (back != null)
+            {
+                back.Show();
+            }
+            else
+            {
+                new FrbaHotel.MenuPrincipal().Show();
+            }
+            this.Hide();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedCells.Count != 0)
+            {
+                string direccion = string.Format("{0} {1}", dataGridView1.SelectedCells[4].Value.ToString(),
+                    dataGridView1.SelectedCells[5].Value.ToString());
+                Form f = new AltaHotel(this,
+                    dataGridView1.SelectedCells[1].Value.ToString(), //nombre
+                    dataGridView1.SelectedCells[2].Value.ToString(), //mail
+                    dataGridView1.SelectedCells[3].Value.ToString(), //telefono
+                    direccion, //direccion
+                    dataGridView1.SelectedCells[7].Value.ToString(), //cant estrellas
+                    dataGridView1.SelectedCells[9].Value.ToString(), //recarga estrellas
+                    dataGridView1.SelectedCells[6].Value.ToString(), //id ciudad
+                    dataGridView1.SelectedCells[8].Value.ToString(), //id pais
+                    dataGridView1.SelectedCells[10].Value.ToString()); //fecha creacion
+                f.Show();
+            }
+            else
+            {
+                MessageBox.Show("No hay datos que modificar", "No se puede modificar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            new AltaHotel(this).Show();
+            this.Hide();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedCells.Count != 0)
+            {
+                new BajaHotel(this,
+                    dataGridView1.SelectedCells[1].Value.ToString()).Show(); //hotelID
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("No hay datos que modificar", "No se puede modificar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

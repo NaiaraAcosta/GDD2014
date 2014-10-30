@@ -11,15 +11,46 @@ namespace FrbaHotel.ABM_de_Hotel
 {
     public partial class AltaHotel : Form
     {
+        Form back = null;
         public AltaHotel()
         {
             InitializeComponent();
         }
 
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        public AltaHotel(Form atras)
         {
-
+            InitializeComponent();
+            back = atras;
         }
+
+        public AltaHotel(Form atras,
+            string nombre,
+            string mail,
+            string telefono,
+            string direccion,
+            string cantEstrellas,
+            string recargaEstrellas,
+            string idCiudad,
+            string idPais,
+            string fechaCreacion)
+        {
+            InitializeComponent();
+            back = atras;
+            textBox1.Text = nombre;
+            textBox2.Text = mail;
+            textBox3.Text = telefono;
+            textBox4.Text = direccion;
+            textBox5.Text = cantEstrellas;
+            textBox6.Text = recargaEstrellas;
+            textBox7.Text = idCiudad;
+            textBox8.Text = idPais;
+            string[] stringSeparators = new string[] { "/" };
+            string[] result = fechaCreacion.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+            result[2] = result[2].Substring(0, 4);
+            dateTimePicker1.Value = new DateTime(int.Parse(result[2]), int.Parse(result[1]), int.Parse(result[0]));
+        }
+
+       
 
         private void textBox8_TextChanged(object sender, EventArgs e)
         {
@@ -64,6 +95,19 @@ namespace FrbaHotel.ABM_de_Hotel
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (back != null)
+            {
+                back.Show();
+            }
+            else
+            {
+                new FrbaHotel.MenuPrincipal().Show();
+            }
+            this.Hide();
         }
     }
 }

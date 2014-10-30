@@ -144,20 +144,6 @@ namespace FrbaHotel
             this.Close();
         }
 
-        private void altaClienteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form f = new ABM_de_Cliente.AltaCliente(this);
-            f.Show();
-            this.Hide();
-        }
-
-        private void bajaModificacionClienteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form f = new ABM_de_Cliente.BajaCliente(this);
-            f.Show();
-            this.Hide();
-        }
-
         private void modificacionBajaDeClienteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form f = new ABM_de_Habitacion.ABMHabitacion();
@@ -234,14 +220,23 @@ namespace FrbaHotel
             return output.ToString();
         }
 
-        public void mostar()
-        {
-            this.Show();
-        }
+        
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void altaDeClienteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new ABM_de_Cliente.ABMCliente(this);
+            f.Show();
+            this.Hide();
         }
     }
 }

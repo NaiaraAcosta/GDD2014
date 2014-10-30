@@ -11,9 +11,18 @@ namespace FrbaHotel.ABM_de_Hotel
 {
     public partial class BajaHotel : Form
     {
+        Form back = null;
+        string IDHotel;
         public BajaHotel()
         {
             InitializeComponent();
+        }
+
+        public BajaHotel(Form atras, string idHotel)
+        {
+            InitializeComponent();
+            back = atras;
+            IDHotel = idHotel;
         }
 
         private void label3_Click(object sender, EventArgs e)
@@ -44,6 +53,11 @@ namespace FrbaHotel.ABM_de_Hotel
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

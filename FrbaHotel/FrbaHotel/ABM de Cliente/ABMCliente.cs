@@ -11,10 +11,10 @@ using System.Configuration;
 
 namespace FrbaHotel.ABM_de_Cliente
 {
-    public partial class BajaCliente : Form
+    public partial class ABMCliente : Form
     {
         Form back = null;
-        public BajaCliente(Form atras)
+        public ABMCliente(Form atras)
         {
             InitializeComponent();
             back = atras;
@@ -162,12 +162,8 @@ namespace FrbaHotel.ABM_de_Cliente
             }
             else
             {
-                Form f = new ABM_de_Cliente.AltaCliente();
-                f.Show();
+                MessageBox.Show("No hay datos que modificar", "No se puede modificar", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
-            //this.Hide();
-            
         }
 
         private void button3_Click(object sender, EventArgs e)

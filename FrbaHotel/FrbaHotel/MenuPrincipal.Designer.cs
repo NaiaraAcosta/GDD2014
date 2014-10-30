@@ -44,8 +44,6 @@
             this.gfdToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.qweToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.altaDeClienteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.altaClienteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bajaModificacionClienteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modificacionBajaDeClienteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aBMDeHotelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aBMDeRolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +59,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -158,21 +157,21 @@
             // asdToolStripMenuItem3
             // 
             this.asdToolStripMenuItem3.Name = "asdToolStripMenuItem3";
-            this.asdToolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.asdToolStripMenuItem3.Size = new System.Drawing.Size(134, 22);
             this.asdToolStripMenuItem3.Text = "Ingresar";
             this.asdToolStripMenuItem3.Click += new System.EventHandler(this.asdToolStripMenuItem3_Click);
             // 
             // estadísticasToolStripMenuItem
             // 
             this.estadísticasToolStripMenuItem.Name = "estadísticasToolStripMenuItem";
-            this.estadísticasToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.estadísticasToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.estadísticasToolStripMenuItem.Text = "Estadísticas";
             this.estadísticasToolStripMenuItem.Click += new System.EventHandler(this.estadísticasToolStripMenuItem_Click);
             // 
             // gfdToolStripMenuItem1
             // 
             this.gfdToolStripMenuItem1.Name = "gfdToolStripMenuItem1";
-            this.gfdToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.gfdToolStripMenuItem1.Size = new System.Drawing.Size(134, 22);
             this.gfdToolStripMenuItem1.Text = "Cerrar";
             this.gfdToolStripMenuItem1.Click += new System.EventHandler(this.gfdToolStripMenuItem1_Click);
             // 
@@ -190,26 +189,10 @@
             // 
             // altaDeClienteToolStripMenuItem
             // 
-            this.altaDeClienteToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.altaClienteToolStripMenuItem,
-            this.bajaModificacionClienteToolStripMenuItem});
             this.altaDeClienteToolStripMenuItem.Name = "altaDeClienteToolStripMenuItem";
             this.altaDeClienteToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.altaDeClienteToolStripMenuItem.Text = "ABM de Cliente";
-            // 
-            // altaClienteToolStripMenuItem
-            // 
-            this.altaClienteToolStripMenuItem.Name = "altaClienteToolStripMenuItem";
-            this.altaClienteToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
-            this.altaClienteToolStripMenuItem.Text = "Alta Cliente";
-            this.altaClienteToolStripMenuItem.Click += new System.EventHandler(this.altaClienteToolStripMenuItem_Click);
-            // 
-            // bajaModificacionClienteToolStripMenuItem
-            // 
-            this.bajaModificacionClienteToolStripMenuItem.Name = "bajaModificacionClienteToolStripMenuItem";
-            this.bajaModificacionClienteToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
-            this.bajaModificacionClienteToolStripMenuItem.Text = "Baja/Modificacion Cliente";
-            this.bajaModificacionClienteToolStripMenuItem.Click += new System.EventHandler(this.bajaModificacionClienteToolStripMenuItem_Click);
+            this.altaDeClienteToolStripMenuItem.Click += new System.EventHandler(this.altaDeClienteToolStripMenuItem_Click);
             // 
             // modificacionBajaDeClienteToolStripMenuItem
             // 
@@ -330,11 +313,22 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // Form1
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(423, 322);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 10;
+            this.button3.Text = "Salir";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // MenuPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(508, 357);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
@@ -346,7 +340,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.Name = "MenuPrincipal";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -377,8 +371,6 @@
         private System.Windows.Forms.ToolStripMenuItem asdToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem altaDeClienteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem modificacionBajaDeClienteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem altaClienteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bajaModificacionClienteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aBMDeHotelToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aBMDeRolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aBMDeUsuarioToolStripMenuItem;
@@ -393,5 +385,6 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }

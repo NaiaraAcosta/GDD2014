@@ -40,12 +40,12 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(13, 13);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(259, 186);
+            this.listBox1.Size = new System.Drawing.Size(293, 186);
             this.listBox1.TabIndex = 0;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(195, 215);
+            this.button1.Location = new System.Drawing.Point(231, 205);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -55,43 +55,46 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(104, 215);
+            this.button2.Location = new System.Drawing.Point(150, 205);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 2;
             this.button2.Text = "Modificar";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(13, 215);
+            this.button3.Location = new System.Drawing.Point(31, 205);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.Size = new System.Drawing.Size(113, 23);
             this.button3.TabIndex = 3;
-            this.button3.Text = "Eliminar";
+            this.button3.Text = "Habilitar/Deshabilitar";
             this.button3.UseVisualStyleBackColor = true;
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(195, 254);
+            this.button4.Location = new System.Drawing.Point(231, 234);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 4;
             this.button4.Text = "Cancelar";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // Form2
+            // ABMRol
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(288, 294);
+            this.ClientSize = new System.Drawing.Size(318, 266);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.listBox1);
-            this.Name = "Form2";
+            this.Name = "ABMRol";
             this.Text = "ABM Rol";
+            this.Load += new System.EventHandler(this.ABMRol_Load);
             this.ResumeLayout(false);
 
         }

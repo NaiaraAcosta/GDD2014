@@ -52,26 +52,20 @@ namespace FrbaHotel.ABM_de_Habitacion
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Form f;
             if (dataGridView1.SelectedCells.Count != 0)
-
             {
-                f = new ABM_de_Habitacion.AltaHabitacion(this,
+                Form f = new ABM_de_Habitacion.AltaHabitacion(this,
                     int.Parse(dataGridView1.SelectedCells[1].Value.ToString()),
                     int.Parse(dataGridView1.SelectedCells[3].Value.ToString()),
                     char.Parse(dataGridView1.SelectedCells[4].Value.ToString()),
                     int.Parse(dataGridView1.SelectedCells[5].Value.ToString()),
                     "");
+                f.Show();
             }
             else
             {
-                f = new ABM_de_Habitacion.AltaHabitacion(this);
+                MessageBox.Show("No hay datos que modificar", "No se puede modificar", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            f.Show();
-
-           
-
         }
 
         private void button4_Click(object sender, EventArgs e)
