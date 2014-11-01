@@ -15,16 +15,20 @@ namespace FrbaHotel.Login
     {
         string username;
         Form back;
+        Form menu;
+        int[] idHotel;
+        bool[] func;
         public SeleccionRol()
         {
             InitializeComponent();
         }
 
-        public SeleccionRol(Form atras, string user)
+        public SeleccionRol(Form atras, Form menuPrin, string user)
         {
             InitializeComponent();
             username = user;
             back = atras;
+            menu = menuPrin;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -41,6 +45,15 @@ namespace FrbaHotel.Login
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
             string detalle = "";
+            int i = 0;
+            while (reader.Read())
+            {
+                i++;
+            }
+            reader.Close();
+            reader = cmd.ExecuteReader();
+            idHotel = new int[i];
+            i = 0;
             while (reader.Read())
             {
                 detalle = string.Format("{0} - {1} - {2} {3}",
@@ -48,6 +61,8 @@ namespace FrbaHotel.Login
                     reader["LOC_DETALLE"].ToString().Trim(),
                     reader["HOTEL_CALLE"].ToString(),
                     reader["HOTEL_NRO_CALLE"].ToString());
+                idHotel[i] = int.Parse(reader["HOTEL_ID"].ToString());
+                i++;
                 listBox1.Items.Add(detalle);
             }
             reader.Close();
@@ -57,20 +72,65 @@ namespace FrbaHotel.Login
         private void button2_Click(object sender, EventArgs e)
         {
             back.Show();
-            this.Hide();
+            this.Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             logicaModo();
-            Form f = new FrbaHotel.MenuPrincipal();
+            Form f = new FrbaHotel.MenuPrincipal(func, menu);
             f.Show();
-            this.Hide();
+            this.Close();
+            menu.Hide();
+            menu.Dispose();
         }
         private void logicaModo()
         {
-            label1.Text = listBox1.SelectedItems.ToString();
-            Login.Class1.mode = 1;
+            if (listBox1.SelectedItem != null)
+            {
+                string seleccion = listBox1.SelectedItem.ToString();
+                Login.Class1.mode = 1;
+
+                string[] stringSeparators = new string[] { "-" };
+                string[] result = seleccion.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+
+                string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+                SqlConnection conn = new SqlConnection(ConnStr);
+                string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] usr,
+                [GD2C2014].[CONTROL_ZETA].[ROL] rol, 
+                [GD2C2014].[CONTROL_ZETA].[FUNCIONALIDAD] fun,
+                [GD2C2014].[CONTROL_ZETA].[ROL_FUNC] rolfun
+                where usr.USR_USERNAME = '{0}' 
+                and usr.HOTEL_ID = '{1}'
+                and rol.ROL_NOMBRE = '{2}' 
+                and usr.ROL_ID = rol.ROL_ID
+                and usr.ROL_ID = rolfun.ROL_ID
+                and rolfun.FUNC_ID = fun.FUNC_ID",
+                                                     username,
+                                                     idHotel[listBox1.SelectedIndex],
+                                                     result[0]);
+                SqlCommand cmd = new SqlCommand(sSel, conn);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                int i = 0;
+                while (reader.Read())
+                {
+                    i++;
+                }
+                reader.Close();
+                reader = cmd.ExecuteReader();
+                func = new bool[i];
+                while (reader.Read())
+                {
+                    func[int.Parse(reader["FUNC_ID"].ToString()) - 1] = true;
+                }
+                reader.Close();
+                conn.Close();
+            }
+            else
+            {
+                func = new bool[13];
+            }
         }
     }
 }

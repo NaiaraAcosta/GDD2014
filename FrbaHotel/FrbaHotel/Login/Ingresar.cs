@@ -22,7 +22,7 @@ namespace FrbaHotel.Login
         {
             if (logicaLogueo(textBox1.Text, textBox2.Text))
             {
-                Form f = new Login.SeleccionRol(this,textBox1.Text);
+                Form f = new Login.SeleccionRol(this, back, textBox1.Text);
                 f.Show();
                 this.Hide();
             }

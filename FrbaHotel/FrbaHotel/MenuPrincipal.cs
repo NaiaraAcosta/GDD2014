@@ -16,6 +16,7 @@ namespace FrbaHotel
     public partial class MenuPrincipal : Form
     {
         private SqlDataAdapter dataAdapter = new SqlDataAdapter();
+        Form principal = null;
         public MenuPrincipal()
         {
             InitializeComponent();
@@ -24,6 +25,78 @@ namespace FrbaHotel
                 this.qweToolStripMenuItem1.Visible = false;
                 this.estadíaToolStripMenuItem.Visible = false;
                 this.estadísticasToolStripMenuItem.Visible = false;
+            }
+        }
+
+        public MenuPrincipal(bool[] func, Form menu)
+        {
+            InitializeComponent();
+            principal = menu;
+            if (!func[0])//abm de rol
+            {
+                this.aBMDeRolToolStripMenuItem.Visible = false;
+            }
+            if (!func[1])//login y seguridad
+            {
+                this.asdToolStripMenuItem3.Visible = false;
+                this.button1.Visible = false;
+            }
+            if (!func[2])//abm de usuario
+            {
+                this.aBMDeUsuarioToolStripMenuItem.Visible = false;
+            }
+            if (!func[3])//abm de clientes
+            {
+                this.altaDeClienteToolStripMenuItem.Visible = false;
+            }
+            if (!func[4])//abm de hotel
+            {
+                this.aBMDeHotelToolStripMenuItem.Visible = false;
+            }
+            if (!func[5])//abm de habitacion
+            {
+                this.modificacionBajaDeClienteToolStripMenuItem.Visible = false;
+            }
+            if (!func[6])//abm de regimen de estadias
+            {
+                //nothing to do here...
+            }
+            if (!func[7])//generar o modificar reserva
+            {
+                this.generarToolStripMenuItem.Visible = false;
+                this.modificarToolStripMenuItem.Visible = false;
+            }
+            if (!func[8])//cancelar reserva
+            {
+                this.cancelarToolStripMenuItem.Visible = false;
+            }
+            if (!func[9])//registrar estadia
+            {
+                this.registarEstadiaToolStripMenuItem.Visible = false;
+            }
+            if (!func[10])//registrar consumibles
+            {
+                this.registrarConsumibleToolStripMenuItem.Visible = false;
+            }
+            if (!func[11])//facturar estadia
+            {
+                //todavia sin hacer
+            }
+            if (!func[12])//listado estadistico
+            {
+                this.estadísticasToolStripMenuItem.Visible = false;
+            }
+            if (!func[0] && !func[2] && !func[3] && !func[4] && !func[5])
+            {
+                this.qweToolStripMenuItem1.Visible = false;
+            }
+            if (!func[7] && !func[8])
+            {
+                this.asdToolStripMenuItem2.Visible = false;
+            }
+            if (!func[9] && !func[10])
+            {
+                this.estadíaToolStripMenuItem.Visible = false;
             }
         }
 
@@ -230,6 +303,10 @@ namespace FrbaHotel
         private void button3_Click(object sender, EventArgs e)
         {
             this.Close();
+            if (principal != null)
+            {
+                principal.Close();
+            }
         }
 
         private void altaDeClienteToolStripMenuItem_Click(object sender, EventArgs e)
