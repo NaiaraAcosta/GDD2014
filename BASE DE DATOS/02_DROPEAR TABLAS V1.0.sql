@@ -1,4 +1,3 @@
--- HOTEL_REGIMEN
 USE [GD2C2014]
 GO
 
@@ -240,6 +239,13 @@ GO
 /****** Object:  Table [CONTROL_ZETA].[RESERVA]    Script Date: 10/06/2014 02:43:28 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[CONTROL_ZETA].[RESERVA]') AND type in (N'U'))
 DROP TABLE [CONTROL_ZETA].[RESERVA]
+GO
+
+-- RESERVA_BKP
+
+/****** Object:  Table [CONTROL_ZETA].[RESERVA_BKP]    Script Date: 10/06/2014 02:43:28 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[CONTROL_ZETA].[RESERVA_BKP]') AND type in (N'U'))
+DROP TABLE [CONTROL_ZETA].[RESERVA_BKP]
 GO
 
 
