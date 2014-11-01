@@ -22,10 +22,23 @@ CREATE PROCEDURE CONTROL_ZETA.SP_ABM_HOTEL()
 AS
 BEGIN
 END;
+
 ---ABM HABITACION(Tabla habitaciones)-2
-CREATE PROCEDURE CONTROL_ZETA.SP_ABM_RESERVA()
+CREATE PROCEDURE CONTROL_ZETA.SP_ABM_HABITACION(@accion tinyint,@nro_hab smallint, @hab_piso SMALLINT,@ubi_hab varchar(70),@obs varchar(150),@id_hotel int, @id_tipo_hab smallint, @error tinyint output,@id_hab numeric output)
 AS
 BEGIN
+IF @accion=1
+BEGIN
+--Alta
+END
+ELSE IF @accion=2
+BEGIN
+--Modificacion
+END
+ELSE IF @accion=2
+BEGIN
+--Baja
+END;
 END;
 
 --------------
@@ -260,11 +273,16 @@ GO
 CREATE PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE(@id_hotel int, @nro_hab SMALLINT, @id_con smallint, @cant tinyint, @error tinyint OUTPUT )
 AS
 --@Desc:Se registran los consumibles
+CREATE PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE(@id_hotel int, @nro_hab SMALLINT, @id_con smallint, @cant tinyint, @error tinyint OUTPUT )
+AS
+--@Desc:Se registran los consumibles
 BEGIN
 DECLARE 
-@i tinyint =1
-@id_hab numeric =CONTROL_ZETA.get_id_habitacion(@nro_hab,@id_hotel)
-@id_est numeric = CONTROL_ZETA.get_id_estadia(@hab_id)
+@i tinyint =1,
+@id_hab numeric =CONTROL_ZETA.get_id_habitacion(@nro_hab,@id_hotel),
+@id_est numeric = 0
+
+set @id_est=@id_hab
 
 IF (@id_est>0)
 	BEGIN
@@ -278,7 +296,7 @@ IF (@id_est>0)
 		set @error=0	
 	END;	
 	ELSE
-		set @error=2		
+	set @error=2		
 	END;
 ELSE
 set @error=1
