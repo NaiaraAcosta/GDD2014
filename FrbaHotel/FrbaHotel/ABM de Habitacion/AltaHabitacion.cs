@@ -69,7 +69,7 @@ namespace FrbaHotel.ABM_de_Habitacion
             {
                 new ABMHabitacion().Show();
             }
-            this.Hide();
+            this.Close();
         }
     }
 }

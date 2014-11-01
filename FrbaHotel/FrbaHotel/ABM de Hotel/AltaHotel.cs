@@ -107,7 +107,7 @@ namespace FrbaHotel.ABM_de_Hotel
             {
                 new FrbaHotel.MenuPrincipal().Show();
             }
-            this.Hide();
+            this.Close();
         }
     }
 }

@@ -137,7 +137,7 @@ namespace FrbaHotel.ABM_de_Cliente
                 Form f = new FrbaHotel.MenuPrincipal();
                 f.Show();
             }
-            this.Hide();
+            this.Close();
         }
 
         private void button2_Click(object sender, EventArgs e)

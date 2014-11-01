@@ -36,7 +36,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(193, 117);
+            this.button2.Location = new System.Drawing.Point(324, 117);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 7;
@@ -46,7 +46,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(106, 117);
+            this.button1.Location = new System.Drawing.Point(237, 117);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 6;
@@ -59,7 +59,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(12, 37);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(256, 69);
+            this.listBox1.Size = new System.Drawing.Size(387, 69);
             this.listBox1.TabIndex = 5;
             // 
             // label1
@@ -71,16 +71,16 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Seleccione el hotel y rol a utilizar";
             // 
-            // Form1
+            // SeleccionRol
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 152);
+            this.ClientSize = new System.Drawing.Size(411, 152);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.label1);
-            this.Name = "Form1";
+            this.Name = "SeleccionRol";
             this.Text = "Seleccion de hotel-rol";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);

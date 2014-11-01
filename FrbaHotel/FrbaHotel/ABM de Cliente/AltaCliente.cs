@@ -59,7 +59,7 @@ namespace FrbaHotel.ABM_de_Cliente
                 Form f = new ABM_de_Cliente.Form2(this);
                 f.Show();
             }*/
-            this.Hide();
+            this.Close(); ;
         }
 
         private void Form1_Load(object sender, EventArgs e)

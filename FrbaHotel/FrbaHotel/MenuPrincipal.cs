@@ -238,5 +238,12 @@ namespace FrbaHotel
             f.Show();
             this.Hide();
         }
+
+        private void modificarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new Generar_Modificar_Reserva.ModificarReserva(this);
+            f.Show();
+            this.Hide();
+        }
     }
 }

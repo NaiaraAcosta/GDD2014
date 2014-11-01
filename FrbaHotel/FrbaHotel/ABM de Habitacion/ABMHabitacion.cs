@@ -78,7 +78,7 @@ namespace FrbaHotel.ABM_de_Habitacion
             {
                 new FrbaHotel.MenuPrincipal().Show();
             }
-            this.Hide();
+            this.Close();
         }
     }
 }

@@ -32,13 +32,23 @@ namespace FrbaHotel.Login
             string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
 
             SqlConnection conn = new SqlConnection(ConnStr);
-            string sSel = string.Format("SELECT [ROL_ID], [HOTEL_ID] FROM [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] where USR_USERNAME = '{0}'", username);
+            string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] usr,
+                [GD2C2014].[CONTROL_ZETA].[HOTEL] hotel, [GD2C2014].[CONTROL_ZETA].[ROL] rol, 
+                [GD2C2014].[CONTROL_ZETA].[LOCALIDAD] loc 
+                where usr.USR_USERNAME = '{0}' and usr.HOTEL_ID = hotel.HOTEL_ID 
+                and usr.ROL_ID = rol.ROL_ID and hotel.HOTEL_ID_LOC = loc.LOC_ID", username);
             SqlCommand cmd = new SqlCommand(sSel, conn);
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
+            string detalle = "";
             while (reader.Read())
             {
-                listBox1.Items.Add(reader["Hotel_Ciudad"].ToString());
+                detalle = string.Format("{0} - {1} - {2} {3}",
+                    reader["ROL_NOMBRE"].ToString(),
+                    reader["LOC_DETALLE"].ToString().Trim(),
+                    reader["HOTEL_CALLE"].ToString(),
+                    reader["HOTEL_NRO_CALLE"].ToString());
+                listBox1.Items.Add(detalle);
             }
             reader.Close();
             conn.Close(); 

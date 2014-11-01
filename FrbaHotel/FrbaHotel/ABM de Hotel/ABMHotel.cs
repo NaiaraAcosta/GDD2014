@@ -95,7 +95,7 @@ namespace FrbaHotel.ABM_de_Hotel
             {
                 new FrbaHotel.MenuPrincipal().Show();
             }
-            this.Hide();
+            this.Close();
         }
 
         private void button4_Click(object sender, EventArgs e)

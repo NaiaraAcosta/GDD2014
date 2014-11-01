@@ -97,7 +97,7 @@ namespace FrbaHotel.ABM_de_Rol
             {
                 new FrbaHotel.MenuPrincipal().Show();
             }
-            this.Hide();
+            this.Close();
         }
     }
 }

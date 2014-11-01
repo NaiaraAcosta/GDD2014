@@ -126,6 +126,12 @@
     <Compile Include="Cancelar Reserva\BajaReserva.Designer.cs">
       <DependentUpon>BajaReserva.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generar Modificar Reserva\ModificarReserva.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Generar Modificar Reserva\ModificarReserva.Designer.cs">
+      <DependentUpon>ModificarReserva.cs</DependentUpon>
+    </Compile>
     <Compile Include="MenuPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -218,6 +224,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Cancelar Reserva\BajaReserva.resx">
       <DependentUpon>BajaReserva.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Generar Modificar Reserva\ModificarReserva.resx">
+      <DependentUpon>ModificarReserva.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MenuPrincipal.resx">
       <DependentUpon>MenuPrincipal.cs</DependentUpon>

@@ -58,7 +58,7 @@ namespace FrbaHotel.ABM_de_Rol
             {
                 new FrbaHotel.MenuPrincipal().Show();
             }
-            this.Hide();
+            this.Close();
         }
 
         private void button2_Click(object sender, EventArgs e)

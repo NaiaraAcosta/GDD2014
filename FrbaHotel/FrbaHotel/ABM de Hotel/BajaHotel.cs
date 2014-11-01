@@ -59,5 +59,10 @@ namespace FrbaHotel.ABM_de_Hotel
         {
             
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
