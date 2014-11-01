@@ -24,16 +24,36 @@ BEGIN
 END;
 
 ---ABM HABITACION(Tabla habitaciones)-2
-CREATE PROCEDURE CONTROL_ZETA.SP_ABM_HABITACION(@accion tinyint,@nro_hab smallint, @hab_piso SMALLINT,@ubi_hab varchar(70),@obs varchar(150),@id_hotel int, @id_tipo_hab smallint, @error tinyint output,@id_hab numeric output)
+CREATE PROCEDURE CONTROL_ZETA.SP_ABM_HABITACION(@accion tinyint,@nro_hab smallint,@id_hab numeric, @hab_piso SMALLINT,@ubi_hab varchar(70),@obs varchar(150),@id_hotel int, @id_tipo_hab smallint, @error tinyint output,@id_hab_new numeric output)
 AS
 BEGIN
 IF @accion=1
 BEGIN
 --Alta
-END
+	IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.HABITACION H WHERE H.HAB_NRO=@nro_hab AND H.HAB_ID_HOTEL=@id_hotel)
+	BEGIN
+		INSERT INTO CONTROL_ZETA.HABITACION(HAB_NRO,HAB_ID_HOTEL,HAB_PISO,HAB_ID_TIPO,HAB_UBI_HOTEL,HAB_OBSERVACION,@obs)
+		VALUES(@nro_hab,@id_hotel,@hab_piso,@id_tipo_hab,@ubi_hab)
+		set @id_hab_new=scope_identity()
+		set @error=-1
+	END
+	ELSE
+		set @error=-3
 ELSE IF @accion=2
 BEGIN
 --Modificacion
+	IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.HABITACION H WHERE H.HAB_NRO=@nro_hab AND H.HAB_ID_HOTEL=@id_hotel)
+	BEGIN
+		UPDATE CONTROL_ZETA.HABITACION 
+		SET HAB_ID_HOTEL=AA,
+		HAB_NRO=AA,
+		HAB_OBSERVACION=AA,
+		HAB_PISO=AA,
+		HAB_UBI_HOTEL=ASCI WHERE HAB_ID=@id_hab
+		set @error=-1
+	END;
+	ELSE
+	set @error=-3
 END
 ELSE IF @accion=2
 BEGIN
