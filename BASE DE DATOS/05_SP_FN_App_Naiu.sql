@@ -226,5 +226,60 @@ else
 	set @error=1
 END;
 
----REGISTRAR CONSUMIBLES(Tabla CON_EST_HAB)-2
+GO
 
+CREATE FUNCTION CONTROL_ZETA.get_id_habitacion(@nro_hab SMALLINT,@id_hotel int)
+returns numeric
+AS
+--@Desc: Se obtiene el id de habitacion segun nro de habitacion y hotel
+BEGIN
+
+RETURN(SELECT H.HAB_ID 
+FROM CONTROL_ZETA.HABITACION H 
+WHERE H.HAB_NRO=@nro_hab AND H.HAB_ID_HOTEL=@id_hotel)
+END;
+
+GO
+
+CREATE FUNCTION CONTROL_ZETA.get_id_estadia(@hab_id numeric)
+returns numeric
+AS
+--@Desc: Se obtiene el id de estadia segun el id de habitacion
+BEGIN
+
+RETURN(SELECT E.EST_ID 
+FROM CONTROL_ZETA.ESTADIA E, CONTROL_ZETA.RESERVA R,CONTROL_ZETA.RESERVA_HABITACION RH 
+WHERE E.EST_RESERVA_ID=R.RESERVA_ID AND RH.RESERVA_ID=R.RESERVA_ID AND RH.HAB_ID=@hab_id)
+END;
+GO
+
+--------------------------
+--REGISTRAR CONSUMIBLE----
+--------------------------
+
+CREATE PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE(@id_hotel int, @nro_hab SMALLINT, @id_con smallint, @cant tinyint, @error tinyint OUTPUT )
+AS
+--@Desc:Se registran los consumibles
+BEGIN
+DECLARE 
+@i tinyint =1
+@id_hab numeric =CONTROL_ZETA.get_id_habitacion(@nro_hab,@id_hotel)
+@id_est numeric = CONTROL_ZETA.get_id_estadia(@hab_id)
+
+IF (@id_est>0)
+	BEGIN
+	IF @id_hab>0
+	BEGIN
+		WHILE @i<@cant
+		BEGIN
+			INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID)
+			VALUES (@id_hab,@id_con,@id_est)
+		END;
+		set @error=0	
+	END;	
+	ELSE
+		set @error=2		
+	END;
+ELSE
+set @error=1
+END;
