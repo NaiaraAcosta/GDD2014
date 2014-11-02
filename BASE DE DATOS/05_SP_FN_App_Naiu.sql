@@ -18,10 +18,10 @@ BEGIN
 	BEGIN
 		INSERT INTO CONTROL_ZETA.ROL (ROL_NOMBRE, ROL_ESTADO)VALUES(@nombre,@estado)
 		SET @id_rol=SCOPE_IDENTITY()
-		SET @error=-1
+		SET @error=1
 	END;
 	ELSE
-	SET @error=-3
+	SET @error=3
 END;
 ELSE IF @accion=2
 BEGIN
@@ -31,14 +31,14 @@ BEGIN
 		IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_NOMBRE=@nombre)
 		BEGIN
 			UPDATE CONTROL_ZETA.ROL SET ROL_NOMBRE=@nombre,ROL_ESTADO=@estado where ROL_ID=@id_rol
-			DELETE CONTROL_ZETA.ROL_FUNC WHERE ROL_ID = @rol_id
-			SET @error=-1
+			DELETE CONTROL_ZETA.ROL_FUNC WHERE ROL_ID = @id_rol
+			SET @error=1
 		END;
 		ELSE
-		SET @error=-3
+		SET @error=3
 	END
 	ELSE
-		SET @error=-2
+		SET @error=2
 	
 END;
 ELSE IF @accion=3
@@ -47,30 +47,30 @@ BEGIN
 IF EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_ID=@id_rol)
 	BEGIN
 		UPDATE CONTROL_ZETA.ROL SET ROL_ESTADO=@estado where ROL_ID=@id_rol
-		SET @error=-1
+		SET @error=1
 	END
 	ELSE
-		SET @error=-2
+		SET @error=2
 END;
 END;
 
 GO
 
 
-CREATE PROCEDURE CONTROL_ZETA.SP_ROL_FUNC(@accion SMALLINT,@rol_id TINYINT, @func_id TINYINT, @error tinyint output)
+CREATE PROCEDURE CONTROL_ZETA.SP_ROL_FUNC(@rol_id TINYINT, @func_id TINYINT, @error tinyint output)
 AS
 --@Desc:Crea relacion de Rol y funcionalidad
 BEGIN
-	IF @accion=1
+	
 	BEGIN
 		IF NOT EXISTS(SELECT * FROM CONTROL_ZETA.ROL_FUNC WHERE ROL_ID = @rol_id and FUNC_ID=@func_id)
 		BEGIN
 			INSERT INTO CONTROL_ZETA.ROL_FUNC(ROL_ID,FUNC_ID) VALUES (@rol_id,@func_id)
-			set @error=-1
+			set @error=1
 		END
 		ELSE
-			set @error=-2
-	END;
+			set @error=2
+	END
 END
 
 GO
@@ -84,7 +84,7 @@ BEGIN
 RETURN (SELECT P.PAIS_ID FROM CONTROL_ZETA.PAIS P WHERE P.PAIS_DETALLE=@pais)
 END
 
-
+GO
 ---
 CREATE FUNCTION CONTROL_ZETA.hay_reservas_regimen(@id_regimen TINYINT, @fe_sist DATE, @id_hotel int)
 returns tinyint
@@ -175,7 +175,7 @@ CREATE PROCEDURE CONTROL_ZETA.SP_REGIMEN_HOTEL(@accion tinyint,@id_hotel int, @i
 AS
 --@Desc: Relacion hotel y regimen
 BEGIN
-IF @accion=1
+IF @accion=1 --Alta
 BEGIN
 	IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.HOTEL_REGIMEN HR WHERE HR.HOTEL_ID=@id_hotel AND HR.REG_ID=@id_regimen)
 	BEGIN
@@ -210,7 +210,7 @@ AS
 BEGIN
 	IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.HOTEL_CIERRE WHERE HOTEL_ID=@id_hotel AND ((@fe_inicio_cierre>=HOTEL_C_FECHA_DESDE AND @fe_inicio_cierre<=HOTEL_C_FECHA_HASTA) OR (@fe_fin_cierre>=HOTEL_C_FECHA_DESDE AND @fe_fin_cierre<=HOTEL_C_FECHA_HASTA)))
 	BEGIN
-		IF CONTROL_ZETA.hay_reservas_fechas(@fe_inicio_cierre, @fe_fin_cierre , @id_hotel )>0
+		IF CONTROL_ZETA.hay_reservas_fechas(@fe_inicio_cierre, @fe_fin_cierre ,@id_hotel )>0
 		BEGIN
 			INSERT INTO CONTROL_ZETA.HOTEL_CIERRE(HOTEL_ID,HOTEL_C_MOTIVO,HOTEL_C_FECHA_DESDE,HOTEL_C_FECHA_HASTA) 
 			VALUES (@id_hotel,@motivo,@fe_inicio_cierre,@fe_fin_cierre)
@@ -240,10 +240,10 @@ BEGIN
 		INSERT INTO CONTROL_ZETA.HABITACION(HAB_NRO,HAB_ID_HOTEL,HAB_PISO,HAB_ID_TIPO,HAB_UBI_HOTEL,HAB_OBSERVACION,HAB_ESTADO)
 		VALUES(@nro_hab,@id_hotel,@hab_piso,@id_tipo_hab,@ubi_hab,@obs,'H')
 		set @id_hab_new=scope_identity()
-		set @error=-1
+		set @error=1
 	END
 	ELSE
-		set @error=-3
+		set @error=3
 END		
 ELSE IF @accion=2
 BEGIN
@@ -259,10 +259,10 @@ BEGIN
 			HAB_PISO=@hab_piso,
 			HAB_UBI_HOTEL=@ubi_hab 
 			WHERE HAB_ID=@id_hab
-			set @error=-1
+			set @error=1
 		END;
 		ELSE
-		set @error=-3
+		set @error=3
 	END
 	ELSE
 	set @error=-2
@@ -276,13 +276,14 @@ IF EXISTS (SELECT * FROM CONTROL_ZETA.HABITACION H WHERE H.HAB_ID=@id_hab)
 		UPDATE CONTROL_ZETA.HABITACION 
 		SET HAB_ESTADO='I'	WHERE HAB_ID=@id_hab
 		
-		set @error=-1
+		set @error=1
 	END
 	ELSE
-	set @error=-3
+	set @error=2
 END;
 END;
 
+GO
 --------------
 ---RESERVAS---
 --------------
@@ -386,10 +387,10 @@ BEGIN
 		SET @id_reserva=CONTROL_ZETA.get_id_reserva_new()
 		INSERT INTO CONTROL_ZETA.RESERVA (RESERVA_ID,RESERVA_FECHA,RESERVA_FECHA_INICIO, RESERVA_FECHA_HASTA,RESERVA_ID_REGIMEN, RESERVA_ID_HOTEL, RESERVA_ESTADO, CLIENTE_ID, USR_USERNAME)
 		VALUES(@id_reserva,@fe_sist,@fe_desde,@fe_hasta,@tipo_reg_id,@hotel_id,'RINC',@cliente_id,@id_usr);
-		set @error=0
+		set @error=1
 	END
 	ELSE
-	set @error=1
+	set @error=5
 	
 END;
 
@@ -452,11 +453,11 @@ BEGIN
 			USR_USERNAME=@id_usr
 			WHERE RESERVA_ID=@id_reserva
 			
-			set @error=0
+			set @error=1
 		END
 		ELSE
 
-		set @error=1
+		set @error=5
 		END
 	ELSE
 		set @error=2
@@ -474,10 +475,10 @@ BEGIN
 		DELETE CONTROL_ZETA.RESERVA_HABITACION WHERE RESERVA_ID=@id_res 
 		EXEC CONTROL_ZETA.SP_AGREGAR_HAB_RES @id_reserva=@id_res ,@cant_hab=@cant_h ,@tipo_hab=@tipo_h ,@hotel_id=@hotel
 		UPDATE CONTROL_ZETA.RESERVA SET RESERVA_ESTADO='RM'
-		set @error=0
+		set @error=1
 	END;
 	ELSE
-		set @error=1
+		set @error=2
 END;
 
 GO
@@ -491,10 +492,10 @@ IF EXISTS(SELECT *FROM CONTROL_ZETA.RESERVA R WHERE R.RESERVA_ID=@id_reserva AND
 		
 		UPDATE CONTROL_ZETA.RESERVA SET RESERVA_ESTADO=@id_est, RESERVA_MOTIVO_CANC=@motivo, RESERVA_FECHA_CANC=@fecha_canc,USR_USERNAME_CANC=@id_usr
 		WHERE RESERVA_ID=@id_reserva
-		set @error=0
+		set @error=1
 	END;
 else
-	set @error=1
+	set @error=5
 END;
 
 GO
@@ -528,9 +529,7 @@ GO
 --REGISTRAR CONSUMIBLE----
 --------------------------
 
-CREATE PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE(@id_hotel int, @nro_hab SMALLINT, @id_con smallint, @cant tinyint, @error tinyint OUTPUT )
-AS
---@Desc:Se registran los consumibles
+
 CREATE PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE(@id_hotel int, @nro_hab SMALLINT, @id_con smallint, @cant tinyint, @error tinyint OUTPUT )
 AS
 --@Desc:Se registran los consumibles
@@ -540,7 +539,7 @@ DECLARE
 @id_hab numeric =CONTROL_ZETA.get_id_habitacion(@nro_hab,@id_hotel),
 @id_est numeric = 0
 
-set @id_est=@id_hab
+set @id_est=CONTROL_ZETA.get_estadia(@id_hab)
 
 IF (@id_est>0)
 	BEGIN
@@ -551,11 +550,11 @@ IF (@id_est>0)
 			INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID)
 			VALUES (@id_hab,@id_con,@id_est)
 		END;
-		set @error=0	
+		set @error=1	
 	END;	
 	ELSE
-	set @error=2		
+	set @error=5		
 	END;
 ELSE
-set @error=1
+set @error=6
 END;
