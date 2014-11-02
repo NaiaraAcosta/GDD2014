@@ -4,28 +4,131 @@
 --3:Borrado-Delete
 
 ----ABM ROL-3 (Deberia cargar la tabla ROL, ROL_FUNC)
-CREATE PROCEDURE CONTROL_ZETA.SP_ABM_ROL (@accion SMALLINT,@nombre varchar(20),@estado varchar(1))
-as
-begin
-end;
+CREATE PROCEDURE CONTROL_ZETA.SP_ABM_ROL (@accion SMALLINT,@id_rol TINYINT, @nombre varchar(20),@estado varchar(1), @id_rol_new TINYINT output,@error tinyint output)
+AS
+BEGIN
+IF (@accion=1)
+BEGIN
+--Alta
+	IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_NOMBRE=@nombre)
+	BEGIN
+		INSERT INTO CONTROL_ZETA.ROL (ROL_NOMBRE, ROL_ESTADO)VALUES(@nombre,@estado)
+		SET @id_rol=SCOPE_IDENTITY()
+		SET @error=-1
+	END;
+	ELSE
+	SET @error=-3
+END;
+ELSE IF @accion=2
+BEGIN
+--Modificacion
+	IF EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_ID=@id_rol)
+	BEGIN
+		IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_NOMBRE=@nombre)
+		BEGIN
+			UPDATE CONTROL_ZETA.ROL SET ROL_NOMBRE=@nombre,ROL_ESTADO=@estado where ROL_ID=@id_rol
+			SET @error=-1
+		END;
+		ELSE
+		SET @error=-3
+	END
+	ELSE
+		SET @error=-2
+	
+END;
+ELSE IF @accion=3
+BEGIN
+--Baja
+IF EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_ID=@id_rol)
+	BEGIN
+		UPDATE CONTROL_ZETA.ROL SET ROL_ESTADO=@estado where ROL_ID=@id_rol
+		SET @error=-1
+	END
+	ELSE
+		SET @error=-2
+END;
+END;
 ---IMPORTANTE:Se tendria que hacer otro SP para asociar el ROL con la Funcionalidad y que desde la app se ejecute varias veces
 
 
 ---ASIGNACION DE FUNCIONES A ROL-3 (Carga tabla ROL_FUNC)
-CREATE PROCEDURE CONTROL_ZETA.SP_ROL_FUNC(@accion SMALLINT,@rol_id TINYINT, @func_id TINYINT)
+CREATE PROCEDURE CONTROL_ZETA.SP_ROL_FUNC(@accion SMALLINT,@rol_id TINYINT, @func_id TINYINT, @error tinyint output)
 AS
 BEGIN
-END; 
+	IF @accion=1
+	BEGIN
+		IF NOT EXISTS(SELECT * FROM CONTROL_ZETA.ROL_FUNC WHERE ROL_ID = @rol_id and FUNC_ID=@func_id)
+		BEGIN
+			INSERT INTO CONTROL_ZETA.ROL_FUNC(ROL_ID,FUNC_ID) VALUES (@rol_id,@func_id)
+			set @error=-1
+		END
+		ELSE
+			set @error=-2
+	END;
+END
 
 ---ABM HOTEL(Tabla Hotel)-2
 CREATE PROCEDURE CONTROL_ZETA.SP_ABM_HOTEL()
 AS
 BEGIN
 END;
----ABM HABITACION(Tabla habitaciones)-2
-CREATE PROCEDURE CONTROL_ZETA.SP_ABM_RESERVA()
+
+------------------
+----HABITACION----
+------------------
+CREATE PROCEDURE CONTROL_ZETA.SP_ABM_HABITACION(@accion tinyint,@nro_hab smallint,@id_hab numeric, @hab_piso SMALLINT,@ubi_hab varchar(70),@obs varchar(150),@id_hotel int, @id_tipo_hab smallint, @error tinyint output,@id_hab_new numeric output)
 AS
+--@Desc: Realiza ABM de habitacion
 BEGIN
+IF @accion=1
+BEGIN
+--Alta
+	IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.HABITACION H WHERE H.HAB_NRO=@nro_hab AND H.HAB_ID_HOTEL=@id_hotel)
+	BEGIN
+		INSERT INTO CONTROL_ZETA.HABITACION(HAB_NRO,HAB_ID_HOTEL,HAB_PISO,HAB_ID_TIPO,HAB_UBI_HOTEL,HAB_OBSERVACION,HAB_ESTADO)
+		VALUES(@nro_hab,@id_hotel,@hab_piso,@id_tipo_hab,@ubi_hab,@obs,'H')
+		set @id_hab_new=scope_identity()
+		set @error=-1
+	END
+	ELSE
+		set @error=-3
+END		
+ELSE IF @accion=2
+BEGIN
+--Modificacion
+	IF EXISTS (SELECT * FROM CONTROL_ZETA.HABITACION H WHERE H.HAB_ID=@id_hab)
+	BEGIN
+		IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.HABITACION H WHERE H.HAB_NRO=@nro_hab AND H.HAB_ID_HOTEL=@id_hotel)
+		BEGIN
+			UPDATE CONTROL_ZETA.HABITACION 
+			SET HAB_ID_HOTEL=@id_hotel,
+			HAB_NRO=@nro_hab,
+			HAB_OBSERVACION=@obs,
+			HAB_PISO=@hab_piso,
+			HAB_UBI_HOTEL=@ubi_hab 
+			WHERE HAB_ID=@id_hab
+			set @error=-1
+		END;
+		ELSE
+		set @error=-3
+	END
+	ELSE
+	set @error=-2
+	
+END
+ELSE IF @accion=2
+BEGIN
+--Baja
+IF EXISTS (SELECT * FROM CONTROL_ZETA.HABITACION H WHERE H.HAB_ID=@id_hab)
+	BEGIN
+		UPDATE CONTROL_ZETA.HABITACION 
+		SET HAB_ESTADO='I'	WHERE HAB_ID=@id_hab
+		
+		set @error=-1
+	END
+	ELSE
+	set @error=-3
+END;
 END;
 
 --------------
@@ -226,5 +329,65 @@ else
 	set @error=1
 END;
 
----REGISTRAR CONSUMIBLES(Tabla CON_EST_HAB)-2
+GO
 
+CREATE FUNCTION CONTROL_ZETA.get_id_habitacion(@nro_hab SMALLINT,@id_hotel int)
+returns numeric
+AS
+--@Desc: Se obtiene el id de habitacion segun nro de habitacion y hotel
+BEGIN
+
+RETURN(SELECT H.HAB_ID 
+FROM CONTROL_ZETA.HABITACION H 
+WHERE H.HAB_NRO=@nro_hab AND H.HAB_ID_HOTEL=@id_hotel)
+END;
+
+GO
+
+CREATE FUNCTION CONTROL_ZETA.get_id_estadia(@hab_id numeric)
+returns numeric
+AS
+--@Desc: Se obtiene el id de estadia segun el id de habitacion
+BEGIN
+
+RETURN(SELECT E.EST_ID 
+FROM CONTROL_ZETA.ESTADIA E, CONTROL_ZETA.RESERVA R,CONTROL_ZETA.RESERVA_HABITACION RH 
+WHERE E.EST_RESERVA_ID=R.RESERVA_ID AND RH.RESERVA_ID=R.RESERVA_ID AND RH.HAB_ID=@hab_id)
+END;
+GO
+
+--------------------------
+--REGISTRAR CONSUMIBLE----
+--------------------------
+
+CREATE PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE(@id_hotel int, @nro_hab SMALLINT, @id_con smallint, @cant tinyint, @error tinyint OUTPUT )
+AS
+--@Desc:Se registran los consumibles
+CREATE PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE(@id_hotel int, @nro_hab SMALLINT, @id_con smallint, @cant tinyint, @error tinyint OUTPUT )
+AS
+--@Desc:Se registran los consumibles
+BEGIN
+DECLARE 
+@i tinyint =1,
+@id_hab numeric =CONTROL_ZETA.get_id_habitacion(@nro_hab,@id_hotel),
+@id_est numeric = 0
+
+set @id_est=@id_hab
+
+IF (@id_est>0)
+	BEGIN
+	IF @id_hab>0
+	BEGIN
+		WHILE @i<@cant
+		BEGIN
+			INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID)
+			VALUES (@id_hab,@id_con,@id_est)
+		END;
+		set @error=0	
+	END;	
+	ELSE
+	set @error=2		
+	END;
+ELSE
+set @error=1
+END;
