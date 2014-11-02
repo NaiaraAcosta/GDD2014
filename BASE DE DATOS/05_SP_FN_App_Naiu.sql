@@ -307,6 +307,19 @@ END;
 
 GO
 
+CREATE FUNCTION CONTROL_ZETA.hotel_cerrado(@fe_desde date, @fe_hasta date, @id_hotel int)
+returns tinyint
+AS
+BEGIN
+RETURN(SELECT COUNT (*) 
+FROM CONTROL_ZETA.HOTEL_CIERRE HC 
+WHERE HC.HOTEL_ID=@id_hotel AND 
+@fe_desde> HC.HOTEL_C_FECHA_DESDE AND
+@fe_desde< HC.HOTEL_C_FECHA_HASTA)
+
+END
+
+GO
 
 CREATE PROCEDURE CONTROL_ZETA.SP_CANC_RCNS(@fe_sistema date)
 AS
@@ -331,6 +344,7 @@ BEGIN
 				FROM CONTROL_ZETA.HABITACION H 
 				WHERE H.HAB_ID_HOTEL=@hotel_id AND
 				H.HAB_ID_TIPO=@tipo_hab AND
+				CONTROL_ZETA.hotel_cerrado(@fe_desde,@fe_hasta,@hotel_id)=0 AND
 				(H.HAB_ID NOT IN (SELECT RH.HAB_ID 
 								  FROM CONTROL_ZETA.RESERVA_HABITACION RH 
 								  WHERE RH.RESERVA_ID IN (SELECT R.RESERVA_ID 
@@ -346,6 +360,8 @@ BEGIN
 	ELSE 
 	SET @disp=(-1)
 END;
+
+
 GO
 
 CREATE FUNCTION CONTROL_ZETA.get_id_reserva_new()
