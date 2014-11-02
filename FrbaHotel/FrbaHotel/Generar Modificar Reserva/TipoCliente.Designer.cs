@@ -61,6 +61,7 @@
             this.button1.TabIndex = 2;
             this.button1.Text = "Cliente nuevo";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
@@ -70,6 +71,7 @@
             this.button2.TabIndex = 3;
             this.button2.Text = "Cliente regular";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -79,8 +81,9 @@
             this.button3.TabIndex = 4;
             this.button3.Text = "Cancelar";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // Form3
+            // TipoCliente
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -90,8 +93,9 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "Form3";
+            this.Name = "TipoCliente";
             this.Text = "Cliente nuevo/regular";
+            this.Load += new System.EventHandler(this.TipoCliente_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

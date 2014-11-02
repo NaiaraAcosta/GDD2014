@@ -247,7 +247,7 @@ namespace FrbaHotel
 
         private void generarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form f = new Generar_Modificar_Reserva.AltaReserva();
+            Form f = new Generar_Modificar_Reserva.AltaReserva(this);
             f.Show();
             this.Hide();
         }

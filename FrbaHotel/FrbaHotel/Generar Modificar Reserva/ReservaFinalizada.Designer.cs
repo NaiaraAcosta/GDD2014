@@ -71,8 +71,9 @@
             this.button1.TabIndex = 3;
             this.button1.Text = "Aceptar";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // Form4
+            // ReservaFinalizada
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -81,7 +82,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "Form4";
+            this.Name = "ReservaFinalizada";
             this.Text = "Reserva finalizada";
             this.Load += new System.EventHandler(this.Form4_Load);
             this.ResumeLayout(false);

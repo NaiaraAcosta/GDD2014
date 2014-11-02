@@ -48,7 +48,7 @@
             this.groupBox1.Controls.Add(this.dataGridView1);
             this.groupBox1.Location = new System.Drawing.Point(10, 139);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(333, 113);
+            this.groupBox1.Size = new System.Drawing.Size(333, 182);
             this.groupBox1.TabIndex = 24;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Resultado";
@@ -62,7 +62,8 @@
             this.dataGridView1.Location = new System.Drawing.Point(7, 20);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(320, 76);
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView1.Size = new System.Drawing.Size(320, 156);
             this.dataGridView1.TabIndex = 0;
             // 
             // button1
@@ -73,6 +74,7 @@
             this.button1.TabIndex = 23;
             this.button1.Text = "Buscar";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // textBox4
             // 
@@ -125,27 +127,29 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(183, 264);
+            this.button2.Location = new System.Drawing.Point(186, 327);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 25;
             this.button2.Text = "Aceptar";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(265, 264);
+            this.button3.Location = new System.Drawing.Point(268, 327);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 26;
             this.button3.Text = "Cancelar";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // Form2
+            // ClienteRegular
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(352, 300);
+            this.ClientSize = new System.Drawing.Size(352, 362);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.groupBox1);
@@ -156,7 +160,7 @@
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
-            this.Name = "Form2";
+            this.Name = "ClienteRegular";
             this.Text = "Cliente regular";
             this.Load += new System.EventHandler(this.Form2_Load);
             this.groupBox1.ResumeLayout(false);
