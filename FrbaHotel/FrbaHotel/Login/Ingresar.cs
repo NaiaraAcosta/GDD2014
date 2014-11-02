@@ -11,8 +11,8 @@ namespace FrbaHotel.Login
 {
     public partial class Ingresar : Form
     {
-        Form back;
-        public Ingresar(Form atras)
+        FrbaHotel.MenuPrincipal back;
+        public Ingresar(FrbaHotel.MenuPrincipal atras)
         {
             InitializeComponent();
             back = atras;

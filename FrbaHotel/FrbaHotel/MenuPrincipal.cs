@@ -16,7 +16,7 @@ namespace FrbaHotel
     public partial class MenuPrincipal : Form
     {
         private SqlDataAdapter dataAdapter = new SqlDataAdapter();
-        Form principal = null;
+        FrbaHotel.MenuPrincipal principal = null;
         public MenuPrincipal()
         {
             InitializeComponent();
@@ -31,7 +31,7 @@ namespace FrbaHotel
         public MenuPrincipal(bool[] func, Form menu)
         {
             InitializeComponent();
-            principal = menu;
+            principal = (FrbaHotel.MenuPrincipal) menu;
             if (!func[0])//abm de rol
             {
                 this.aBMDeRolToolStripMenuItem.Visible = false;
@@ -302,11 +302,20 @@ namespace FrbaHotel
 
         private void button3_Click(object sender, EventArgs e)
         {
-            this.Close();
             if (principal != null)
             {
-                principal.Close();
+                principal.cerrar();
             }
+            this.Close();
+        }
+
+        public void cerrar()
+        {
+            if (principal != null)
+            {
+                principal.cerrar();
+            }
+            this.Close();
         }
 
         private void altaDeClienteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -319,6 +328,13 @@ namespace FrbaHotel
         private void modificarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form f = new Generar_Modificar_Reserva.ModificarReserva(this);
+            f.Show();
+            this.Hide();
+        }
+
+        private void facturarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = new Facturacion.Facturar(this);
             f.Show();
             this.Hide();
         }

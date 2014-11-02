@@ -23,7 +23,7 @@ namespace FrbaHotel.Login
             InitializeComponent();
         }
 
-        public SeleccionRol(Form atras, Form menuPrin, string user)
+        public SeleccionRol(Form atras, FrbaHotel.MenuPrincipal menuPrin, string user)
         {
             InitializeComponent();
             username = user;
@@ -82,14 +82,14 @@ namespace FrbaHotel.Login
             f.Show();
             this.Close();
             menu.Hide();
-            menu.Dispose();
+            //menu.Dispose();
         }
         private void logicaModo()
         {
             if (listBox1.SelectedItem != null)
             {
                 string seleccion = listBox1.SelectedItem.ToString();
-                Login.Class1.mode = 1;
+                //Login.Class1.mode = 1;
 
                 string[] stringSeparators = new string[] { "-" };
                 string[] result = seleccion.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
@@ -126,10 +126,12 @@ namespace FrbaHotel.Login
                 }
                 reader.Close();
                 conn.Close();
+                Login.Class1.hotel = idHotel[listBox1.SelectedIndex];
             }
             else
             {
                 func = new bool[13];
+                Login.Class1.hotel = 0;
             }
         }
     }

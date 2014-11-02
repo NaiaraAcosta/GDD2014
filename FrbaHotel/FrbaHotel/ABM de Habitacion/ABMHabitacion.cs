@@ -34,7 +34,7 @@ namespace FrbaHotel.ABM_de_Habitacion
             string sCnn;
             sCnn = @"data source = Gonzalo-PC\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
 
-            string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HABITACION] where HAB_ID_HOTEL = '{0}'", hotel);
+            string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HABITACION] where HAB_ID_HOTEL = '{0}'", Login.Class1.hotel);
             SqlDataAdapter da;
             DataTable dt = new DataTable();
             try

@@ -31,6 +31,7 @@ namespace FrbaHotel.ABM_de_Habitacion
             textBox2.Text = string.Format("{0}", piso);
             textBox3.Text = string.Format("{0}", ubi);
             textBox4.Text = string.Format("{0}", tipo);
+            textBox4.Enabled = false;
             richTextBox1.Text = string.Format("{0}", comodidades);
         }
 
