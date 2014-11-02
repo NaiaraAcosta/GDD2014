@@ -3,9 +3,13 @@
 --2:Modificacion-Update
 --3:Borrado-Delete
 
-----ABM ROL-3 (Deberia cargar la tabla ROL, ROL_FUNC)
+-------------
+------ROL----
+-------------
+
 CREATE PROCEDURE CONTROL_ZETA.SP_ABM_ROL (@accion SMALLINT,@id_rol TINYINT, @nombre varchar(20),@estado varchar(1), @id_rol_new TINYINT output,@error tinyint output)
 AS
+--@Desc:ABM de Rol
 BEGIN
 IF (@accion=1)
 BEGIN
@@ -27,6 +31,7 @@ BEGIN
 		IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_NOMBRE=@nombre)
 		BEGIN
 			UPDATE CONTROL_ZETA.ROL SET ROL_NOMBRE=@nombre,ROL_ESTADO=@estado where ROL_ID=@id_rol
+			DELETE CONTROL_ZETA.ROL_FUNC WHERE ROL_ID = @rol_id
 			SET @error=-1
 		END;
 		ELSE
@@ -48,12 +53,13 @@ IF EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_ID=@id_rol)
 		SET @error=-2
 END;
 END;
----IMPORTANTE:Se tendria que hacer otro SP para asociar el ROL con la Funcionalidad y que desde la app se ejecute varias veces
+
+GO
 
 
----ASIGNACION DE FUNCIONES A ROL-3 (Carga tabla ROL_FUNC)
 CREATE PROCEDURE CONTROL_ZETA.SP_ROL_FUNC(@accion SMALLINT,@rol_id TINYINT, @func_id TINYINT, @error tinyint output)
 AS
+--@Desc:Crea relacion de Rol y funcionalidad
 BEGIN
 	IF @accion=1
 	BEGIN
@@ -67,11 +73,157 @@ BEGIN
 	END;
 END
 
----ABM HOTEL(Tabla Hotel)-2
-CREATE PROCEDURE CONTROL_ZETA.SP_ABM_HOTEL()
+GO
+----------------
+----HOTEL-------
+----------------
+CREATE FUNCTION CONTROL_ZETA.get_id_pais(@pais varchar(50))
+returns tinyint
 AS
 BEGIN
+RETURN (SELECT P.PAIS_ID FROM CONTROL_ZETA.PAIS P WHERE P.PAIS_DETALLE=@pais)
+END
+
+
+---
+CREATE FUNCTION CONTROL_ZETA.hay_reservas_regimen(@id_regimen TINYINT, @fe_sist DATE, @id_hotel int)
+returns tinyint
+AS
+BEGIN
+RETURN (SELECT COUNT(R.RESERVA_ID_REGIMEN) 
+FROM CONTROL_ZETA.RESERVA R 
+WHERE R.RESERVA_ID_REGIMEN=@id_regimen AND 
+R.RESERVA_ESTADO IN ('RC','RM','RI') AND 
+R.RESERVA_FECHA_HASTA >@fe_sist AND R.RESERVA_ID_HOTEL=@id_hotel )
+
+END
+
+GO
+---
+CREATE FUNCTION CONTROL_ZETA.hay_reservas_fechas(@fe_inicio_cierre date, @fe_fin_cierre date, @id_hotel int)
+returns tinyint
+AS
+BEGIN
+RETURN (SELECT COUNT (R.RESERVA_ID) 
+FROM CONTROL_ZETA.RESERVA R 
+WHERE R.RESERVA_FECHA_INICIO>@fe_inicio_cierre AND 
+R.RESERVA_FECHA_HASTA<@fe_fin_cierre AND 
+R.RESERVA_ID_HOTEL=@id_hotel AND
+R.RESERVA_ESTADO IN ('RC','RM','RI'))
+END
+
+GO
+
+CREATE PROCEDURE CONTROL_ZETA.SP_AM_HOTEL(@accion tinyint,@id_hotel int,@nombre VARCHAR(100), @mail VARCHAR(50), @tel VARCHAR(10),@calle  VARCHAR(50), @nro_calle SMALLINT, @loc VARCHAR(50), @cant_est TINYINT, @pais VARCHAR(50), @rec_estrella int, @usr VARCHAR(50),@fe_sist date,@error tinyint OUTPUT,@id_hotel_new int OUTPUT)
+AS
+--@Desc: Alta y modificacion de hotel
+BEGIN
+DECLARE
+@id_loc tinyint,
+@id_pais tinyint
+
+set @id_loc=CONTROL_ZETA.get_ciudad(@loc)
+set @id_pais=CONTROL_ZETA.get_id_pais(@pais)
+IF (@accion=1)
+BEGIN
+--Alta
+	IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.HOTEL H WHERE (H.HOTEL_NOMBRE=@nombre) OR (H.HOTEL_CALLE=@calle AND H.HOTEL_NRO_CALLE= @nro_calle AND H.HOTEL_ID_LOC=@id_loc AND H.HOTEL_PAIS=@id_pais))
+	BEGIN
+		INSERT INTO CONTROL_ZETA.HOTEL(HOTEL_NOMBRE,HOTEL_CALLE,HOTEL_NRO_CALLE,HOTEL_ID_LOC,HOTEL_PAIS,HOTEL_TEL,	 HOTEL_RECARGA_ESTRELLA,HOTEL_CANT_ESTRELLA,HOTEL_FECHA_CREACION,HOTEL_MAIL)
+		VALUES(@nombre,@calle,@nro_calle,@id_loc,@id_pais, @tel, @rec_estrella,@cant_est,@fe_sist,@mail)
+		set @id_hotel_new=SCOPE_IDENTITY()
+		
+		INSERT INTO CONTROL_ZETA.USR_ROL_HOTEL(USR_USERNAME,ROL_ID,HOTEL_ID) VALUES(@usr,1,@id_hotel_new)
+		
+		SET @error=1
+	END
+	ELSE
+	SET @error=3
+END
+ELSE IF @accion=2
+BEGIN
+--Modificacion
+	IF EXISTS(SELECT * FROM CONTROL_ZETA.HOTEL H WHERE H.HOTEL_ID=@id_hotel)
+	BEGIN
+		IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.HOTEL H WHERE (H.HOTEL_NOMBRE=@nombre) OR (H.HOTEL_CALLE=@calle AND H.HOTEL_NRO_CALLE= @nro_calle AND H.HOTEL_ID_LOC=@id_loc AND H.HOTEL_PAIS=@id_pais))	
+		BEGIN
+			UPDATE CONTROL_ZETA.HOTEL 
+			SET HOTEL_NOMBRE=@nombre, 
+			HOTEL_CALLE=@calle, 
+			HOTEL_NRO_CALLE=@nro_calle, 
+			HOTEL_ID_LOC=@id_loc, 
+			HOTEL_PAIS=@id_pais, 
+			HOTEL_MAIL=@mail, 
+			HOTEL_CANT_ESTRELLA=@cant_est, 
+			HOTEL_RECARGA_ESTRELLA=@rec_estrella, 
+			HOTEL_TEL=@tel
+			WHERE HOTEL_ID=@id_hotel
+			SET @error=1
+		END;
+		ELSE
+		SET @error=3
+	END;
+	ELSE
+	SET @error=2
+	END
+	
+END
+
+GO
+
+CREATE PROCEDURE CONTROL_ZETA.SP_REGIMEN_HOTEL(@accion tinyint,@id_hotel int, @id_regimen TINYINT, @fe_sist date,@error TINYINT OUTPUT)
+AS
+--@Desc: Relacion hotel y regimen
+BEGIN
+IF @accion=1
+BEGIN
+	IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.HOTEL_REGIMEN HR WHERE HR.HOTEL_ID=@id_hotel AND HR.REG_ID=@id_regimen)
+	BEGIN
+		INSERT INTO CONTROL_ZETA.HOTEL_REGIMEN(HOTEL_ID,REG_ID,REG_ESTADO) VALUES(@id_hotel,@id_regimen,'H')
+	SET @error=1
+	END
+	ELSE IF EXISTS (SELECT * FROM CONTROL_ZETA.HOTEL_REGIMEN HR WHERE HR.HOTEL_ID=@id_hotel AND HR.REG_ID=@id_regimen AND HR.REG_ESTADO='I')
+	BEGIN
+		UPDATE CONTROL_ZETA.HOTEL_REGIMEN SET REG_ESTADO='H' WHERE HOTEL_ID=@id_hotel AND REG_ID=@id_regimen
+		SET @error=1
+	END
+	ELSE
+	SET @error=3
+END
+ELSE IF @accion=3
+BEGIN
+	IF (CONTROL_ZETA.hay_reservas_regimen(@id_regimen,@fe_sist,@id_hotel)=0)
+	BEGIN
+		UPDATE CONTROL_ZETA.HOTEL_REGIMEN SET REG_ESTADO='I' WHERE HOTEL_ID=@id_hotel AND REG_ID=@id_regimen
+		SET @error=1
+	END;
+	ELSE
+	SET @error=5
+END
 END;
+
+GO
+
+CREATE PROCEDURE CONTROL_ZETA.SP_CIERRE_HOTEL(@fe_inicio_cierre date, @fe_fin_cierre date, @id_hotel int, @motivo varchar(100), @error tinyint OUTPUT)
+AS
+--@Desc: Cierre de hotel
+BEGIN
+	IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.HOTEL_CIERRE WHERE HOTEL_ID=@id_hotel AND ((@fe_inicio_cierre>=HOTEL_C_FECHA_DESDE AND @fe_inicio_cierre<=HOTEL_C_FECHA_HASTA) OR (@fe_fin_cierre>=HOTEL_C_FECHA_DESDE AND @fe_fin_cierre<=HOTEL_C_FECHA_HASTA)))
+	BEGIN
+		IF CONTROL_ZETA.hay_reservas_fechas(@fe_inicio_cierre, @fe_fin_cierre , @id_hotel )>0
+		BEGIN
+			INSERT INTO CONTROL_ZETA.HOTEL_CIERRE(HOTEL_ID,HOTEL_C_MOTIVO,HOTEL_C_FECHA_DESDE,HOTEL_C_FECHA_HASTA) 
+			VALUES (@id_hotel,@motivo,@fe_inicio_cierre,@fe_fin_cierre)
+			SET @error=1
+		END
+		ELSE 
+			SET @error=6
+END
+ELSE
+	SET @error=3		
+END
+
+GO
 
 ------------------
 ----HABITACION----
