@@ -4,18 +4,68 @@
 --3:Borrado-Delete
 
 ----ABM ROL-3 (Deberia cargar la tabla ROL, ROL_FUNC)
-CREATE PROCEDURE CONTROL_ZETA.SP_ABM_ROL (@accion SMALLINT,@nombre varchar(20),@estado varchar(1))
-as
-begin
-end;
+CREATE PROCEDURE CONTROL_ZETA.SP_ABM_ROL (@accion SMALLINT,@id_rol TINYINT, @nombre varchar(20),@estado varchar(1), @id_rol_new TINYINT output,@error tinyint output)
+AS
+BEGIN
+IF (@accion=1)
+BEGIN
+--Alta
+	IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_NOMBRE=@nombre)
+	BEGIN
+		INSERT INTO CONTROL_ZETA.ROL (ROL_NOMBRE, ROL_ESTADO)VALUES(@nombre,@estado)
+		SET @id_rol=SCOPE_IDENTITY()
+		SET @error=-1
+	END;
+	ELSE
+	SET @error=-3
+END;
+ELSE IF @accion=2
+BEGIN
+--Modificacion
+	IF EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_ID=@id_rol)
+	BEGIN
+		IF NOT EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_NOMBRE=@nombre)
+		BEGIN
+			UPDATE CONTROL_ZETA.ROL SET ROL_NOMBRE=@nombre,ROL_ESTADO=@estado where ROL_ID=@id_rol
+			SET @error=-1
+		END;
+		ELSE
+		SET @error=-3
+	END
+	ELSE
+		SET @error=-2
+	
+END;
+ELSE IF @accion=3
+BEGIN
+--Baja
+IF EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_ID=@id_rol)
+	BEGIN
+		UPDATE CONTROL_ZETA.ROL SET ROL_ESTADO=@estado where ROL_ID=@id_rol
+		SET @error=-1
+	END
+	ELSE
+		SET @error=-2
+END;
+END;
 ---IMPORTANTE:Se tendria que hacer otro SP para asociar el ROL con la Funcionalidad y que desde la app se ejecute varias veces
 
 
 ---ASIGNACION DE FUNCIONES A ROL-3 (Carga tabla ROL_FUNC)
-CREATE PROCEDURE CONTROL_ZETA.SP_ROL_FUNC(@accion SMALLINT,@rol_id TINYINT, @func_id TINYINT)
+CREATE PROCEDURE CONTROL_ZETA.SP_ROL_FUNC(@accion SMALLINT,@rol_id TINYINT, @func_id TINYINT, @error tinyint output)
 AS
 BEGIN
-END; 
+	IF @accion=1
+	BEGIN
+		IF NOT EXISTS(SELECT * FROM CONTROL_ZETA.ROL_FUNC WHERE ROL_ID = @rol_id and FUNC_ID=@func_id)
+		BEGIN
+			INSERT INTO CONTROL_ZETA.ROL_FUNC(ROL_ID,FUNC_ID) VALUES (@rol_id,@func_id)
+			set @error=-1
+		END
+		ELSE
+			set @error=-2
+	END;
+END
 
 ---ABM HOTEL(Tabla Hotel)-2
 CREATE PROCEDURE CONTROL_ZETA.SP_ABM_HOTEL()
