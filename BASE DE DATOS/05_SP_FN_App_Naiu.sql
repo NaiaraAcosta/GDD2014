@@ -378,15 +378,15 @@ END;
 GO
 
 
-CREATE PROCEDURE CONTROL_ZETA.SP_ALTA_RESERVA(@hotel_id int,@fe_desde date,@fe_hasta date,@tipo_reg_id TINYINT,@cliente_id numeric,@id_usr varchar(50),@fe_sist date,@id_reserva numeric OUTPUT,@error tinyint OUTPUT)
+CREATE PROCEDURE CONTROL_ZETA.SP_ALTA_RESERVA(@hotel_id int,@fe_desde date,@fe_hasta date,@tipo_reg_id TINYINT,@cliente_id numeric,@id_usr varchar(50),@fe_sist date,@cant_hab tinyint,@id_reserva numeric OUTPUT,@error tinyint OUTPUT)
 AS
 --@Desc: Realiza el alta de reserva
 BEGIN
 	IF (CONTROL_ZETA.fe_res_consistente(@fe_desde,@fe_hasta,@fe_sist)=0)
 	BEGIN
 		SET @id_reserva=CONTROL_ZETA.get_id_reserva_new()
-		INSERT INTO CONTROL_ZETA.RESERVA (RESERVA_ID,RESERVA_FECHA,RESERVA_FECHA_INICIO, RESERVA_FECHA_HASTA,RESERVA_ID_REGIMEN, RESERVA_ID_HOTEL, RESERVA_ESTADO, CLIENTE_ID, USR_USERNAME)
-		VALUES(@id_reserva,@fe_sist,@fe_desde,@fe_hasta,@tipo_reg_id,@hotel_id,'RINC',@cliente_id,@id_usr);
+		INSERT INTO CONTROL_ZETA.RESERVA (RESERVA_ID,RESERVA_FECHA,RESERVA_FECHA_INICIO, RESERVA_FECHA_HASTA,RESERVA_ID_REGIMEN, RESERVA_ID_HOTEL, RESERVA_ESTADO, CLIENTE_ID, USR_USERNAME,RES_CANT_HAB)
+		VALUES(@id_reserva,@fe_sist,@fe_desde,@fe_hasta,@tipo_reg_id,@hotel_id,'RC',@cliente_id,@id_usr,@cant_hab);
 		set @error=1
 	END
 	ELSE
@@ -408,7 +408,7 @@ BEGIN
 	WHERE H.HAB_ID_TIPO=@tipo_hab AND 
 	H.HAB_ID_HOTEL=@hotel_id;
 	
-	UPDATE CONTROL_ZETA.RESERVA SET RESERVA_ESTADO='RC'
+	
 END;
 
 
@@ -423,18 +423,22 @@ BEGIN
 				RESERVA_ID_REGIMEN, RESERVA_ID_HOTEL, RESERVA_ESTADO, CLIENTE_ID)
 	SELECT R.RESERVA_ID, R.RESERVA_FECHA_INICIO, R.RESERVA_FECHA_HASTA,R.RESERVA_ID_REGIMEN,
 	R.RESERVA_ID_HOTEL,'RINC',R.CLIENTE_ID 
-	FROM CONTROL_ZETA.RESERVA R 
-	WHERE R.RESERVA_ESTADO ='RINC';
+	FROM CONTROL_ZETA.RESERVA R
+	WHERE R.RES_CANT_HAB!=(SELECT COUNT(1) 
+						   FROM CONTROL_ZETA.RESERVA_HABITACION RH
+						    WHERE RH.RESERVA_ID=R.RESERVA_ID)
 							
-	DELETE CONTROL_ZETA.RESERVA 
-	WHERE RESERVA_ESTADO ='RINC';
+	DELETE CONTROL_ZETA.RESERVA
+	WHERE RES_CANT_HAB!=(SELECT COUNT(1) 
+						   FROM CONTROL_ZETA.RESERVA_HABITACION RH
+						    WHERE RH.RESERVA_ID=RESERVA_ID)
 												
 						
 END;
 
 GO
 
-CREATE PROCEDURE CONTROL_ZETA.SP_MODIF_RESERVA(@hotel_id int,@fe_desde date,@fe_hasta date,@tipo_reg_id TINYINT,@cliente_id numeric,@id_usr varchar(50),@id_reserva numeric,@fe_sist date,@error tinyint OUTPUT)
+CREATE PROCEDURE CONTROL_ZETA.SP_MODIF_RESERVA(@hotel_id int,@fe_desde date,@fe_hasta date,@tipo_reg_id TINYINT,@cliente_id numeric,@id_usr varchar(50),@id_reserva numeric,@fe_sist date,@cant_hab tinyint,@error tinyint OUTPUT)
 AS
 --@Desc: Modifica la reserva
 BEGIN
@@ -448,11 +452,12 @@ BEGIN
 			RESERVA_FECHA_HASTA=@fe_hasta,
 			RESERVA_ID_REGIMEN=@tipo_reg_id, 
 			RESERVA_ID_HOTEL=@hotel_id, 
-			RESERVA_ESTADO='RINC', 
+			RESERVA_ESTADO='RM', 
 			CLIENTE_ID=@cliente_id,
-			USR_USERNAME=@id_usr
+			USR_USERNAME=@id_usr,
+			RES_CANT_HAB=@cant_hab
 			WHERE RESERVA_ID=@id_reserva
-			
+			DELETE CONTROL_ZETA.RESERVA_HABITACION WHERE RESERVA_ID=@id_reserva
 			set @error=1
 		END
 		ELSE
@@ -464,7 +469,7 @@ BEGIN
 
 END;
 
-GO
+/*GO
 
 CREATE PROCEDURE CONTROL_ZETA.SP_MODIF_HAB_RES(@id_res numeric,@cant_h tinyint,@tipo_h SMALLINT,@hotel int,@error tinyint OUTPUT)
 AS
@@ -472,14 +477,13 @@ AS
 BEGIN
 	IF EXISTS(SELECT *FROM CONTROL_ZETA.RESERVA R WHERE R.RESERVA_ID=@id_res)
 	BEGIN
-		DELETE CONTROL_ZETA.RESERVA_HABITACION WHERE RESERVA_ID=@id_res 
+		 
 		EXEC CONTROL_ZETA.SP_AGREGAR_HAB_RES @id_reserva=@id_res ,@cant_hab=@cant_h ,@tipo_hab=@tipo_h ,@hotel_id=@hotel
-		UPDATE CONTROL_ZETA.RESERVA SET RESERVA_ESTADO='RM'
 		set @error=1
 	END;
 	ELSE
 		set @error=2
-END;
+END;*/
 
 GO
 
