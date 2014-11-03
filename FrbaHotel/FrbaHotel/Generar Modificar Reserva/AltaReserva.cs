@@ -17,6 +17,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
         List<int> idHotel = new List<int>();
         List<int> idHab = new List<int>();
         List<int> idReg = new List<int>();
+
         public AltaReserva()
         {
             InitializeComponent();
@@ -27,10 +28,6 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             InitializeComponent();
             back = atras;
             dateTimePicker1.MinDate = DateTime.Today;
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
             if (Login.Class1.hotel != 0)
             {
                 string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
@@ -92,7 +89,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             SqlDataReader reader2 = cmd2.ExecuteReader();
             while (reader2.Read())
             {
-                comboBox1.Items.Add(reader2["TIPO_HAB_DESCRIPCION"].ToString());
+                checkedListBox1.Items.Add(reader2["TIPO_HAB_DESCRIPCION"].ToString());
                 idHab.Add(int.Parse(reader2["TIPO_HAB_ID"].ToString()));
             }
             reader2.Close();
@@ -109,6 +106,41 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             }
             reader2.Close();
             conn2.Close();
+        }
+
+        public AltaReserva(Form atras, SqlDataReader reader, SqlConnection conn)
+        {
+            InitializeComponent();
+            back = atras;
+            //dateTimePicker1.MinDate = DateTime.Today;
+            string fechaInicio = "";
+            string fechaHasta = "";
+            string detalle = "";
+            while (reader.Read())
+            {
+                fechaInicio = reader["RESERVA_FECHA_INICIO"].ToString();
+                string[] stringSeparators = new string[] { "/"};
+                string[] result = fechaInicio.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+                result[2] = result[2].Substring(0, 4);
+                dateTimePicker1.Value = new DateTime(int.Parse(result[2]), int.Parse(result[1]), int.Parse(result[0]));
+
+                detalle = string.Format("{0} - {1} {2}",
+
+                    reader["LOC_DETALLE"].ToString().Trim(),
+                    reader["HOTEL_CALLE"].ToString(),
+                    reader["HOTEL_NRO_CALLE"].ToString());
+                idHotel.Add(int.Parse(reader["HOTEL_ID"].ToString()));
+                comboBox3.Text = detalle;
+                comboBox3.Enabled = false;
+            }
+            reader.Close();
+            conn.Close();
+        }
+                
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
@@ -200,6 +232,47 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             Form f = new TipoCliente(this, back);
             f.Show();
             this.Hide();
+        }
+
+        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (e.NewValue == CheckState.Checked && e.CurrentValue == CheckState.Unchecked)
+            {
+                checkedListBox1.Items.Insert(e.Index + 1, checkedListBox1.SelectedItem.ToString());
+            }
+            if (e.NewValue == CheckState.Unchecked && e.CurrentValue == CheckState.Checked)
+            {
+                if (e.Index == proximoChecked(e.Index))
+                {
+                    checkedListBox1.Items.RemoveAt(e.Index);
+                }
+                else
+                {
+                    checkedListBox1.Items.RemoveAt(proximoChecked(e.Index));
+                    e.NewValue = e.CurrentValue;
+                }
+            }
+        }
+        private int proximoChecked(int aBorrar)
+        {
+            if (!checkedListBox1.GetItemChecked(aBorrar + 1))
+            {
+                return aBorrar;
+            }
+            else
+            {
+                return proximoChecked(aBorrar + 1);
+            }
+        }
+
+        private void checkedListBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+           
         }
     }
 }

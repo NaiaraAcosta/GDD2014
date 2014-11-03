@@ -65,7 +65,9 @@ namespace FrbaHotel.ABM_de_Rol
         {
             if (listBox1.SelectedItem != null)
             {
-                new AltaRol(this, listBox1.SelectedIndex).Show();
+                Form f = new AltaRol(this, listBox1.SelectedIndex);
+                f.Text = "Modificar Rol";
+                f.Show();
             }
             else
             {

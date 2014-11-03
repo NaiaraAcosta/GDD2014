@@ -15,5 +15,10 @@ namespace FrbaHotel.ABM_de_Usuario
         {
             InitializeComponent();
         }
+
+        private void AltaUsuario_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

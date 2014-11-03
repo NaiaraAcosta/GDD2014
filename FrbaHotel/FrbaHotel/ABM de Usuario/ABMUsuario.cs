@@ -40,5 +40,15 @@ namespace FrbaHotel.ABM_de_Usuario
             reader.Close();
             conn.Close(); 
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ABMUsuario_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

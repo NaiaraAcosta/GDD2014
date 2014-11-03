@@ -15,5 +15,10 @@ namespace FrbaHotel.Listado_Estadistico
         {
             InitializeComponent();
         }
+
+        private void Resultado_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

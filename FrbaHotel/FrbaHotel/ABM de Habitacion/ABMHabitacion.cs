@@ -48,6 +48,28 @@ namespace FrbaHotel.ABM_de_Habitacion
             {
                 label1.Text = "Error: " + ex.Message;
             }
+
+
+            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            SqlConnection conn = new SqlConnection(ConnStr);
+            sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HOTEL] hotel, 
+                [GD2C2014].[CONTROL_ZETA].[LOCALIDAD] loc 
+                where hotel.HOTEL_ID = '{0}' 
+                and hotel.HOTEL_ID_LOC = loc.LOC_ID", Login.Class1.hotel);
+            SqlCommand cmd = new SqlCommand(sSel, conn);
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            string detalle = "";
+            while (reader.Read())
+            {
+                detalle = string.Format("{0} - {1} {2}",
+                    reader["LOC_DETALLE"].ToString().Trim(),
+                    reader["HOTEL_CALLE"].ToString(),
+                    reader["HOTEL_NRO_CALLE"].ToString());
+                textBox1.Text = detalle;
+            }
+            reader.Close();
+            conn.Close(); 
         }
 
         private void button2_Click(object sender, EventArgs e)

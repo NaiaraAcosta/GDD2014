@@ -146,6 +146,7 @@
             this.Controls.Add(this.label1);
             this.Name = "Estadisticas";
             this.Text = "Estadísticas";
+            this.Load += new System.EventHandler(this.Estadisticas_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

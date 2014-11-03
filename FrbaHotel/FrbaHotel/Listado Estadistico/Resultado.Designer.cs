@@ -107,6 +107,7 @@
             this.Controls.Add(this.label1);
             this.Name = "Resultado";
             this.Text = "Resultado";
+            this.Load += new System.EventHandler(this.Resultado_Load);
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
