@@ -334,10 +334,12 @@ END;
 GO
 
 
-CREATE PROCEDURE CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD(@id_res NUMERIC,@hotel_id int,@fe_desde date,@fe_hasta date,@cant_hab tinyint,@fe_sist date,@id_tipo_hab SMALLINT, @disp smallint output)
+CREATE PROCEDURE CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD(@id_res NUMERIC,@hotel_id int,@fe_desde date,@fe_hasta date,@cant_hab tinyint,@fe_sist date,@id_tipo_hab SMALLINT, @res smallint output)
 AS
 ----@Desc: Verifica disponibilidad
 BEGIN
+DECLARE
+@DISP INT
 
 	EXEC CONTROL_ZETA.SP_CANC_RCNS @fe_sistema=@fe_sist
 	
@@ -394,12 +396,13 @@ BEGIN
 			END
 		END
 		ELSE
-		SET @disp=(-2)
+		SET @RES=(-2)
 	END
 	ELSE 
-		SET @disp=(-1)
+		SET @RES=(-1)
+	IF @DISP>=@cant_hab SET @RES=1
+	else SET @RES=0
 END
-
 
 GO
 
