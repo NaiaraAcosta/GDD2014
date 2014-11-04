@@ -332,7 +332,7 @@ END;
 GO
 
 
-CREATE PROCEDURE CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD(@id_res NUMERIC,@hotel_id int,@fe_desde date,@fe_hasta date,@cant_hab tinyint,@fe_sist date,@tipo_hab SMALLINT, @disp smallint output)
+CREATE PROCEDURE CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD(@id_res NUMERIC,@hotel_id int,@fe_desde date,@fe_hasta date,@cant_hab tinyint,@fe_sist date,@id_tipo_hab SMALLINT, @disp smallint output)
 AS
 ----@Desc: Verifica disponibilidad
 BEGIN
@@ -341,50 +341,62 @@ BEGIN
 	
 	IF (CONTROL_ZETA.fe_res_consistente(@fe_desde,@fe_hasta,@fe_sist)=0)
 	BEGIN
-		IF @id_res IS NOT NULL
+		IF (CONTROL_ZETA.hotel_cerrado(@fe_desde,@fe_hasta,@hotel_id)=0)
 		BEGIN
-			SET @disp = (SELECT COUNT (H.HAB_ID) 
+			IF @id_res IS NOT NULL
+			BEGIN
+			--Es Modif: Ya existe reserva
+				SET @disp =(SELECT COUNT(DISTINCT H.HAB_ID)
 						FROM CONTROL_ZETA.HABITACION H 
 						WHERE H.HAB_ID_HOTEL=@hotel_id AND
-						H.HAB_ID_TIPO=@tipo_hab AND
-						CONTROL_ZETA.hotel_cerrado(@fe_desde,@fe_hasta,@hotel_id)=0 AND
+						H.HAB_ID_TIPO=@id_tipo_hab AND
 						(H.HAB_ID NOT IN (SELECT RH.HAB_ID 
 										  FROM CONTROL_ZETA.RESERVA_HABITACION RH 
 										  WHERE RH.RESERVA_ID IN (SELECT R.RESERVA_ID 
 																  FROM CONTROL_ZETA.RESERVA R 
-																  WHERE R.RESERVA_FECHA_INICIO=@fe_desde AND 
+																  WHERE 
+																  R.RESERVA_ID!=@id_res AND
+																  R.RESERVA_FECHA_INICIO=@fe_desde AND 
 																  R.RESERVA_FECHA_HASTA=@fe_hasta AND
 																  R.RESERVA_ESTADO IN('RI','RC','RM')
-																  AND R.RESERVA_ID!=@id_res)															 )OR 
+																  ))OR													
 						H.HAB_ID IN (SELECT DISTINCT(EHC.HAB_ID) 
 						FROM CONTROL_ZETA.ESTADIA_HAB_CON EHC, CONTROL_ZETA.ESTADIA E 
 						WHERE EHC.EST_ID=E.EST_ID AND
-						E.EST_FECHA_HASTA IS NOT NULL)))
+						E.EST_FECHA_HASTA IS NOT NULL
+						AND E.EST_FECHA_HASTA<@fe_desde)))
+			
+			END
+			ELSE
+			BEGIN
+			--Es Alta
+				SET @disp =(SELECT COUNT(DISTINCT H.HAB_ID)
+						FROM CONTROL_ZETA.HABITACION H 
+						WHERE H.HAB_ID_HOTEL=@hotel_id AND
+						H.HAB_ID_TIPO=@id_tipo_hab AND
+						(H.HAB_ID NOT IN (SELECT RH.HAB_ID 
+										  FROM CONTROL_ZETA.RESERVA_HABITACION RH 
+										  WHERE RH.RESERVA_ID IN (SELECT R.RESERVA_ID 
+																  FROM CONTROL_ZETA.RESERVA R 
+																  WHERE 
+																  --R.RESERVA_ID!=@id_res AND
+																  R.RESERVA_FECHA_INICIO=@fe_desde AND 
+																  R.RESERVA_FECHA_HASTA=@fe_hasta AND
+																  R.RESERVA_ESTADO IN('RI','RC','RM')
+																  ))OR													
+						H.HAB_ID IN (SELECT DISTINCT(EHC.HAB_ID) 
+						FROM CONTROL_ZETA.ESTADIA_HAB_CON EHC, CONTROL_ZETA.ESTADIA E 
+						WHERE EHC.EST_ID=E.EST_ID AND
+						E.EST_FECHA_HASTA IS NOT NULL
+						AND E.EST_FECHA_HASTA<@fe_desde)))
+			END
 		END
 		ELSE
-		BEGIN
-			SET @disp = (SELECT COUNT (H.HAB_ID) 
-						FROM CONTROL_ZETA.HABITACION H 
-						WHERE H.HAB_ID_HOTEL=@hotel_id AND
-						H.HAB_ID_TIPO=@tipo_hab AND
-						CONTROL_ZETA.hotel_cerrado(@fe_desde,@fe_hasta,@hotel_id)=0 AND
-						(H.HAB_ID NOT IN (SELECT RH.HAB_ID 
-										  FROM CONTROL_ZETA.RESERVA_HABITACION RH 
-										  WHERE RH.RESERVA_ID IN (SELECT R.RESERVA_ID 
-																  FROM CONTROL_ZETA.RESERVA R 
-																  WHERE R.RESERVA_FECHA_INICIO=@fe_desde AND 
-																  R.RESERVA_FECHA_HASTA=@fe_hasta AND
-																  R.RESERVA_ESTADO IN('RI','RC','RM')
-																  )	)OR 
-						H.HAB_ID IN (SELECT DISTINCT(EHC.HAB_ID) 
-						FROM CONTROL_ZETA.ESTADIA_HAB_CON EHC, CONTROL_ZETA.ESTADIA E 
-						WHERE EHC.EST_ID=E.EST_ID AND
-						E.EST_FECHA_HASTA IS NOT NULL)))
-		END
+		SET @disp=(-2)
 	END
 	ELSE 
 		SET @disp=(-1)
-END;
+END
 
 
 GO
