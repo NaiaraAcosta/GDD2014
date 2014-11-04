@@ -6,12 +6,15 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace FrbaHotel.ABM_de_Habitacion
 {
     public partial class AltaHabitacion : Form
     {
         Form back = null;
+        List<string> tipoHabId = new List<string>();
         public AltaHabitacion()
         {
             InitializeComponent();
@@ -23,16 +26,33 @@ namespace FrbaHotel.ABM_de_Habitacion
             back = atras;
         }
 
-        public AltaHabitacion(Form atras, int num, int piso, char ubi, int tipo, string comodidades)
+        public AltaHabitacion(Form atras, string id ,string num, string piso, string ubi, string tipo, string comodidades)
         {
             InitializeComponent();
             back = atras;
-            textBox1.Text = string.Format("{0}",num);
-            textBox2.Text = string.Format("{0}", piso);
-            textBox3.Text = string.Format("{0}", ubi);
-            textBox4.Text = string.Format("{0}", tipo);
-            textBox4.Enabled = false;
-            richTextBox1.Text = string.Format("{0}", comodidades);
+
+            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            SqlConnection conn = new SqlConnection(ConnStr);
+            string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HABITACION] hab, 
+                [GD2C2014].[CONTROL_ZETA].[TIPO_HAB] tipohab 
+                where hab.HAB_ID_TIPO = tipohab.TIPO_HAB_ID");
+            SqlCommand cmd = new SqlCommand(sSel, conn);
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                comboBox1.Items.Add(reader["TIPO_HAB_DESCRIPCION"].ToString());
+                tipoHabId.Add(reader["TIPO_HAB_ID"].ToString());
+            }
+            reader.Close();
+            conn.Close();
+
+            textBox1.Text = num;
+            textBox2.Text = piso;
+            textBox3.Text = ubi;
+            comboBox1.SelectedIndex = tipoHabId.FindIndex(x => x == tipo);
+            comboBox1.Enabled = false;
+            richTextBox1.Text = comodidades;
         }
 
         private void label1_Click(object sender, EventArgs e)

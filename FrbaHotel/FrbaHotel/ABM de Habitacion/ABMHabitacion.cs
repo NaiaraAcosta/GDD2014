@@ -32,7 +32,7 @@ namespace FrbaHotel.ABM_de_Habitacion
         private void Form2_Load(object sender, EventArgs e)
         {
             string sCnn;
-            sCnn = @"data source = Gonzalo-PC\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
+            sCnn = @"data source = localhost\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
 
             string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HABITACION] where HAB_ID_HOTEL = '{0}'", Login.Class1.hotel);
             SqlDataAdapter da;
@@ -77,11 +77,12 @@ namespace FrbaHotel.ABM_de_Habitacion
             if (dataGridView1.SelectedCells.Count != 0)
             {
                 Form f = new ABM_de_Habitacion.AltaHabitacion(this,
-                    int.Parse(dataGridView1.SelectedCells[1].Value.ToString()),
-                    int.Parse(dataGridView1.SelectedCells[3].Value.ToString()),
-                    char.Parse(dataGridView1.SelectedCells[4].Value.ToString()),
-                    int.Parse(dataGridView1.SelectedCells[5].Value.ToString()),
-                    "");
+                    dataGridView1.SelectedCells[0].Value.ToString(), //id
+                    dataGridView1.SelectedCells[1].Value.ToString(), //num
+                    dataGridView1.SelectedCells[3].Value.ToString(), //piso
+                    dataGridView1.SelectedCells[5].Value.ToString(), //ubi
+                    dataGridView1.SelectedCells[4].Value.ToString(), //tipo
+                    dataGridView1.SelectedCells[6].Value.ToString());//comodidades
                 f.Show();
             }
             else

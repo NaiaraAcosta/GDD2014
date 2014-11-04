@@ -254,7 +254,7 @@ namespace FrbaHotel
 
         private void cancelarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form f = new Cancelar_Reserva.BajaReserva();
+            Form f = new Cancelar_Reserva.BajaReserva(this);
             f.Show();
             this.Hide();
         }
