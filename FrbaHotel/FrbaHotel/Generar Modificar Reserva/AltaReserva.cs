@@ -18,6 +18,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
         List<int> idHab = new List<int>();
         List<int> idReg = new List<int>();
         List<int> listHab = new List<int>();
+        bool verificado;
         public AltaReserva()
         {
             InitializeComponent();
@@ -357,46 +358,72 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void button3_Click(object sender, EventArgs e)
         {
-
-            int tipo = idHab[0];
-            int cantidad = cantHab(tipo);
-            
-            int result;
+            List<int> cantidad = new List<int>();
+            List<int> result = new List<int>();
             string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
             SqlConnection con = new SqlConnection(ConnStr);
             con.Open();
-
-            SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD", con);
-            scCommand.CommandType = CommandType.StoredProcedure;
-            scCommand.Parameters.Add("@hotel_id", SqlDbType.Int).Value = idHotel[comboBox3.SelectedIndex];
-            scCommand.Parameters.Add("@fe_desde", SqlDbType.Date).Value = dateTimePicker1.Value;
-            scCommand.Parameters.Add("@fe_hasta ", SqlDbType.Date).Value = dateTimePicker2.Value;
-            scCommand.Parameters.Add("@cant_hab", SqlDbType.TinyInt).Value = cantidad;
-            scCommand.Parameters.Add("@fe_sist", SqlDbType.Date) .Value = DateTime.Now;
-            scCommand.Parameters.Add("@tipo_hab", SqlDbType.SmallInt).Value = tipo;
-            scCommand.Parameters.Add("@disp", SqlDbType.SmallInt).Direction = ParameterDirection.Output;
+            SqlTransaction transaction = con.BeginTransaction();
             try
             {
-                if (scCommand.Connection.State == ConnectionState.Closed)
+                for(int i = 0; i < idHab.Count; i++)
                 {
-                    scCommand.Connection.Open();
-                }
-                scCommand.ExecuteNonQuery();
-                result = int.Parse(scCommand.Parameters["@disp"].ToString());
-
-
+                    int tipo = idHab[i];
+                    cantidad.Add(cantHab(tipo));
+                    if (cantidad[i] != 0)
+                    {
+                        SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD", con, transaction);
+                        scCommand.CommandType = CommandType.StoredProcedure;
+                        scCommand.Parameters.AddWithValue("@id_res", DBNull.Value);
+                        scCommand.Parameters.Add("@hotel_id", SqlDbType.Int).Value = idHotel[comboBox3.SelectedIndex];
+                        scCommand.Parameters.Add("@fe_desde", SqlDbType.Date).Value = dateTimePicker1.Value;
+                        scCommand.Parameters.Add("@fe_hasta ", SqlDbType.Date).Value = dateTimePicker2.Value;
+                        scCommand.Parameters.Add("@cant_hab", SqlDbType.TinyInt).Value = cantidad[i];
+                        scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(2012, 01, 01);
+                        scCommand.Parameters.Add("@id_tipo_hab", SqlDbType.SmallInt).Value = tipo;
+                        scCommand.Parameters.Add("@res", SqlDbType.SmallInt).Direction = ParameterDirection.Output;
+                        try
+                        {
+                            if (scCommand.Connection.State == ConnectionState.Closed)
+                            {
+                                scCommand.Connection.Open();
+                            }
+                            scCommand.ExecuteNonQuery();
+                            result.Add(int.Parse(scCommand.Parameters["@res"].Value.ToString()));
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        
+                    }
+                }   
+                transaction.Commit();
             }
-            catch (Exception)
+            catch (SqlException)
             {
-
+                transaction.Rollback();
             }
-            finally
-            {                
-                scCommand.Connection.Close();
                 
+            
+            
+            con.Close();
+
+            bool verificado = true;
+            for (int i = 0; i < result.Count; i++)
+            {
+                if (result[i] == 0)
+                {
+                    verificado = false;
+                }
             }
-
-
+            if (verificado)
+            {
+                label6.Text = "Existe disponibilidad para reservar";
+            }
+            else
+            {
+                label6.Text = "No existe disponibilidad para reservar";
+            }
         }
         private int cantHab(int tipo)
         {
