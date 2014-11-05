@@ -1,4 +1,4 @@
-GO
+
 drop function control_zeta.get_ciudad;
 GO
 create function control_zeta.get_ciudad(@p_Hotel_Ciudad varchar(50))

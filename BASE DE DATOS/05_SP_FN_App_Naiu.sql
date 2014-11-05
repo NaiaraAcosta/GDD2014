@@ -7,6 +7,10 @@
 ------ROL----
 -------------
 
+DROP PROCEDURE CONTROL_ZETA.SP_ABM_ROL
+
+GO
+
 CREATE PROCEDURE CONTROL_ZETA.SP_ABM_ROL (@accion SMALLINT,@id_rol TINYINT, @nombre varchar(20),@estado varchar(1), @id_rol_new TINYINT output,@error tinyint output)
 AS
 --@Desc:ABM de Rol
@@ -40,7 +44,7 @@ BEGIN
 	ELSE
 		SET @error=2
 	
-END;
+END
 ELSE IF @accion=3
 BEGIN
 --Baja
@@ -51,12 +55,13 @@ IF EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_ID=@id_rol)
 	END
 	ELSE
 		SET @error=2
-END;
+END
 END;
 
 GO
 
-
+DROP PROCEDURE CONTROL_ZETA.SP_ROL_FUNC
+GO
 CREATE PROCEDURE CONTROL_ZETA.SP_ROL_FUNC(@rol_id TINYINT, @func_id TINYINT, @error tinyint output)
 AS
 --@Desc:Crea relacion de Rol y funcionalidad
@@ -77,6 +82,9 @@ GO
 ----------------
 ----HOTEL-------
 ----------------
+
+DROP FUNCTION CONTROL_ZETA.get_id_pais
+GO
 CREATE FUNCTION CONTROL_ZETA.get_id_pais(@pais varchar(50))
 returns tinyint
 AS
@@ -86,6 +94,8 @@ END
 
 GO
 ---
+DROP FUNCTION CONTROL_ZETA.hay_reservas_regimen
+GO
 CREATE FUNCTION CONTROL_ZETA.hay_reservas_regimen(@id_regimen TINYINT, @fe_sist DATE, @id_hotel int)
 returns tinyint
 AS
@@ -100,6 +110,8 @@ END
 
 GO
 ---
+DROP FUNCTION CONTROL_ZETA.hay_reservas_fechas
+GO
 CREATE FUNCTION CONTROL_ZETA.hay_reservas_fechas(@fe_inicio_cierre date, @fe_fin_cierre date, @id_hotel int)
 returns tinyint
 AS
@@ -114,6 +126,8 @@ END
 
 GO
 
+DROP PROCEDURE CONTROL_ZETA.SP_AM_HOTEL
+GO
 CREATE PROCEDURE CONTROL_ZETA.SP_AM_HOTEL(@accion tinyint,@id_hotel int,@nombre VARCHAR(100), @mail VARCHAR(50), @tel VARCHAR(10),@calle  VARCHAR(50), @nro_calle SMALLINT, @loc VARCHAR(50), @cant_est TINYINT, @pais VARCHAR(50), @rec_estrella int, @usr VARCHAR(50),@fe_sist date,@error tinyint OUTPUT,@id_hotel_new int OUTPUT)
 AS
 --@Desc: Alta y modificacion de hotel
@@ -171,6 +185,8 @@ END
 
 GO
 
+DROP PROCEDURE CONTROL_ZETA.SP_REGIMEN_HOTEL
+GO
 CREATE PROCEDURE CONTROL_ZETA.SP_REGIMEN_HOTEL(@accion tinyint,@id_hotel int, @id_regimen TINYINT, @fe_sist date,@error TINYINT OUTPUT)
 AS
 --@Desc: Relacion hotel y regimen
@@ -204,6 +220,8 @@ END;
 
 GO
 
+DROP PROCEDURE CONTROL_ZETA.SP_CIERRE_HOTEL
+GO
 CREATE PROCEDURE CONTROL_ZETA.SP_CIERRE_HOTEL(@fe_inicio_cierre date, @fe_fin_cierre date, @id_hotel int, @motivo varchar(100), @error tinyint OUTPUT)
 AS
 --@Desc: Cierre de hotel
@@ -228,6 +246,8 @@ GO
 ------------------
 ----HABITACION----
 ------------------
+DROP PROCEDURE CONTROL_ZETA.SP_ABM_HABITACION
+GO
 CREATE PROCEDURE CONTROL_ZETA.SP_ABM_HABITACION(@accion tinyint,@nro_hab smallint,@id_hab numeric, @hab_piso SMALLINT,@ubi_hab varchar(70),@obs varchar(150),@id_hotel int, @id_tipo_hab smallint, @error tinyint output,@id_hab_new numeric output)
 AS
 --@Desc: Realiza ABM de habitacion
@@ -288,7 +308,8 @@ GO
 ---RESERVAS---
 --------------
 
-
+DROP FUNCTION CONTROL_ZETA.fe_res_consistente
+GO
 CREATE FUNCTION CONTROL_ZETA.fe_res_consistente(@fe_desde date, @fe_hasta date, @fe_sist date)
 returns tinyint
 AS
@@ -308,6 +329,8 @@ END;
 
 GO
 
+DROP FUNCTION CONTROL_ZETA.hotel_cerrado
+GO
 CREATE FUNCTION CONTROL_ZETA.hotel_cerrado(@fe_desde date, @fe_hasta date, @id_hotel int)
 returns tinyint
 AS
@@ -322,6 +345,8 @@ END
 
 GO
 
+DROP PROCEDURE CONTROL_ZETA.SP_CANC_RCNS
+GO
 CREATE PROCEDURE CONTROL_ZETA.SP_CANC_RCNS(@fe_sistema date)
 AS
 --@Desc: Realiza limpieza por no show
@@ -333,13 +358,87 @@ END;
 
 GO
 
+DROP FUNCTION CONTROL_ZETA.get_id_reserva_new
+GO
+CREATE FUNCTION CONTROL_ZETA.get_id_reserva_new()
+returns numeric
+AS
+--@Desc: Se obtiene el numero de id siguiente de reserva
+BEGIN
 
-CREATE PROCEDURE CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD(@id_res NUMERIC,@hotel_id int,@fe_desde date,@fe_hasta date,@cant_hab tinyint,@fe_sist date,@id_tipo_hab SMALLINT, @res smallint output)
+RETURN(SELECT (MAX(RESERVA_ID)+1) FROM CONTROL_ZETA.RESERVA)
+
+END;
+
+GO
+
+DROP FUNCTION CONTROL_ZETA.OBTENER_PRECIO_HAB
+
+GO
+
+CREATE FUNCTION CONTROL_ZETA.OBTENER_PRECIO_HAB(@id_regimen TINYINT,@id_hotel int,@id_tipo_hab SMALLINT)
+RETURNS NUMERIC
+AS
+BEGIN
+	return(SELECT (RG.REG_PRECIO *  TH.TIPO_HAB_PORC  ) 
+			FROM CONTROL_ZETA.RESERVA_HABITACION RH,
+			CONTROL_ZETA.TIPO_HAB TH,
+			CONTROL_ZETA.HOTEL HT,
+			CONTROL_ZETA.REGIMEN RG
+			WHERE RG.REG_ID=@id_regimen AND
+			HT.HOTEL_ID=@id_hotel AND
+			TH.TIPO_HAB_ID=@id_tipo_hab)	 
+    
+END     
+
+GO
+
+DROP FUNCTION CONTROL_ZETA.SP_PRECIO_TOTAL
+
+GO
+
+CREATE FUNCTION CONTROL_ZETA.SP_PRECIO_TOTAL(@criterio tinyint,@fe_desde date,@fe_hasta date,@id_res numeric,@id_hotel int)
+RETURNS numeric
+AS
+BEGIN
+DECLARE
+@PRECIO NUMERIC,
+@REC_EST int,
+@CANT_EST tinyint,
+@P_FINAL NUMERIC
+
+	SET @CANT_EST  = (SELECT TOP(1) HT.HOTEL_CANT_ESTRELLA 
+					  FROM HOTEL HT 
+					  WHERE HT.HOTEL_ID=@id_hotel)
+	SET @REC_EST = (SELECT HT.HOTEL_RECARGA_ESTRELLA 
+					FROM HOTEL HT 
+					WHERE HT.HOTEL_ID=@id_hotel)
+	
+SET @PRECIO=((@REC_EST * @CANT_EST ) + (SELECT SUM(TRP.PRECIO_TEMP) 
+									   FROM CONTROL_ZETA.TEMP_RESERVA_PEDIDO TRP
+									   WHERE TRP.RESERVA_ID=@id_res))
+
+IF @criterio=0 --Por noche 
+	SET @P_FINAL=@PRECIO
+else if @criterio=1 --Por estadia
+	SET @P_FINAL=(@PRECIO*DATEDIFF (DAY,@fe_desde,@fe_hasta))
+	
+RETURN(@P_FINAL)
+
+END;
+
+GO
+
+DROP PROCEDURE CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD
+GO
+CREATE PROCEDURE CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD(@id_res NUMERIC,@hotel_id int,@fe_desde date,@fe_hasta date,@cant_hab tinyint,@fe_sist date,@id_tipo_hab SMALLINT,@id_regimen TINYINT, @res smallint output)
 AS
 ----@Desc: Verifica disponibilidad
 BEGIN
 DECLARE
-@DISP INT
+@DISP INT,
+@PRECIO NUMERIC,
+@RESERVA NUMERIC
 
 	EXEC CONTROL_ZETA.SP_CANC_RCNS @fe_sistema=@fe_sist
 	
@@ -350,6 +449,7 @@ DECLARE
 			IF @id_res IS NOT NULL
 			BEGIN
 			--Es Modif: Ya existe reserva
+				SET @RESERVA=@id_res
 				SET @disp =(SELECT COUNT(DISTINCT H.HAB_ID)
 						FROM CONTROL_ZETA.HABITACION H 
 						WHERE H.HAB_ID_HOTEL=@hotel_id AND
@@ -374,6 +474,7 @@ DECLARE
 			ELSE
 			BEGIN
 			--Es Alta
+				SET @RESERVA=CONTROL_ZETA.get_id_reserva_new()
 				SET @disp =(SELECT COUNT(DISTINCT H.HAB_ID)
 						FROM CONTROL_ZETA.HABITACION H 
 						WHERE H.HAB_ID_HOTEL=@hotel_id AND
@@ -400,109 +501,82 @@ DECLARE
 	END
 	ELSE 
 		SET @RES=(-1)
-	IF @DISP>=@cant_hab SET @RES=1
+	IF @DISP>=@cant_hab 
+	BEGIN
+		SET @RES=1
+			
+			set @PRECIO=CONTROL_ZETA.OBTENER_PRECIO_HAB(@id_regimen,@hotel_id ,@id_tipo_hab )
+			INSERT INTO CONTROL_ZETA.TEMP_RESERVA_PEDIDO(RESERVA_ID,HAB_ID,PRECIO_TEMP)
+			SELECT TOP (@cant_hab) @RESERVA,H.HAB_ID, @PRECIO
+			FROM CONTROL_ZETA.HABITACION H 
+			WHERE H.HAB_ID_TIPO=@id_tipo_hab AND 
+			H.HAB_ID_HOTEL=@hotel_id;
+	END
 	else SET @RES=0
 END
 GO
-CREATE FUNCTION CONTROL_ZETA.OBTENER_PRECIO_HAB(@id_regimen TINYINT,@id_hotel int,@id_tipo_hab SMALLINT, @cant_hab tinyint)
-RETURNS NUMERIC
-AS
-BEGIN
-	return((SELECT ((RG.REG_PRECIO *  TH.TIPO_HAB_PORC  ) + (HT.HOTEL_RECARGA_ESTRELLA * HT.HOTEL_CANT_ESTRELLA))
-      FROM 
-    CONTROL_ZETA.RESERVA_HABITACION RH,
-     CONTROL_ZETA.TIPO_HAB TH,
-     CONTROL_ZETA.HOTEL HT,
-     CONTROL_ZETA.REGIMEN RG
-	WHERE RG.REG_ID=@id_regimen AND
-	HT.HOTEL_ID=@id_hotel AND
-	TH.TIPO_HAB_ID=@id_tipo_hab)*@cant_hab)	 
-    
-END     
 
+DROP PROCEDURE CONTROL_ZETA.SP_ALTA_RESERVA
 GO
-
-CREATE FUNCTION CONTROL_ZETA.get_id_reserva_new()
-returns numeric
-AS
---@Desc: Se obtiene el numero de id siguiente de reserva
-BEGIN
-
-RETURN(SELECT (MAX(RESERVA_ID)+1) FROM CONTROL_ZETA.RESERVA)
-
-END;
-
-GO
-
-
 CREATE PROCEDURE CONTROL_ZETA.SP_ALTA_RESERVA(@hotel_id int,@fe_desde date,@fe_hasta date,@tipo_reg_id TINYINT,@cliente_id numeric,@id_usr varchar(50),@fe_sist date,@cant_hab tinyint,@id_reserva numeric OUTPUT,@error tinyint OUTPUT)
 AS
 --@Desc: Realiza el alta de reserva
 BEGIN
+DECLARE
+@PRECIO_TOTAL NUMERIC
+BEGIN TRANSACTION
 	IF (CONTROL_ZETA.fe_res_consistente(@fe_desde,@fe_hasta,@fe_sist)=0)
 	BEGIN
 		SET @id_reserva=CONTROL_ZETA.get_id_reserva_new()
-		INSERT INTO CONTROL_ZETA.RESERVA (RESERVA_ID,RESERVA_FECHA,RESERVA_FECHA_INICIO, RESERVA_FECHA_HASTA,RESERVA_ID_REGIMEN, RESERVA_ID_HOTEL, RESERVA_ESTADO, CLIENTE_ID, USR_USERNAME,RES_CANT_HAB)
-		VALUES(@id_reserva,@fe_sist,@fe_desde,@fe_hasta,@tipo_reg_id,@hotel_id,'RC',@cliente_id,@id_usr,@cant_hab);
-		set @error=1
+		SET @PRECIO_TOTAL = CONTROL_ZETA.SP_PRECIO_TOTAL(1,@fe_desde,@fe_hasta,@id_reserva,@hotel_id)
+		
+		INSERT INTO CONTROL_ZETA.RESERVA (RESERVA_ID,RESERVA_FECHA,RESERVA_FECHA_INICIO, RESERVA_FECHA_HASTA,RESERVA_ID_REGIMEN, RESERVA_ID_HOTEL, RESERVA_ESTADO, CLIENTE_ID, USR_USERNAME,RES_PRECIO_TOTAL)
+		VALUES(@id_reserva,@fe_sist,@fe_desde,@fe_hasta,@tipo_reg_id,@hotel_id,'RC',@cliente_id,@id_usr,@PRECIO_TOTAL);
+		
+		IF ((SELECT COUNT(*) FROM CONTROL_ZETA.TEMP_RESERVA_PEDIDO) > 0)
+		BEGIN
+			INSERT INTO CONTROL_ZETA.RESERVA_HABITACION(RESERVA_ID,HAB_ID)
+			SELECT TRP.RESERVA_ID,TRP.HAB_ID 
+			FROM CONTROL_ZETA.TEMP_RESERVA_PEDIDO TRP
+			WHERE TRP.RESERVA_ID=@id_reserva
+		
+			DELETE CONTROL_ZETA.TEMP_RESERVA_PEDIDO
+		
+			set @error=1
+			COMMIT
+		END
+		ELSE
+		BEGIN
+			set @error=6
+			ROLLBACK
+		END
 	END
 	ELSE
-	set @error=5
+	BEGIN
+		set @error=5
+		ROLLBACK
+	END;
 	
-END;
-
-
-GO
-
-CREATE PROCEDURE CONTROL_ZETA.SP_AGREGAR_HAB_RES(@id_reserva numeric,@cant_hab tinyint,@tipo_hab SMALLINT,@hotel_id int)
-AS
---@Desc: Agrega la relacion de reserva y habitacion
-BEGIN
-
-	INSERT INTO CONTROL_ZETA.RESERVA_HABITACION(RESERVA_ID,HAB_ID)
-	SELECT TOP (@cant_hab) @id_reserva,H.HAB_ID 
-	FROM CONTROL_ZETA.HABITACION H 
-	WHERE H.HAB_ID_TIPO=@tipo_hab AND 
-	H.HAB_ID_HOTEL=@hotel_id;
-	
-	
-END;
-
-
-GO
-CREATE PROCEDURE CONTROL_ZETA.SP_CONSISTENCIA_RESERVAS
-AS
---@Desc:Identifica las inconsistencias y las soluciona
-BEGIN
-
-	INSERT INTO CONTROL_ZETA.RESERVA_BKP (RESERVA_ID,  
-				RESERVA_FECHA_INICIO, RESERVA_FECHA_HASTA, 
-				RESERVA_ID_REGIMEN, RESERVA_ID_HOTEL, RESERVA_ESTADO, CLIENTE_ID)
-	SELECT R.RESERVA_ID, R.RESERVA_FECHA_INICIO, R.RESERVA_FECHA_HASTA,R.RESERVA_ID_REGIMEN,
-	R.RESERVA_ID_HOTEL,'RINC',R.CLIENTE_ID 
-	FROM CONTROL_ZETA.RESERVA R
-	WHERE R.RES_CANT_HAB!=(SELECT COUNT(1) 
-						   FROM CONTROL_ZETA.RESERVA_HABITACION RH
-						    WHERE RH.RESERVA_ID=R.RESERVA_ID)
-							
-	DELETE CONTROL_ZETA.RESERVA
-	WHERE RES_CANT_HAB!=(SELECT COUNT(1) 
-						   FROM CONTROL_ZETA.RESERVA_HABITACION RH
-						    WHERE RH.RESERVA_ID=RESERVA_ID)
-												
-						
 END;
 
 GO
 
+DROP PROCEDURE CONTROL_ZETA.SP_MODIF_RESERVA
+GO
 CREATE PROCEDURE CONTROL_ZETA.SP_MODIF_RESERVA(@hotel_id int,@fe_desde date,@fe_hasta date,@tipo_reg_id TINYINT,@cliente_id numeric,@id_usr varchar(50),@id_reserva numeric,@fe_sist date,@cant_hab tinyint,@error tinyint OUTPUT)
 AS
 --@Desc: Modifica la reserva
 BEGIN
+DECLARE
+@PRECIO_TOTAL NUMERIC
+
+BEGIN TRANSACTION
 	IF EXISTS(SELECT *FROM CONTROL_ZETA.RESERVA R WHERE R.RESERVA_ID=@id_reserva)
 	BEGIN
 		IF ((SELECT R.RESERVA_FECHA_INICIO FROM CONTROL_ZETA.RESERVA R WHERE R.RESERVA_ID=@id_reserva)<@fe_desde)
 		BEGIN
+			SET @PRECIO_TOTAL = CONTROL_ZETA.SP_PRECIO_TOTAL(1,@fe_desde,@fe_hasta,@id_reserva,@hotel_id)
+			
 			UPDATE CONTROL_ZETA.RESERVA 
 			SET RESERVA_FECHA=@fe_sist,
 			RESERVA_FECHA_INICIO=@fe_desde, 
@@ -512,55 +586,82 @@ BEGIN
 			RESERVA_ESTADO='RM', 
 			CLIENTE_ID=@cliente_id,
 			USR_USERNAME=@id_usr,
-			RES_CANT_HAB=@cant_hab
+			RES_PRECIO_TOTAL=@PRECIO_TOTAL
 			WHERE RESERVA_ID=@id_reserva
+			
 			DELETE CONTROL_ZETA.RESERVA_HABITACION WHERE RESERVA_ID=@id_reserva
-			set @error=1
+			
+			IF (SELECT COUNT(*) FROM CONTROL_ZETA.TEMP_RESERVA_PEDIDO) > 0
+			BEGIN
+				INSERT INTO CONTROL_ZETA.RESERVA_HABITACION(RESERVA_ID,HAB_ID)
+				SELECT TRP.RESERVA_ID,TRP.HAB_ID 
+				FROM CONTROL_ZETA.TEMP_RESERVA_PEDIDO TRP
+				WHERE TRP.RESERVA_ID=@id_reserva
+			
+				DELETE CONTROL_ZETA.TEMP_RESERVA_PEDIDO
+				
+				set @error=1
+			
+				COMMIT
+			END
+			ELSE 
+			BEGIN
+				set @error=6
+				ROLLBACK
+			END
 		END
 		ELSE
-
-		set @error=5
+		BEGIN
+			set @error=5
+			ROLLBACK
 		END
+	END	
 	ELSE
+	BEGIN
 		set @error=2
+		ROLLBACK
+	END
 
 END;
 
-/*GO
-
-CREATE PROCEDURE CONTROL_ZETA.SP_MODIF_HAB_RES(@id_res numeric,@cant_h tinyint,@tipo_h SMALLINT,@hotel int,@error tinyint OUTPUT)
-AS
---@Desc: Se realiza la modificacion de las habitaciones y reserva
-BEGIN
-	IF EXISTS(SELECT *FROM CONTROL_ZETA.RESERVA R WHERE R.RESERVA_ID=@id_res)
-	BEGIN
-		 
-		EXEC CONTROL_ZETA.SP_AGREGAR_HAB_RES @id_reserva=@id_res ,@cant_hab=@cant_h ,@tipo_hab=@tipo_h ,@hotel_id=@hotel
-		set @error=1
-	END;
-	ELSE
-		set @error=2
-END;*/
 
 GO
 
+DROP PROCEDURE CONTROL_ZETA.SP_CANCELAR_RESERVA
+GO
 CREATE PROCEDURE CONTROL_ZETA.SP_CANCELAR_RESERVA(@id_reserva numeric, @motivo varchar(150), @fecha_canc date, @id_usr varchar(50), @id_est varchar(4),@error tinyint OUTPUT)
 AS
 --@Desc:Cancela la reserva
 BEGIN
+
+BEGIN TRANSACTION
 IF EXISTS(SELECT *FROM CONTROL_ZETA.RESERVA R WHERE R.RESERVA_ID=@id_reserva AND R.RESERVA_FECHA_INICIO>=@fecha_canc)
 	BEGIN
 		
 		UPDATE CONTROL_ZETA.RESERVA SET RESERVA_ESTADO=@id_est, RESERVA_MOTIVO_CANC=@motivo, RESERVA_FECHA_CANC=@fecha_canc,USR_USERNAME_CANC=@id_usr
 		WHERE RESERVA_ID=@id_reserva
 		set @error=1
+		COMMIT
 	END;
 else
 	set @error=5
+	ROLLBACK
 END;
 
 GO
 
+DROP PROCEDURE CONTROL_ZETA.LIMPIAR_PEDIDO
+GO
+CREATE PROCEDURE CONTROL_ZETA.LIMPIAR_PEDIDO
+AS
+BEGIN
+DELETE CONTROL_ZETA.TEMP_RESERVA_PEDIDO
+END;
+
+GO
+
+DROP FUNCTION CONTROL_ZETA.get_id_habitacion
+GO
 CREATE FUNCTION CONTROL_ZETA.get_id_habitacion(@nro_hab SMALLINT,@id_hotel int)
 returns numeric
 AS
@@ -574,6 +675,8 @@ END;
 
 GO
 
+DROP FUNCTION CONTROL_ZETA.get_id_estadia
+GO
 CREATE FUNCTION CONTROL_ZETA.get_id_estadia(@hab_id numeric)
 returns numeric
 AS
@@ -590,7 +693,8 @@ GO
 --REGISTRAR CONSUMIBLE----
 --------------------------
 
-
+DROP PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE
+GO
 CREATE PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE(@id_hotel int, @nro_hab SMALLINT, @id_con smallint, @cant tinyint, @error tinyint OUTPUT )
 AS
 --@Desc:Se registran los consumibles
@@ -618,4 +722,58 @@ IF (@id_est>0)
 	END;
 ELSE
 set @error=6
+END;
+GO
+---------------
+----LOGIN------
+---------------
+DROP PROCEDURE CONTROL_ZETA.LOGIN_USR
+GO
+CREATE PROCEDURE CONTROL_ZETA.LOGIN_USR(@usr varchar(50),@pass VARCHAR (100),@error tinyint)
+as
+BEGIN
+
+ 
+DECLARE 
+@V_USR varchar(50),
+@V_PASS VARCHAR (100),
+@V_INTENTOS TINYINT,
+@V_ESTADO VARCHAR(1)
+
+DECLARE C_USR CURSOR FOR  
+SELECT  U.USR_USERNAME,U.USR_PASS,U.USR_ESTADO,U.USR_INTENTOS 
+FROM CONTROL_ZETA.USUARIO U 
+WHERE U.USR_USERNAME=@usr
+
+OPEN C_USR
+
+FETCH NEXT FROM C_USR 
+INTO @V_USR ,@V_PASS , @V_ESTADO ,@V_INTENTOS 
+
+IF ((SELECT CURSOR_STATUS('local','C_USR'))=0) 
+BEGIN
+	IF (@V_ESTADO ='I') 
+	BEGIN
+		IF (@V_INTENTOS<4)
+		BEGIN
+			IF(@V_PASS=@pass)
+				SET @error=1--->PUDO INGRESAR!
+			ELSE
+			BEGIN
+			    
+				UPDATE CONTROL_ZETA.USUARIO SET USR_INTENTOS=@V_INTENTOS+1 WHERE USR_USERNAME=@usr
+				SET @error=6 --Pass incorrecta
+			END
+		END
+		ELSE set @error=5 --Ya hizo 3 intentos fallidos
+	END
+	ELSE SET @error=4 --Esta inhabilitado
+
+
+END
+ELSE SET @error=2 --No esta el usr
+
+
+
+
 END;
