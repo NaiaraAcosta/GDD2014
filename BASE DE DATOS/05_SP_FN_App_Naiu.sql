@@ -730,7 +730,7 @@ GO
 ---------------
 DROP PROCEDURE CONTROL_ZETA.LOGIN_USR
 GO
-CREATE PROCEDURE CONTROL_ZETA.LOGIN_USR(@usr varchar(50),@pass VARCHAR (100),@error tinyint)
+CREATE PROCEDURE CONTROL_ZETA.LOGIN_USR(@usr varchar(50),@pass VARCHAR (100),@error tinyint output)
 as
 BEGIN
 
@@ -751,14 +751,14 @@ OPEN C_USR
 FETCH NEXT FROM C_USR 
 INTO @V_USR ,@V_PASS , @V_ESTADO ,@V_INTENTOS 
 
-IF ((SELECT CURSOR_STATUS('local','C_USR'))=0) 
+IF (@@CURSOR_ROWS=0) 
 BEGIN
 	IF (@V_ESTADO ='I') 
 	BEGIN
 		IF (@V_INTENTOS<4)
 		BEGIN
 			IF(@V_PASS=@pass)
-				SET @error=1--->PUDO INGRESAR!
+				SET @error=1 --PUDO INGRESAR!
 			ELSE
 			BEGIN
 			    
@@ -769,12 +769,11 @@ BEGIN
 		ELSE set @error=5 --Ya hizo 3 intentos fallidos
 	END
 	ELSE SET @error=4 --Esta inhabilitado
-
-
 END
 ELSE SET @error=2 --No esta el usr
 
-
+ CLOSE C_USR
+ DEALLOCATE C_USR
 
 
 END;
