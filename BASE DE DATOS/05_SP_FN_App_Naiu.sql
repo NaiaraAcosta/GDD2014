@@ -431,7 +431,7 @@ GO
 
 DROP PROCEDURE CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD
 GO
-CREATE PROCEDURE CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD(@id_res NUMERIC,@hotel_id int,@fe_desde date,@fe_hasta date,@cant_hab tinyint,@fe_sist date,@id_tipo_hab SMALLINT,@id_regimen TINYINT, @res smallint output)
+CREATE PROCEDURE CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD(@id_res NUMERIC,@hotel_id int,@fe_desde date,@fe_hasta date,@cant_hab tinyint,@fe_sist date,@id_tipo_hab SMALLINT,@id_regimen TINYINT, @res smallint output, @id_res_new_temp numeric output)
 AS
 ----@Desc: Verifica disponibilidad
 BEGIN
@@ -511,6 +511,7 @@ DECLARE
 			FROM CONTROL_ZETA.HABITACION H 
 			WHERE H.HAB_ID_TIPO=@id_tipo_hab AND 
 			H.HAB_ID_HOTEL=@hotel_id;
+			set @id_res_new_temp=@RESERVA
 	END
 	else SET @RES=0
 END
@@ -518,7 +519,7 @@ GO
 
 DROP PROCEDURE CONTROL_ZETA.SP_ALTA_RESERVA
 GO
-CREATE PROCEDURE CONTROL_ZETA.SP_ALTA_RESERVA(@hotel_id int,@fe_desde date,@fe_hasta date,@tipo_reg_id TINYINT,@cliente_id numeric,@id_usr varchar(50),@fe_sist date,@cant_hab tinyint,@id_reserva numeric OUTPUT,@error tinyint OUTPUT)
+CREATE PROCEDURE CONTROL_ZETA.SP_ALTA_RESERVA(@hotel_id int,@fe_desde date,@fe_hasta date,@tipo_reg_id TINYINT,@cliente_id numeric,@id_usr varchar(50),@fe_sist date,@id_reserva numeric OUTPUT,@error tinyint OUTPUT)
 AS
 --@Desc: Realiza el alta de reserva
 BEGIN
@@ -563,7 +564,7 @@ GO
 
 DROP PROCEDURE CONTROL_ZETA.SP_MODIF_RESERVA
 GO
-CREATE PROCEDURE CONTROL_ZETA.SP_MODIF_RESERVA(@hotel_id int,@fe_desde date,@fe_hasta date,@tipo_reg_id TINYINT,@cliente_id numeric,@id_usr varchar(50),@id_reserva numeric,@fe_sist date,@cant_hab tinyint,@error tinyint OUTPUT)
+CREATE PROCEDURE CONTROL_ZETA.SP_MODIF_RESERVA(@hotel_id int,@fe_desde date,@fe_hasta date,@tipo_reg_id TINYINT,@cliente_id numeric,@id_usr varchar(50),@id_reserva numeric,@fe_sist date,@error tinyint OUTPUT)
 AS
 --@Desc: Modifica la reserva
 BEGIN
