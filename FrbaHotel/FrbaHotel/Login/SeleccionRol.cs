@@ -127,6 +127,7 @@ namespace FrbaHotel.Login
                 reader.Close();
                 conn.Close();
                 Login.Class1.hotel = idHotel[listBox1.SelectedIndex];
+                Login.Class1.user = username;
             }
             else
             {

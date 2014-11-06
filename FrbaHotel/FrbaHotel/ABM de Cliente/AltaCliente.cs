@@ -14,7 +14,7 @@ namespace FrbaHotel.ABM_de_Cliente
         Form back = null;
         Form back2 = null;
         Form back3 = null;
-        int mode = 0;
+        string[] param = null;
         public AltaCliente(Form atras,string nombre, string apellido, string tipo, string numero, string mail, string telefono, string calle,
             string localidad, string pais, string nacionalidad, string nacimiento)
         {
@@ -45,13 +45,13 @@ namespace FrbaHotel.ABM_de_Cliente
             InitializeComponent();
             back = atras;
         }
-        public AltaCliente(Form atras, Form atras2, Form atras3, int modo)
+        public AltaCliente(Form atras, Form atras2, Form atras3, string[] parametros)
         {
             InitializeComponent();
             back = atras;
             back2 = atras2;
             back3 = atras3;
-            mode = modo;
+            param = parametros;
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -81,10 +81,10 @@ namespace FrbaHotel.ABM_de_Cliente
         private void button1_Click(object sender, EventArgs e)
         {
             validarDatos();
-            if (mode == 1)
+            if (param != null)
             {
-                int idCliente = 0; //MOCK!!!!!
-                Form f = new Generar_Modificar_Reserva.ReservaFinalizada(this, back, back2, back3, idCliente);
+                param[4] = ""; //MOCK!!!!!
+                Form f = new Generar_Modificar_Reserva.ReservaFinalizada(this, back, back2, back3, param);
                 f.Show();
                 this.Hide();
             }

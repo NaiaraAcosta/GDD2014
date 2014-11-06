@@ -268,7 +268,7 @@ namespace FrbaHotel
 
         private void registrarConsumibleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form f = new Registrar_Consumible.ABMConsumible();
+            Form f = new Registrar_Consumible.ABMConsumible(this);
             f.Show();
             this.Hide();
         }

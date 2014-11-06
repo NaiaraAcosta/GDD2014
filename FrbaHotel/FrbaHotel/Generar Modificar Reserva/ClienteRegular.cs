@@ -17,16 +17,18 @@ namespace FrbaHotel.Generar_Modificar_Reserva
         Form back2 = null;
         Form back3 = null;
         List<int> idDoc = new List<int>();
+        string[] param;
         public ClienteRegular()
         {
             InitializeComponent();
         }
-        public ClienteRegular(Form atras, Form atras2, Form atras3)
+        public ClienteRegular(Form atras, Form atras2, Form atras3, string[] parametros)
         {
             InitializeComponent();
             back = atras;
             back2 = atras2;
             back3 = atras3;
+            param = parametros;
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -97,8 +99,8 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void button2_Click(object sender, EventArgs e)
         {
-            int idClien = int.Parse(dataGridView1.SelectedCells[0].Value.ToString());
-            Form f = new ReservaFinalizada(this, back, back2, back3, idClien);
+            param[4] = dataGridView1.SelectedCells[0].Value.ToString();
+            ReservaFinalizada f = new ReservaFinalizada(this, back, back2, back3, param);
             f.Show();
             this.Hide();
         }

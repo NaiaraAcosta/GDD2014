@@ -20,5 +20,11 @@ namespace FrbaHotel.Login
             set;
         }
 
+        public static string user
+        {
+            get;
+            set;
+        }
+
     }
 }
