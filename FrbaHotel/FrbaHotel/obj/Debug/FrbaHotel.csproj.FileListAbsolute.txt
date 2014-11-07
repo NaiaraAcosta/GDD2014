@@ -14,3 +14,5 @@ C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2
 C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.Login.Form2.resources
 C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.ABM_de_Usuario.Form1.resources
 C:\Users\Provisoria\Documents\Facultad\Gestion de Datos\TP Hotel Frba 1.0 - 2C 2014\Aplicacion Desktop\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.ABM_de_Usuario.Form2.resources
+C:\Users\Naiu\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.exe
+C:\Users\Naiu\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Debug\FrbaHotel.pdb

@@ -529,7 +529,7 @@ BEGIN TRANSACTION
 	IF (CONTROL_ZETA.fe_res_consistente(@fe_desde,@fe_hasta,@fe_sist)=0)
 	BEGIN
 		SET @id_reserva=CONTROL_ZETA.get_id_reserva_new()
-		SET @PRECIO_TOTAL = CONTROL_ZETA.SP_PRECIO_TOTAL(1,@fe_desde,@fe_hasta,@id_reserva,@hotel_id)
+		SET @PRECIO_TOTAL = CONTROL_ZETA.SP_PRECIO_TOTAL(0,@fe_desde,@fe_hasta,@id_reserva,@hotel_id)
 		
 		INSERT INTO CONTROL_ZETA.RESERVA (RESERVA_ID,RESERVA_FECHA,RESERVA_FECHA_INICIO, RESERVA_FECHA_HASTA,RESERVA_ID_REGIMEN, RESERVA_ID_HOTEL, RESERVA_ESTADO, CLIENTE_ID, USR_USERNAME,RES_PRECIO_TOTAL)
 		VALUES(@id_reserva,@fe_sist,@fe_desde,@fe_hasta,@tipo_reg_id,@hotel_id,'RC',@cliente_id,@id_usr,@PRECIO_TOTAL);
@@ -576,7 +576,7 @@ BEGIN TRANSACTION
 	BEGIN
 		IF ((SELECT R.RESERVA_FECHA_INICIO FROM CONTROL_ZETA.RESERVA R WHERE R.RESERVA_ID=@id_reserva)<@fe_desde)
 		BEGIN
-			SET @PRECIO_TOTAL = CONTROL_ZETA.SP_PRECIO_TOTAL(1,@fe_desde,@fe_hasta,@id_reserva,@hotel_id)
+			SET @PRECIO_TOTAL = CONTROL_ZETA.SP_PRECIO_TOTAL(0,@fe_desde,@fe_hasta,@id_reserva,@hotel_id)
 			
 			UPDATE CONTROL_ZETA.RESERVA 
 			SET RESERVA_FECHA=@fe_sist,
