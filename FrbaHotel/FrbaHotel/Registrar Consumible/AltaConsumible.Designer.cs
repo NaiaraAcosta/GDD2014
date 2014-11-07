@@ -105,11 +105,11 @@
             this.button2.Text = "Cancelar";
             this.button2.UseVisualStyleBackColor = true;
             // 
-            // Form1
+            // AltaConsumible
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(272, 160);
+            this.ClientSize = new System.Drawing.Size(272, 193);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox2);
@@ -118,7 +118,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "Form1";
+            this.Name = "AltaConsumible";
             this.Text = "Agregar consumible";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);

@@ -33,6 +33,11 @@ namespace FrbaHotel.Registrar_Consumible
 
         private void button6_Click(object sender, EventArgs e)
         {
+            refrescar(textBox1.Text, textBox2.Text, textBox3.Text);
+        }
+
+        private void refrescar(string habID, string estadiaID, string clienteID)
+        {
             string sCnn = @"data source = localhost\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
             string sSel = String.Format(@"SELECT estaconsu.EST_ID, CLIENTE_ID, estaconsu.CON_ID, CON_DESCRIPCION, HAB_ID FROM 
                 [GD2C2014].[CONTROL_ZETA].[ESTADIA_CLIENTE] estaclie,
@@ -41,17 +46,17 @@ namespace FrbaHotel.Registrar_Consumible
 		        where estaconsu.EST_ID = estaclie.EST_ID
 		        and estaconsu.CON_ID = consu.CON_ID");
 
-            if (textBox1.Text != "")
+            if (habID != "")
             {
-               sSel = String.Format("{0} and estaconsu.HAB_ID = {1}", sSel, textBox1.Text);
+                sSel = String.Format("{0} and estaconsu.HAB_ID = {1}", sSel, habID);
             }
-            if (textBox2.Text != "")
+            if (estadiaID != "")
             {
-               sSel = String.Format("{0} and estaclie.EST_ID = {1}", sSel, textBox2.Text);
+                sSel = String.Format("{0} and estaclie.EST_ID = {1}", sSel, estadiaID);
             }
-            if (textBox3.Text != "")
+            if (clienteID != "")
             {
-               sSel = String.Format("{0} and estaclie.CLIENTE_ID = {1}", sSel, textBox3.Text);
+                sSel = String.Format("{0} and estaclie.CLIENTE_ID = {1}", sSel, clienteID);
             }
             SqlDataAdapter da;
             DataTable dt = new DataTable();
@@ -80,7 +85,9 @@ namespace FrbaHotel.Registrar_Consumible
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            AltaConsumible f = new AltaConsumible(this);
+            f.Show();
+            this.Hide();
         }
 
         

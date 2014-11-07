@@ -11,6 +11,7 @@ namespace FrbaHotel.Registrar_Consumible
 {
     public partial class AltaConsumible : Form
     {
+        Registrar_Consumible.ABMConsumible back = null;
         public AltaConsumible()
         {
             InitializeComponent();
