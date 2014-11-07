@@ -48,3 +48,8 @@ obj/
 bin/
 FrbaHotel/FrbaHotel/bin/
 FrbaHotel/FrbaHotel/obj/
+
+*.exe
+FrbaHotel/FrbaHotel/obj/Debug/FrbaHotel.csproj.FileListAbsolute.txt
+FrbaHotel/FrbaHotel/obj/Release/FrbaHotel.exe
+FrbaHotel/FrbaHotel/obj/Release/FrbaHotel.exe
