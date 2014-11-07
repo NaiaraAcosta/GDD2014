@@ -704,7 +704,7 @@ AS
 BEGIN
 DECLARE 
 @i tinyint =1,
-@id_hab numeric =CONTROL_ZETA.get_id_habitacion(@nro_hab,@id_hotel),
+@id_hab numeric =CONTROL_ZETA.get_id_habitacion(@nro_hab,@id_hotel)
 --@id_est numeric = 0
 
 --set @id_est=CONTROL_ZETA.get_estadia(@id_hab)
@@ -716,13 +716,12 @@ DECLARE
 		BEGIN
 			INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID)
 			VALUES (@id_hab,@id_con,@id_est)
-		END;
+		END
 		set @error=1	
-	END;	
-	ELSE
-	set @error=5		
-	END;
-END;
+	END	
+	ELSE set @error=5		
+	
+END
 GO
 ---------------
 ----LOGIN------
