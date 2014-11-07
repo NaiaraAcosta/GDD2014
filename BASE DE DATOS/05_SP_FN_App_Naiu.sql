@@ -643,10 +643,12 @@ IF EXISTS(SELECT *FROM CONTROL_ZETA.RESERVA R WHERE R.RESERVA_ID=@id_reserva AND
 		WHERE RESERVA_ID=@id_reserva
 		set @error=1
 		COMMIT
-	END;
+	END
 else
+	BEGIN
 	set @error=5
-	ROLLBACK
+	ROLLBACK TRANSACTION
+	END
 END;
 
 GO
@@ -696,19 +698,18 @@ GO
 
 DROP PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE
 GO
-CREATE PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE(@id_hotel int, @nro_hab SMALLINT, @id_con smallint, @cant tinyint, @error tinyint OUTPUT )
+CREATE PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE(@id_hotel int, @nro_hab SMALLINT, @id_con smallint, @id_est numeric,@cant tinyint, @error tinyint OUTPUT )
 AS
 --@Desc:Se registran los consumibles
 BEGIN
 DECLARE 
 @i tinyint =1,
 @id_hab numeric =CONTROL_ZETA.get_id_habitacion(@nro_hab,@id_hotel),
-@id_est numeric = 0
+--@id_est numeric = 0
 
-set @id_est=CONTROL_ZETA.get_estadia(@id_hab)
+--set @id_est=CONTROL_ZETA.get_estadia(@id_hab)
 
-IF (@id_est>0)
-	BEGIN
+
 	IF @id_hab>0
 	BEGIN
 		WHILE @i<@cant
@@ -721,8 +722,6 @@ IF (@id_est>0)
 	ELSE
 	set @error=5		
 	END;
-ELSE
-set @error=6
 END;
 GO
 ---------------
