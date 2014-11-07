@@ -150,30 +150,29 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(7, 78);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(184, 13);
+            this.label8.Size = new System.Drawing.Size(0, 13);
             this.label8.TabIndex = 2;
-            this.label8.Text = "El precio total es de: PRECIO TOTAL";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(7, 49);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(174, 13);
+            this.label7.Size = new System.Drawing.Size(0, 13);
             this.label7.TabIndex = 1;
-            this.label7.Text = "El precio por noche es de: PRECIO";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(7, 20);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(151, 13);
+            this.label6.Size = new System.Drawing.Size(227, 13);
             this.label6.TabIndex = 0;
-            this.label6.Text = "Existe/No Existe disponibilidad";
+            this.label6.Text = "Se debe verificar la reserva antes de continuar";
             // 
             // button1
             // 
+            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(197, 398);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);

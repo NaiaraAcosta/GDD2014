@@ -19,8 +19,11 @@ namespace FrbaHotel.Generar_Modificar_Reserva
         List<int> idReg = new List<int>();
         List<int> listHab = new List<int>();
         bool verificado;
+        bool yaVerificado;
         bool primeraVez = true;
         string idResTemp = "";
+        string reserva = "";
+        string cliente = "";
         public AltaReserva()
         {
             InitializeComponent();
@@ -32,6 +35,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             back = atras;
             cargarDatos();
             dateTimePicker1.MinDate = DateTime.Today;
+            dateTimePicker2.MinDate = DateTime.Today;
         }
 
         public AltaReserva(Form atras, SqlDataReader reader, SqlConnection conn)
@@ -42,8 +46,6 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             //dateTimePicker1.MinDate = DateTime.Today;
             string fechaInicio = "";
             string fechaHasta = "";
-            string reservaID = "";
-            
             string detalle = "";
             while (reader.Read())
             {
@@ -59,7 +61,9 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                 dateTimePicker2.Value = new DateTime(int.Parse(result[2]), int.Parse(result[1]), int.Parse(result[0]));
 
                 comboBox2.Text = reader["REG_DESCRIPCION"].ToString();
-                reservaID = reader["RESERVA_ID"].ToString();
+
+                reserva = reader["RESERVA_ID"].ToString();
+                cliente = reader["CLIENTE_ID"].ToString();
 
                 detalle = string.Format("{0} - {1} {2}",
                         reader["LOC_DETALLE"].ToString().Trim(),
@@ -71,9 +75,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             }
             reader.Close();
             conn.Close();
-
-            
-            cargarHabitaciones(reservaID);
+            cargarHabitaciones(reserva);
         }
 
         private void cargarHabitaciones(string reservaID)
@@ -180,7 +182,8 @@ namespace FrbaHotel.Generar_Modificar_Reserva
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
             dateTimePicker2.MinDate = dateTimePicker1.Value;
-            informar(verificado);
+            yaVerificado = false;
+            informar(verificado, yaVerificado);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -190,12 +193,14 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            informar(verificado);
+            yaVerificado = false;
+            informar(verificado, yaVerificado);
         }
 
         private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
         {
-            informar(verificado);
+            yaVerificado = false;
+            informar(verificado, yaVerificado);
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
@@ -235,8 +240,33 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void button2_Click(object sender, EventArgs e)
         {
+            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            SqlConnection con = new SqlConnection(ConnStr);
+            con.Open();
+            limpiarSiEsNecesario(con);
+            con.Close();
             back.Show();
             this.Close();
+        }
+
+        private void limpiarSiEsNecesario(SqlConnection con)
+        {
+            if (!primeraVez)
+            {
+                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.LIMPIAR_PEDIDO", con);
+                scCommand.CommandType = CommandType.StoredProcedure;
+                try
+                {
+                    if (scCommand.Connection.State == ConnectionState.Closed)
+                    {
+                        scCommand.Connection.Open();
+                    }
+                    scCommand.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                }
+            }
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -264,7 +294,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (verificado)
+            if (reserva == "")
             {
                 string[] param = new string[7];
                 param[0] = idHotel[comboBox3.SelectedIndex].ToString();
@@ -280,13 +310,27 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             }
             else
             {
-                MessageBox.Show("Debe verificar disponibilidad, y existir disponibilidad", "No se puede avanzar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string[] param = new string[8];
+                param[0] = idHotel[comboBox3.SelectedIndex].ToString();
+                param[1] = dateTimePicker1.Value.ToString();
+                param[2] = dateTimePicker2.Value.ToString();
+                param[3] = idReg[comboBox2.SelectedIndex].ToString();
+                param[4] = cliente; //cliente id
+                param[5] = Login.Class1.user; //id usr
+                param[6] = reserva;
+                param[7] = new DateTime(2012, 01, 01).ToString();
+                ReservaFinalizada f = new ReservaFinalizada(this, back, param);
+                f.Show();
+                this.Hide();
             }
+            
+            
         }
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            informar(verificado);
+            yaVerificado = false;
+            informar(verificado, yaVerificado);
         }
 
         private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -343,117 +387,140 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void button3_Click(object sender, EventArgs e)
         {
-            List<int> cantidad = new List<int>();
-            List<int> result = new List<int>();
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
-            SqlConnection con = new SqlConnection(ConnStr);
-            con.Open();
-            if (!primeraVez)
+            if (sePuedeVerificar())
             {
-                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.LIMPIAR_PEDIDO", con);
-                scCommand.CommandType = CommandType.StoredProcedure;
+                List<int> cantidad = new List<int>();
+                List<int> result = new List<int>();
+                string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+                SqlConnection con = new SqlConnection(ConnStr);
+                con.Open();
+                limpiarSiEsNecesario(con);
+                primeraVez = false;
+                SqlTransaction transaction = con.BeginTransaction();
                 try
                 {
-                    if (scCommand.Connection.State == ConnectionState.Closed)
+                    for (int i = 0; i < idHab.Count; i++)
                     {
-                        scCommand.Connection.Open();
-                    }
-                    scCommand.ExecuteNonQuery();
-                    primeraVez = false;
-                }
-                catch (Exception)
-                {
-                }
-            }
-            SqlTransaction transaction = con.BeginTransaction();
-            //try
-            //{
-                for(int i = 0; i < idHab.Count; i++)
-                {
-                    int tipo = idHab[i];
-                    cantidad.Add(cantHab(tipo));
-                    if (cantidad[i] != 0)
-                    {
-                        SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD", con, transaction);
-                        scCommand.CommandType = CommandType.StoredProcedure;
-                        scCommand.Parameters.AddWithValue("@id_res", DBNull.Value);
-                        scCommand.Parameters.Add("@hotel_id", SqlDbType.Int).Value = idHotel[comboBox3.SelectedIndex];
-                        scCommand.Parameters.Add("@fe_desde", SqlDbType.Date).Value = dateTimePicker1.Value;
-                        scCommand.Parameters.Add("@fe_hasta ", SqlDbType.Date).Value = dateTimePicker2.Value;
-                        scCommand.Parameters.Add("@cant_hab", SqlDbType.TinyInt).Value = cantidad[i];
-                        scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(2012, 01, 01);
-                        scCommand.Parameters.Add("@id_tipo_hab", SqlDbType.SmallInt).Value = tipo;
-                        scCommand.Parameters.Add("@id_regimen", SqlDbType.TinyInt).Value = idReg[comboBox2.SelectedIndex];
-                        scCommand.Parameters.Add("@res", SqlDbType.SmallInt).Direction = ParameterDirection.Output;
-                        scCommand.Parameters.Add("@id_res_new_temp", SqlDbType.Int).Direction = ParameterDirection.Output;
-                        //try
-                        //{
-                            if (scCommand.Connection.State == ConnectionState.Closed)
+                        int tipo = idHab[i];
+                        cantidad.Add(cantHab(tipo));
+                        if (cantidad[i] != 0)
+                        {
+                            SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_VERIFICA_DISPONIBILIDAD", con, transaction);
+                            scCommand.CommandType = CommandType.StoredProcedure;
+                            if (reserva == "")
                             {
-                                scCommand.Connection.Open();
+                                scCommand.Parameters.AddWithValue("@id_res", DBNull.Value);
                             }
-                            scCommand.ExecuteNonQuery();
-                            result.Add(int.Parse(scCommand.Parameters["@res"].Value.ToString()));
-                            idResTemp = scCommand.Parameters["@id_res_new_temp"].Value.ToString();
-                        //}
-                        //catch (Exception)
-                        //{
-                        //}
+                            else
+                            {
+                                scCommand.Parameters.Add("@id_res", SqlDbType.Int).Value = int.Parse(reserva);
+                            }
+                            scCommand.Parameters.Add("@hotel_id", SqlDbType.Int).Value = idHotel[comboBox3.SelectedIndex];
+                            scCommand.Parameters.Add("@fe_desde", SqlDbType.Date).Value = dateTimePicker1.Value;
+                            scCommand.Parameters.Add("@fe_hasta ", SqlDbType.Date).Value = dateTimePicker2.Value;
+                            scCommand.Parameters.Add("@cant_hab", SqlDbType.TinyInt).Value = cantidad[i];
+                            scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(2012, 01, 01);
+                            scCommand.Parameters.Add("@id_tipo_hab", SqlDbType.SmallInt).Value = tipo;
+                            scCommand.Parameters.Add("@id_regimen", SqlDbType.TinyInt).Value = idReg[comboBox2.SelectedIndex];
+                            scCommand.Parameters.Add("@res", SqlDbType.SmallInt).Direction = ParameterDirection.Output;
+                            scCommand.Parameters.Add("@id_res_new_temp", SqlDbType.Int).Direction = ParameterDirection.Output;
+                            try
+                            {
+                                if (scCommand.Connection.State == ConnectionState.Closed)
+                                {
+                                    scCommand.Connection.Open();
+                                }
+                                scCommand.ExecuteNonQuery();
+                                result.Add(int.Parse(scCommand.Parameters["@res"].Value.ToString()));
+                                idResTemp = scCommand.Parameters["@id_res_new_temp"].Value.ToString();
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
                     }
-                }   
-                transaction.Commit();
-            //}
-            //catch (SqlException)
-            //{
-            //    transaction.Rollback();
-            //}
-
-
-            
-            SqlCommand Totalf = new SqlCommand("SELECT CONTROL_ZETA.SP_PRECIO_TOTAL(@criterio ,@fe_desde ,@fe_hasta ,@id_res ,@id_hotel)", con);
-            Totalf.Parameters.Add("@criterio", SqlDbType.TinyInt).Value = 0;
-            Totalf.Parameters.Add("@fe_desde", SqlDbType.Date).Value = dateTimePicker1.Value;
-            Totalf.Parameters.Add("@fe_hasta", SqlDbType.Date).Value = dateTimePicker2.Value;
-            Totalf.Parameters.Add("@id_res", SqlDbType.Int).Value = idResTemp;
-            Totalf.Parameters.Add("@id_hotel", SqlDbType.Int).Value = idHotel[comboBox3.SelectedIndex];
-            SqlDataReader reader = Totalf.ExecuteReader();
-            while (reader.Read())
-            {
-                string precioTotal = reader["LOC_DETALLE"].ToString();
-            }
-            
-            //string precioTotal = Totalf.ExecuteScalar().ToString();
-
-
-            Totalf = new SqlCommand("SELECT CONTROL_ZETA.SP_PRECIO_TOTAL(@criterio ,@fe_desde ,@fe_hasta ,@id_res ,@id_hotel)", con);
-            new SqlParameter("@criterio", SqlDbType.TinyInt).Value = 1;
-            new SqlParameter("@fe_desde", SqlDbType.Date).Value = dateTimePicker1.Value;
-            new SqlParameter("@fe_hasta", SqlDbType.Date).Value = dateTimePicker2.Value;
-            new SqlParameter("@id_res", SqlDbType.Int).Value = idResTemp;
-            new SqlParameter("@id_hotel", SqlDbType.Int).Value = idHotel[comboBox3.SelectedIndex];
-            int precioNoche = int.Parse(Totalf.ExecuteScalar().ToString());
-
-            con.Close();
-            bool verificado = true;
-            for (int i = 0; i < result.Count; i++)
-            {
-                if (result[i] == 0)
-                {
-                    verificado = false;
+                    transaction.Commit();
                 }
-            }
-            informar(verificado);
-        }
+                catch (SqlException)
+                {
+                    transaction.Rollback();
+                }
 
-        private void informar(bool verificado)
-        {
-            if (verificado)
-            {
-                label6.Text = "Existe disponibilidad para reservar";
+
+                verificado = true;
+                for (int i = 0; i < result.Count; i++)
+                {
+                    if (result[i] == 0)
+                    {
+                        verificado = false;
+                    }
+                }
+                yaVerificado = true;
+                informar(verificado, yaVerificado);
+
+                if (verificado)
+                {
+                    SqlCommand Totalf = new SqlCommand("SELECT CONTROL_ZETA.SP_PRECIO_TOTAL(@criterio ,@fe_desde ,@fe_hasta ,@id_res ,@id_hotel)", con);
+                    Totalf.Parameters.Add("@criterio", SqlDbType.TinyInt).Value = 0;
+                    Totalf.Parameters.Add("@fe_desde", SqlDbType.Date).Value = dateTimePicker1.Value;
+                    Totalf.Parameters.Add("@fe_hasta", SqlDbType.Date).Value = dateTimePicker2.Value;
+                    Totalf.Parameters.Add("@id_res", SqlDbType.Int).Value = idResTemp;
+                    Totalf.Parameters.Add("@id_hotel", SqlDbType.Int).Value = idHotel[comboBox3.SelectedIndex];
+                    SqlDataReader reader = Totalf.ExecuteReader();
+                    string precioNoche = "";
+                    while (reader.Read())
+                    {
+                        precioNoche = reader[0].ToString();
+                    }
+                    reader.Close();
+
+                    Totalf = new SqlCommand("SELECT CONTROL_ZETA.SP_PRECIO_TOTAL(@criterio ,@fe_desde ,@fe_hasta ,@id_res ,@id_hotel)", con);
+                    Totalf.Parameters.Add("@criterio", SqlDbType.TinyInt).Value = 1;
+                    Totalf.Parameters.Add("@fe_desde", SqlDbType.Date).Value = dateTimePicker1.Value;
+                    Totalf.Parameters.Add("@fe_hasta", SqlDbType.Date).Value = dateTimePicker2.Value;
+                    Totalf.Parameters.Add("@id_res", SqlDbType.Int).Value = idResTemp;
+                    Totalf.Parameters.Add("@id_hotel", SqlDbType.Int).Value = idHotel[comboBox3.SelectedIndex];
+                    reader = Totalf.ExecuteReader();
+                    string precioTotal = "";
+                    while (reader.Read())
+                    {
+                        precioTotal = reader[0].ToString();
+                    }
+
+                    label7.Text = "El precio por noche es de: " + precioNoche;
+                    label8.Text = "El precio total es de: " + precioTotal;
+                }
+                con.Close();
             }
             else
             {
-                label6.Text = "No existe disponibilidad para reservar";
+                MessageBox.Show("Existen datos invalidos", "No se puede verificar disponibilidad", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void informar(bool verificado, bool yaVerificado)
+        {
+            if (yaVerificado)
+            {
+                if (verificado)
+                {
+                    label6.Text = "Existe disponibilidad para reservar";
+                    button1.Enabled = true;
+                }
+                else
+                {
+                    label6.Text = "No existe disponibilidad para reservar";
+                    label7.Text = "";
+                    label8.Text = "";
+                    button1.Enabled = false;
+                }
+            }
+            else
+            {
+                label6.Text = "Se debe verificar la reserva antes de continuar";
+                label7.Text = "";
+                label8.Text = "";
+                button1.Enabled = false;
             }
         }
         private int cantHab(int tipo)
@@ -463,7 +530,25 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            informar(verificado);
+            yaVerificado = false;
+            informar(verificado, yaVerificado);
+        }
+
+        private bool sePuedeVerificar()
+        {
+            if (comboBox2.SelectedItem != null &&
+                comboBox3.SelectedItem != null &&
+                !(dateTimePicker1.Value.Day == dateTimePicker2.Value.Day &&
+                dateTimePicker1.Value.Month == dateTimePicker2.Value.Month &&
+                dateTimePicker1.Value.Year == dateTimePicker2.Value.Year) &&
+                checkedListBox1.CheckedIndices.Count != 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
