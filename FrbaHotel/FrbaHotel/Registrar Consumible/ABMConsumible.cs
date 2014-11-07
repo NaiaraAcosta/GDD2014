@@ -39,16 +39,17 @@ namespace FrbaHotel.Registrar_Consumible
         private void refrescar(string habID, string estadiaID, string clienteID)
         {
             string sCnn = @"data source = localhost\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
-            string sSel = String.Format(@"SELECT estaconsu.EST_ID, CLIENTE_ID, estaconsu.CON_ID, CON_DESCRIPCION, HAB_ID FROM 
-                [GD2C2014].[CONTROL_ZETA].[ESTADIA_CLIENTE] estaclie,
-		        [GD2C2014].[CONTROL_ZETA].[CONSUMIBLE] consu,
-		        [GD2C2014].[CONTROL_ZETA].[ESTADIA_HAB_CON] estaconsu
-		        where estaconsu.EST_ID = estaclie.EST_ID
-		        and estaconsu.CON_ID = consu.CON_ID");
+            string sSel = String.Format(@"SELECT CLIENTE_ID, HAB_ID, esta.EST_ID, reserhab.RESERVA_ID, EST_FECHA_DESDE 
+                FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA_CLIENTE] estaclie,
+                [GD2C2014].[CONTROL_ZETA].[ESTADIA] esta,
+		        [GD2C2014].[CONTROL_ZETA].[RESERVA_HABITACION] reserhab
+                where esta.EST_FECHA_HASTA is null
+                and esta.EST_ID = estaclie.EST_ID
+                and reserhab.RESERVA_ID = esta.EST_RESERVA_ID");
 
             if (habID != "")
             {
-                sSel = String.Format("{0} and estaconsu.HAB_ID = {1}", sSel, habID);
+                sSel = String.Format("{0} and reserhab.HAB_ID = {1}", sSel, habID);
             }
             if (estadiaID != "")
             {
@@ -85,7 +86,10 @@ namespace FrbaHotel.Registrar_Consumible
 
         private void button1_Click(object sender, EventArgs e)
         {
-            AltaConsumible f = new AltaConsumible(this);
+            string[] param = new string[2];
+            param[0] = dataGridView1.SelectedCells[2].Value.ToString();
+            param[1] = dataGridView1.SelectedCells[1].Value.ToString();
+            AltaConsumible f = new AltaConsumible(this, param);
             f.Show();
             this.Hide();
         }
