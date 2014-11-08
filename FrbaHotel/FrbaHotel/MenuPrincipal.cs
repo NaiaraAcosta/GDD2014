@@ -261,7 +261,7 @@ namespace FrbaHotel
 
         private void registarEstadiaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form f = new Registrar_Estadia.RegistrarEstadia();
+            Form f = new Registrar_Estadia.RegistrarEstadia(this);
             f.Show();
             this.Hide();
         }
