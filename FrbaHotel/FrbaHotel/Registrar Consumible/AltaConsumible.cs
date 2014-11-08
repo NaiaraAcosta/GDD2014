@@ -103,5 +103,81 @@ namespace FrbaHotel.Registrar_Consumible
                 return primerUncheked(comienzo + 1);
             }
         }
+
+        private int cantCon(string tipo)
+        {
+            return listCon.Count(x => x == tipo) - 1;
+        }
+
+        private int buscarHotel(string estadia)
+        {
+            string ConnStr2 = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            SqlConnection conn2 = new SqlConnection(ConnStr2);
+            string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[RESERVA] res, [GD2C2014].[CONTROL_ZETA].[ESTADIA] est
+                    where est.EST_RESERVA_ID = res.RESERVA_ID
+                    and est.EST_ID = {0}", estadia);
+            SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
+            conn2.Open();
+            SqlDataReader reader2 = cmd2.ExecuteReader();
+            int salida = 0;
+            while (reader2.Read())
+            {
+                salida = int.Parse(reader2["RESERVA_ID_HOTEL"].ToString());
+            }
+            reader2.Close();
+            conn2.Close();
+            return salida;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int idHotel = buscarHotel(param[0]);
+            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            SqlConnection con = new SqlConnection(ConnStr);
+            con.Open();
+            SqlTransaction transaction = con.BeginTransaction();
+            List<int> cantidad = new List<int>();
+            bool conError = false;
+            for (int i = 0; i < idCon.Count; i++)
+            {
+                string tipo = idCon[i];
+                cantidad.Add(cantCon(tipo));
+                if (cantidad[i] != 0)
+                {
+                    SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE", con, transaction);
+                    scCommand.CommandType = CommandType.StoredProcedure;
+                    scCommand.Parameters.Add("@id_hotel", SqlDbType.Int).Value = idHotel;
+                    scCommand.Parameters.Add("@nro_hab", SqlDbType.SmallInt).Value = param[1];
+                    scCommand.Parameters.Add("@id_con ", SqlDbType.SmallInt).Value = idCon[i];
+                    scCommand.Parameters.Add("@id_est", SqlDbType.Int).Value = param[0];
+                    scCommand.Parameters.Add("@cant", SqlDbType.TinyInt).Value = cantidad[i];
+                    scCommand.Parameters.Add("@error", SqlDbType.SmallInt).Direction = ParameterDirection.Output;
+                    if (scCommand.Connection.State == ConnectionState.Closed)
+                    {
+                        scCommand.Connection.Open();
+                    }
+                    scCommand.ExecuteNonQuery();
+                    int result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+                    if (result != 1)
+                    {
+                        string mensaje = string.Format("Error en la carga, COD: {0}", result);
+                        MessageBox.Show(mensaje , "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        conError = true;
+                    }
+                }
+            }
+            if (!conError)
+            {
+                DialogResult seguro = MessageBox.Show("Esta seguro de agregar los consumibles?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (seguro == DialogResult.Yes)
+                {
+                    transaction.Commit();
+                }
+                else
+                {
+                    transaction.Rollback();
+                }
+            }
+        }
     }
 }
