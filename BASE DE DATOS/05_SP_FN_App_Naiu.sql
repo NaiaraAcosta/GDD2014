@@ -716,6 +716,7 @@ DECLARE
 		BEGIN
 			INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID)
 			VALUES (@id_hab,@id_con,@id_est)
+			set @i=@i+1
 		END
 		set @error=1	
 	END	
