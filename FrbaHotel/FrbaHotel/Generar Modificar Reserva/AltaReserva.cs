@@ -397,8 +397,8 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                 limpiarSiEsNecesario(con);
                 primeraVez = false;
                 SqlTransaction transaction = con.BeginTransaction();
-                try
-                {
+                //try
+                //{
                     for (int i = 0; i < idHab.Count; i++)
                     {
                         int tipo = idHab[i];
@@ -424,8 +424,6 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                             scCommand.Parameters.Add("@id_regimen", SqlDbType.TinyInt).Value = idReg[comboBox2.SelectedIndex];
                             scCommand.Parameters.Add("@res", SqlDbType.SmallInt).Direction = ParameterDirection.Output;
                             scCommand.Parameters.Add("@id_res_new_temp", SqlDbType.Int).Direction = ParameterDirection.Output;
-                            try
-                            {
                                 if (scCommand.Connection.State == ConnectionState.Closed)
                                 {
                                     scCommand.Connection.Open();
@@ -433,18 +431,14 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                                 scCommand.ExecuteNonQuery();
                                 result.Add(int.Parse(scCommand.Parameters["@res"].Value.ToString()));
                                 idResTemp = scCommand.Parameters["@id_res_new_temp"].Value.ToString();
-                            }
-                            catch (Exception)
-                            {
-                            }
                         }
                     }
                     transaction.Commit();
-                }
-                catch (SqlException)
-                {
-                    transaction.Rollback();
-                }
+                //}
+                //catch (SqlException)
+                //{
+                //    transaction.Rollback();
+                //}
 
 
                 verificado = true;
