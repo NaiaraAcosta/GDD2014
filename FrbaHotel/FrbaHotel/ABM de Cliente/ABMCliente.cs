@@ -168,5 +168,10 @@ namespace FrbaHotel.ABM_de_Cliente
         {
             
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

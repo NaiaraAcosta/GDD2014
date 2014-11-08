@@ -14,7 +14,7 @@ namespace FrbaHotel.ABM_de_Rol
     public partial class AltaRol : Form
     {
         Form back = null;
-        int IDRol;
+        int IDRol = 0;
         public AltaRol()
         {
             InitializeComponent();
@@ -29,7 +29,82 @@ namespace FrbaHotel.ABM_de_Rol
 
         private void button2_Click(object sender, EventArgs e)
         {
-           
+            //if (IDRol != 0)
+            //{
+            //    string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            //    SqlConnection con = new SqlConnection(ConnStr);
+            //    con.Open();
+            //    SqlTransaction transaction = con.BeginTransaction();
+            //    List<int> cantidad = new List<int>();
+            //    bool conError = false;
+            //    for (int i = 0; i < idCon.Count; i++)
+            //    {
+            //        string tipo = idCon[i];
+            //        cantidad.Add(cantCon(tipo));
+            //        if (cantidad[i] != 0)
+            //        {
+            //            SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ABM_ROL", con, transaction);
+            //            scCommand.CommandType = CommandType.StoredProcedure;
+            //            scCommand.Parameters.Add("@id_hotel", SqlDbType.Int).Value = idHotel;
+            //            scCommand.Parameters.Add("@nro_hab", SqlDbType.SmallInt).Value = nroHab;
+            //            scCommand.Parameters.Add("@id_con ", SqlDbType.SmallInt).Value = int.Parse(idCon[i]);
+            //            scCommand.Parameters.Add("@id_est", SqlDbType.Int).Value = int.Parse(param[0]);
+            //            scCommand.Parameters.Add("@cant", SqlDbType.TinyInt).Value = cantidad[i];
+            //            scCommand.Parameters.Add("@error", SqlDbType.SmallInt).Direction = ParameterDirection.Output;
+            //            if (scCommand.Connection.State == ConnectionState.Closed)
+            //            {
+            //                scCommand.Connection.Open();
+            //            }
+            //            scCommand.ExecuteNonQuery();
+            //            int result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+            //            if (result != 1)
+            //            {
+            //                string mensaje = string.Format("Error en la carga, COD: {0}", result);
+            //                MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //                conError = true;
+            //            }
+            //        }
+            //    }
+
+
+
+            //    int idHotel = buscarHotel(param[0]);
+            //    int nroHab = buscarHab(idHotel, param[1]);
+            //    string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            //    SqlConnection con = new SqlConnection(ConnStr);
+            //    con.Open();
+            //    SqlTransaction transaction = con.BeginTransaction();
+            //    List<int> cantidad = new List<int>();
+            //    bool conError = false;
+            //    for (int i = 0; i < idCon.Count; i++)
+            //    {
+            //        string tipo = idCon[i];
+            //        cantidad.Add(cantCon(tipo));
+            //        if (cantidad[i] != 0)
+            //        {
+            //            SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE", con, transaction);
+            //            scCommand.CommandType = CommandType.StoredProcedure;
+            //            scCommand.Parameters.Add("@id_hotel", SqlDbType.Int).Value = idHotel;
+            //            scCommand.Parameters.Add("@nro_hab", SqlDbType.SmallInt).Value = nroHab;
+            //            scCommand.Parameters.Add("@id_con ", SqlDbType.SmallInt).Value = int.Parse(idCon[i]);
+            //            scCommand.Parameters.Add("@id_est", SqlDbType.Int).Value = int.Parse(param[0]);
+            //            scCommand.Parameters.Add("@cant", SqlDbType.TinyInt).Value = cantidad[i];
+            //            scCommand.Parameters.Add("@error", SqlDbType.SmallInt).Direction = ParameterDirection.Output;
+            //            if (scCommand.Connection.State == ConnectionState.Closed)
+            //            {
+            //                scCommand.Connection.Open();
+            //            }
+            //            scCommand.ExecuteNonQuery();
+            //            int result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+            //            if (result != 1)
+            //            {
+            //                string mensaje = string.Format("Error en la carga, COD: {0}", result);
+            //                MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //                conError = true;
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         private void AltaRol_Load(object sender, EventArgs e)

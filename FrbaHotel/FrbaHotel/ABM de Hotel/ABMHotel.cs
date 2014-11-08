@@ -105,10 +105,12 @@ namespace FrbaHotel.ABM_de_Hotel
                 string direccion = string.Format("{0} {1}", dataGridView1.SelectedCells[4].Value.ToString(),
                     dataGridView1.SelectedCells[5].Value.ToString());
                 Form f = new AltaHotel(this,
+                    dataGridView1.SelectedCells[0].Value.ToString(), //IDhotel
                     dataGridView1.SelectedCells[1].Value.ToString(), //nombre
                     dataGridView1.SelectedCells[2].Value.ToString(), //mail
                     dataGridView1.SelectedCells[3].Value.ToString(), //telefono
-                    direccion, //direccion
+                    dataGridView1.SelectedCells[4].Value.ToString(), //calle
+                    dataGridView1.SelectedCells[5].Value.ToString(), //nro
                     dataGridView1.SelectedCells[7].Value.ToString(), //cant estrellas
                     dataGridView1.SelectedCells[9].Value.ToString(), //recarga estrellas
                     dataGridView1.SelectedCells[6].Value.ToString(), //id ciudad

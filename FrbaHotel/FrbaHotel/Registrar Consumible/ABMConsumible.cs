@@ -39,13 +39,16 @@ namespace FrbaHotel.Registrar_Consumible
         private void refrescar(string habID, string estadiaID, string clienteID)
         {
             string sCnn = @"data source = localhost\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
-            string sSel = String.Format(@"SELECT CLIENTE_ID, HAB_ID, esta.EST_ID, reserhab.RESERVA_ID, EST_FECHA_DESDE 
+            string sSel = String.Format(@"SELECT reser.CLIENTE_ID, HAB_ID, esta.EST_ID, reserhab.RESERVA_ID, EST_FECHA_DESDE 
                 FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA_CLIENTE] estaclie,
                 [GD2C2014].[CONTROL_ZETA].[ESTADIA] esta,
-		        [GD2C2014].[CONTROL_ZETA].[RESERVA_HABITACION] reserhab
+		        [GD2C2014].[CONTROL_ZETA].[RESERVA_HABITACION] reserhab,
+                [GD2C2014].[CONTROL_ZETA].[RESERVA] reser
                 where esta.EST_FECHA_HASTA is null
                 and esta.EST_ID = estaclie.EST_ID
-                and reserhab.RESERVA_ID = esta.EST_RESERVA_ID");
+                and reserhab.RESERVA_ID = esta.EST_RESERVA_ID
+                and reserhab.RESERVA_ID = reser.RESERVA_ID
+                and reser.RESERVA_ID_HOTEL = {0}", Login.Class1.hotel);
 
             if (habID != "")
             {
