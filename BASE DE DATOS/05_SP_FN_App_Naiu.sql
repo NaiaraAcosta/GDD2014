@@ -712,7 +712,7 @@ DECLARE
 
 	IF @id_hab>0
 	BEGIN
-		WHILE @i<@cant
+		WHILE @i<=@cant
 		BEGIN
 			INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID)
 			VALUES (@id_hab,@id_con,@id_est)
