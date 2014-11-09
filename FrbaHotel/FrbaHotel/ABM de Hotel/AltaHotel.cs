@@ -71,7 +71,7 @@ namespace FrbaHotel.ABM_de_Hotel
         {
             listReg.Clear();
             checkedListBox1.Items.Clear();
-            string ConnStr2 = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[REGIMEN]");
             SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
@@ -110,7 +110,7 @@ namespace FrbaHotel.ABM_de_Hotel
 
         private void cargarComboBox()
         {
-            string ConnStr2 = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[LOCALIDAD]");
             SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
@@ -196,8 +196,8 @@ namespace FrbaHotel.ABM_de_Hotel
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection con = new SqlConnection(ConnStr);
             con.Open();
             SqlTransaction transaction = con.BeginTransaction();
@@ -294,7 +294,10 @@ namespace FrbaHotel.ABM_de_Hotel
             }
 
             scCommand.Parameters.Add("@usr", SqlDbType.VarChar, 50).Value = Login.Class1.user;
-            scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(2012, 01, 01);
+            int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+            int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+            int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+            scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(año, mes, dia);
             scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
             scCommand.Parameters.Add("@id_hotel_new", SqlDbType.Int).Direction = ParameterDirection.Output;
             if (scCommand.Connection.State == ConnectionState.Closed)
@@ -347,7 +350,10 @@ namespace FrbaHotel.ABM_de_Hotel
                         scCommand.Parameters.Add("@accion", SqlDbType.TinyInt).Value = 1;
                         scCommand.Parameters.Add("@id_hotel", SqlDbType.Int).Value = int.Parse(idHotel);
                         scCommand.Parameters.Add("@id_regimen", SqlDbType.TinyInt).Value = i + 1;
-                        scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(2012, 01, 01);
+                        int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+                        int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+                        int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+                        scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(año, mes, dia);
                         scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
                         if (scCommand.Connection.State == ConnectionState.Closed)
                         {
@@ -369,7 +375,10 @@ namespace FrbaHotel.ABM_de_Hotel
                         scCommand.Parameters.Add("@accion", SqlDbType.TinyInt).Value = 3;
                         scCommand.Parameters.Add("@id_hotel", SqlDbType.Int).Value = int.Parse(idHotel);
                         scCommand.Parameters.Add("@id_regimen", SqlDbType.TinyInt).Value = i + 1;
-                        scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(2012, 01, 01);
+                        int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+                        int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+                        int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+                        scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(año, mes, dia);
                         scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
                         if (scCommand.Connection.State == ConnectionState.Closed)
                         {

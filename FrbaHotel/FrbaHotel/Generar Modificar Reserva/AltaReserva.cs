@@ -80,8 +80,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void cargarHabitaciones(string reservaID)
         {
-            string ConnStr2 = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
-
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[RESERVA_HABITACION] reshab,
                     [GD2C2014].[CONTROL_ZETA].[HABITACION] hab, 
@@ -120,8 +119,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void cargarDatos()
         {
-            string ConnStr2 = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
-
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[TIPO_HAB]");
             SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
@@ -148,8 +146,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             reader2.Close();
             conn2.Close();
             {
-                string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
-
+                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
                 SqlConnection conn = new SqlConnection(ConnStr);
                 string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HOTEL] hotel, 
                     [GD2C2014].[CONTROL_ZETA].[LOCALIDAD] loc 
@@ -240,7 +237,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection con = new SqlConnection(ConnStr);
             con.Open();
             limpiarSiEsNecesario(con);
@@ -303,7 +300,10 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                 param[3] = idReg[comboBox2.SelectedIndex].ToString();
                 param[4] = ""; //cliente id
                 param[5] = Login.Class1.user; //id usr
-                param[6] = new DateTime(2012, 01, 01).ToString();
+                int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+                int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+                int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+                param[6] = new DateTime(año, mes, dia).ToString();
                 TipoCliente f = new TipoCliente(this, back, param);
                 f.Show();
                 this.Hide();
@@ -318,7 +318,10 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                 param[4] = cliente; //cliente id
                 param[5] = Login.Class1.user; //id usr
                 param[6] = reserva;
-                param[7] = new DateTime(2012, 01, 01).ToString();
+                int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+                int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+                int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+                param[7] = new DateTime(año, mes, dia).ToString();
                 ReservaFinalizada f = new ReservaFinalizada(this, back, param);
                 f.Show();
                 this.Hide();
@@ -391,7 +394,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             {
                 List<int> cantidad = new List<int>();
                 List<int> result = new List<int>();
-                string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
                 SqlConnection con = new SqlConnection(ConnStr);
                 con.Open();
                 limpiarSiEsNecesario(con);
@@ -419,7 +422,10 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                             scCommand.Parameters.Add("@fe_desde", SqlDbType.Date).Value = dateTimePicker1.Value;
                             scCommand.Parameters.Add("@fe_hasta ", SqlDbType.Date).Value = dateTimePicker2.Value;
                             scCommand.Parameters.Add("@cant_hab", SqlDbType.TinyInt).Value = cantidad[i];
-                            scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(2012, 01, 01);
+                            int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+                            int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+                            int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+                            scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(año, mes, dia);
                             scCommand.Parameters.Add("@id_tipo_hab", SqlDbType.SmallInt).Value = tipo;
                             scCommand.Parameters.Add("@id_regimen", SqlDbType.TinyInt).Value = idReg[comboBox2.SelectedIndex];
                             scCommand.Parameters.Add("@res", SqlDbType.SmallInt).Direction = ParameterDirection.Output;

@@ -26,7 +26,7 @@ namespace FrbaHotel.Registrar_Consumible
             InitializeComponent();
             back = atras;
 
-            string ConnStr2 = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[CONSUMIBLE]");
             SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
@@ -58,7 +58,7 @@ namespace FrbaHotel.Registrar_Consumible
             idCon2 = new List<string>();
             listCon2 = new List<string>();
             checkedListBox2.Items.Clear();
-            string ConnStr2 = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[CONSUMIBLE]");
             SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
@@ -80,7 +80,7 @@ namespace FrbaHotel.Registrar_Consumible
 
         private void cargarCheckedListBox()
         {
-            string ConnStr2 = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA_HAB_CON] estahabcon 
                     where estahabcon.EST_ID = '{0}' 
@@ -174,7 +174,7 @@ namespace FrbaHotel.Registrar_Consumible
 
         private int buscarHotel(string estadia)
         {
-            string ConnStr2 = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[RESERVA] res, [GD2C2014].[CONTROL_ZETA].[ESTADIA] est
                     where est.EST_RESERVA_ID = res.RESERVA_ID
@@ -193,7 +193,7 @@ namespace FrbaHotel.Registrar_Consumible
         }
         private int buscarHab(int idHotel, string idHab)
         {
-            string ConnStr2 = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HABITACION]
                     where HAB_ID_HOTEL = {0}
@@ -215,7 +215,7 @@ namespace FrbaHotel.Registrar_Consumible
         {
             int idHotel = buscarHotel(param[0]);
             int nroHab = buscarHab(idHotel, param[1]);
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection con = new SqlConnection(ConnStr);
             con.Open();
             SqlTransaction transaction = con.BeginTransaction();

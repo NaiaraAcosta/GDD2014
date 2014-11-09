@@ -34,7 +34,7 @@ namespace FrbaHotel.Login
         private Boolean logicaLogueo(string user, string pass)
         {
             string contra = SHA256Encrypt(pass);
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection con = new SqlConnection(ConnStr);
             con.Open();
             SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.LOGIN_USR", con);
@@ -93,7 +93,7 @@ namespace FrbaHotel.Login
 
         private int intentos(string user)
         {
-            string ConnStr2 = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[USUARIO]  
                     where USR_USERNAME = '{0}'", user);

@@ -34,8 +34,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
         {
             if (textBox1.Text != "")
             {
-                string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
-
+                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
                 SqlConnection conn = new SqlConnection(ConnStr);
                 string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[RESERVA] res, 
                     [GD2C2014].[CONTROL_ZETA].[HOTEL] hotel,

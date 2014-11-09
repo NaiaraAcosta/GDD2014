@@ -36,7 +36,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
             List<int> cantidad = new List<int>();
             List<int> result = new List<int>();
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection con = new SqlConnection(ConnStr);
             con.Open();
             {
@@ -88,7 +88,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
             List<int> cantidad = new List<int>();
             List<int> result = new List<int>();
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection con = new SqlConnection(ConnStr);
             con.Open();
             {

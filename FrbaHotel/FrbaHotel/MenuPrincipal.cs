@@ -102,7 +102,7 @@ namespace FrbaHotel
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
 
             SqlConnection conn = new SqlConnection(ConnStr);
             SqlCommand cmd = new SqlCommand("SELECT TOP 10 [Hotel_Ciudad] FROM [GD2C2014].[gd_esquema].[Maestra]", conn);
@@ -116,7 +116,7 @@ namespace FrbaHotel
             conn.Close(); 
 
             string sCnn;
-            sCnn = @"data source = Gonzalo-PC\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
+            sCnn = ConfigurationManager.AppSettings["stringConexion"];
 
             string sSel = @"SELECT TOP 1000 [Hotel_Ciudad]
                                  ,[Hotel_Calle]
@@ -174,7 +174,7 @@ namespace FrbaHotel
             }
 
 
-            string sCnn2 = @"data source = Gonzalo-PC\SQLSERVER2008; initial catalog = AdventureWorks2008; user id = gd; password = gd2014";
+            string sCnn2 = ConfigurationManager.AppSettings["stringConexion"];
             string sSel2 = @"uspGetAddress";
             SqlDataAdapter da2;
             DataTable dt2 = new DataTable();

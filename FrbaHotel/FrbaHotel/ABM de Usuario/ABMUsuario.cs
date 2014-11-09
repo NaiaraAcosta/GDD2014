@@ -27,7 +27,7 @@ namespace FrbaHotel.ABM_de_Usuario
         {
             string value1 = string.Empty;
 
-            string ConnStr = @"Data Source=Gonzalo-PC\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
 
             SqlConnection conn = new SqlConnection(ConnStr);
             SqlCommand cmd = new SqlCommand("SELECT TOP 1000 [Hotel_Ciudad] FROM [GD2C2014].[gd_esquema].[Maestra]", conn);

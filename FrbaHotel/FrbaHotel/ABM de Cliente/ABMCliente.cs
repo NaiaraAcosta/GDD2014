@@ -18,7 +18,7 @@ namespace FrbaHotel.ABM_de_Cliente
         {
             InitializeComponent();
             back = atras;
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
 
             SqlConnection conn = new SqlConnection(ConnStr);
             SqlCommand cmd = new SqlCommand("SELECT distinct CLIENTE_ID_TIPO_DOC FROM [GD2C2014].[CONTROL_ZETA].[CLIENTE]", conn);
@@ -34,7 +34,7 @@ namespace FrbaHotel.ABM_de_Cliente
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string sCnn = @"data source = localhost\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
+            string sCnn = ConfigurationManager.AppSettings["stringConexion"];
             string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[CLIENTE]");
             bool first = true;
 

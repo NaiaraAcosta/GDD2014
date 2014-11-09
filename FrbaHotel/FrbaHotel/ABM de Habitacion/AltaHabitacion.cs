@@ -31,7 +31,7 @@ namespace FrbaHotel.ABM_de_Habitacion
             InitializeComponent();
             back = atras;
 
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn = new SqlConnection(ConnStr);
             string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HABITACION] hab, 
                 [GD2C2014].[CONTROL_ZETA].[TIPO_HAB] tipohab 

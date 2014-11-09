@@ -31,7 +31,7 @@ namespace FrbaHotel.ABM_de_Rol
         {
             //if (IDRol != 0)
             //{
-            //    string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            //    string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             //    SqlConnection con = new SqlConnection(ConnStr);
             //    con.Open();
             //    SqlTransaction transaction = con.BeginTransaction();
@@ -70,7 +70,7 @@ namespace FrbaHotel.ABM_de_Rol
 
             //    int idHotel = buscarHotel(param[0]);
             //    int nroHab = buscarHab(idHotel, param[1]);
-            //    string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            //    string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             //    SqlConnection con = new SqlConnection(ConnStr);
             //    con.Open();
             //    SqlTransaction transaction = con.BeginTransaction();
@@ -109,7 +109,7 @@ namespace FrbaHotel.ABM_de_Rol
 
         private void AltaRol_Load(object sender, EventArgs e)
         {
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn = new SqlConnection(ConnStr);
             string sSel = string.Format(@"SELECT ROL_NOMBRE, ROL_ESTADO FROM [GD2C2014].[Control_zeta].[Rol]  
                 where ROL_ID = {0}" , IDRol);

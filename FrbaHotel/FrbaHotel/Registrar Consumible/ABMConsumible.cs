@@ -38,7 +38,7 @@ namespace FrbaHotel.Registrar_Consumible
 
         private void refrescar(string habID, string estadiaID, string clienteID)
         {
-            string sCnn = @"data source = localhost\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
+            string sCnn = ConfigurationManager.AppSettings["stringConexion"];
             string sSel = String.Format(@"SELECT reser.CLIENTE_ID, HAB_ID, esta.EST_ID, reserhab.RESERVA_ID, EST_FECHA_DESDE 
                 FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA_CLIENTE] estaclie,
                 [GD2C2014].[CONTROL_ZETA].[ESTADIA] esta,

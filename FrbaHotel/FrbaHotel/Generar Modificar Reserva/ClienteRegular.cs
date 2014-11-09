@@ -33,8 +33,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
-
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn = new SqlConnection(ConnStr);
             string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[TIPO_DOC]");
             SqlCommand cmd = new SqlCommand(sSel, conn);
@@ -67,8 +66,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
         private void button1_Click(object sender, EventArgs e)
         {
             string sCnn;
-            sCnn = @"data source = Gonzalo-PC\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
-
+            sCnn = ConfigurationManager.AppSettings["stringConexion"];
             string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[CLIENTE] where 1=1");
             if (comboBox1.Text != "")
             {

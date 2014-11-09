@@ -35,7 +35,7 @@ namespace FrbaHotel.Cancelar_Reserva
         {
             if (textBox1.Text != "")
             {
-                string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
 
                 SqlConnection conn = new SqlConnection(ConnStr);
                 string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[RESERVA] res 
@@ -64,14 +64,17 @@ namespace FrbaHotel.Cancelar_Reserva
 
         private void darDeBaja()
         {
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn = new SqlConnection(ConnStr);
             conn.Open();
             SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_CANCELAR_RESERVA", conn);
             scCommand.CommandType = CommandType.StoredProcedure;
             scCommand.Parameters.Add("@id_reserva", SqlDbType.Int).Value = int.Parse(textBox1.Text);
             scCommand.Parameters.Add("@motivo", SqlDbType.VarChar, 150).Value = richTextBox1.Text;
-            scCommand.Parameters.Add("@fecha_canc ", SqlDbType.Date).Value = new DateTime(2012,01,01);
+            int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+            int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+            int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+            scCommand.Parameters.Add("@fecha_canc ", SqlDbType.Date).Value = new DateTime(año,mes,dia);
             scCommand.Parameters.Add("@id_usr", SqlDbType.VarChar, 50).Value = Login.Class1.user;
             scCommand.Parameters.Add("@id_est", SqlDbType.VarChar, 4).Value = "RCC";
             scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;

@@ -34,7 +34,7 @@ namespace FrbaHotel.Registrar_Estadia
         {
             if (textBox1.Text != "")
             {
-                string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
                 SqlConnection con = new SqlConnection(ConnStr);
                 con.Open();
                 SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_REGISTRAR_ESTADIA", con);
@@ -49,7 +49,10 @@ namespace FrbaHotel.Registrar_Estadia
                 {
                     scCommand.Parameters.Add("@CODIGO_IN_OUT", SqlDbType.TinyInt).Value = 2;
                 }
-                scCommand.Parameters.Add("@FECHA", SqlDbType.Date).Value = new DateTime(2012,01,01);
+                int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+                int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+                int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+                scCommand.Parameters.Add("@FECHA", SqlDbType.Date).Value = new DateTime(año,mes,dia);
                 scCommand.Parameters.Add("@CODIGO", SqlDbType.Int).Direction = ParameterDirection.Output;
                 if (scCommand.Connection.State == ConnectionState.Closed)
                 {
@@ -58,6 +61,19 @@ namespace FrbaHotel.Registrar_Estadia
                 scCommand.ExecuteNonQuery();
                 int result = int.Parse(scCommand.Parameters["@CODIGO"].Value.ToString());
 
+                switch (result)
+                {
+                    case 5:
+                        {
+                            MessageBox.Show("Reserva fuera de tiempo", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    default:
+                        {
+                            MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                        }
+                }
                 con.Close();
             }
         }

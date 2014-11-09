@@ -32,7 +32,7 @@ namespace FrbaHotel.ABM_de_Habitacion
         private void Form2_Load(object sender, EventArgs e)
         {
             string sCnn;
-            sCnn = @"data source = localhost\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
+            sCnn = ConfigurationManager.AppSettings["stringConexion"];
 
             string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HABITACION] where HAB_ID_HOTEL = '{0}'", Login.Class1.hotel);
             SqlDataAdapter da;
@@ -50,7 +50,7 @@ namespace FrbaHotel.ABM_de_Habitacion
             }
 
 
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn = new SqlConnection(ConnStr);
             sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HOTEL] hotel, 
                 [GD2C2014].[CONTROL_ZETA].[LOCALIDAD] loc 

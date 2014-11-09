@@ -32,8 +32,7 @@ namespace FrbaHotel.ABM_de_Rol
 
         private void ABMRol_Load(object sender, EventArgs e)
         {
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
-
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn = new SqlConnection(ConnStr);
             SqlCommand cmd = new SqlCommand("SELECT * FROM [GD2C2014].[Control_Zeta].[Rol]", conn);
             conn.Open();

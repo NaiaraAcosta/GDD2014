@@ -46,8 +46,7 @@ namespace FrbaHotel.ABM_de_Hotel
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string sCnn;
-            sCnn = @"data source = Gonzalo-PC\SQLSERVER2008; initial catalog = GD2C2014; user id = gd; password = gd2014";
+            string sCnn = ConfigurationManager.AppSettings["stringConexion"];
 
             string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HOTEL] where 1=1");
             if (textBox1.Text != "")

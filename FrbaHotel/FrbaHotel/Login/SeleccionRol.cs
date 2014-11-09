@@ -33,8 +33,7 @@ namespace FrbaHotel.Login
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
-
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn = new SqlConnection(ConnStr);
             string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] usr,
                 [GD2C2014].[CONTROL_ZETA].[HOTEL] hotel, [GD2C2014].[CONTROL_ZETA].[ROL] rol, 
@@ -94,7 +93,7 @@ namespace FrbaHotel.Login
                 string[] stringSeparators = new string[] { "-" };
                 string[] result = seleccion.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
 
-                string ConnStr = @"Data Source=localhost\SQLSERVER2008;Initial Catalog=GD2C2014;User ID=gd;Password=gd2014;Trusted_Connection=False;";
+                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
                 SqlConnection conn = new SqlConnection(ConnStr);
                 string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] usr,
                 [GD2C2014].[CONTROL_ZETA].[ROL] rol, 
