@@ -39,20 +39,26 @@ namespace FrbaHotel.Registrar_Consumible
         private void refrescar(string habID, string estadiaID, string clienteID)
         {
             string sCnn = ConfigurationManager.AppSettings["stringConexion"];
-            string sSel = String.Format(@"SELECT reser.CLIENTE_ID, HAB_ID, esta.EST_ID, reserhab.RESERVA_ID, EST_FECHA_DESDE 
+            string sSel = String.Format(@"SELECT reser.CLIENTE_ID as Cliente, 
+                        hab.HAB_NRO as NroHab, 
+                        esta.EST_ID as Estadia, 
+                        reserhab.RESERVA_ID as Reserva, 
+                        EST_FECHA_DESDE  as 'Estadia Desde'
                 FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA_CLIENTE] estaclie,
                 [GD2C2014].[CONTROL_ZETA].[ESTADIA] esta,
 		        [GD2C2014].[CONTROL_ZETA].[RESERVA_HABITACION] reserhab,
-                [GD2C2014].[CONTROL_ZETA].[RESERVA] reser
+                [GD2C2014].[CONTROL_ZETA].[RESERVA] reser,
+                [GD2C2014].[CONTROL_ZETA].[HABITACION] hab
                 where esta.EST_FECHA_HASTA is null
                 and esta.EST_ID = estaclie.EST_ID
                 and reserhab.RESERVA_ID = esta.EST_RESERVA_ID
                 and reserhab.RESERVA_ID = reser.RESERVA_ID
+                and reserhab.HAB_ID = hab.HAB_ID
                 and reser.RESERVA_ID_HOTEL = {0}", Login.Class1.hotel);
 
             if (habID != "")
             {
-                sSel = String.Format("{0} and reserhab.HAB_ID = {1}", sSel, habID);
+                sSel = String.Format("{0} and hab.HAB_NRO = {1}", sSel, habID);
             }
             if (estadiaID != "")
             {

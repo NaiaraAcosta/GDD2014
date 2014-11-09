@@ -207,7 +207,7 @@ namespace FrbaHotel
 
         private void estadísticasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form f = new Listado_Estadistico.Estadisticas();
+            Form f = new Listado_Estadistico.Estadisticas(this);
             f.Show();
             this.Hide();
         }
