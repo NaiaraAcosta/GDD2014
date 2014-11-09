@@ -208,30 +208,63 @@ GO
 INSERT INTO CONTROL_ZETA.RESERVA (RESERVA_ID,  
             RESERVA_FECHA_INICIO, RESERVA_FECHA_HASTA, 
             RESERVA_ID_REGIMEN, RESERVA_ID_HOTEL, RESERVA_ESTADO, CLIENTE_ID)
-SELECT  DISTINCT M.RESERVA_CODIGO,
+SELECT  M.RESERVA_CODIGO,
         M.RESERVA_FECHA_INICIO,
         M.RESERVA_FECHA_INICIO + M.RESERVA_CANT_NOCHES AS FECHA_HASTA,
         R.REG_ID,
-        CONTROL_ZETA.GET_ID_HOTEL(M.HOTEL_CIUDAD,
-                                  M.HOTEL_NRO_CALLE,
-                                  M.HOTEL_CALLE) ID_HOTEL,
-
-        
-        case  
-        when RESERVA_FECHA_INICIO < GETDATE()
-        then 'RSF'
-        when RESERVA_FECHA_INICIO >= GETDATE()
-        then 
-        'RC'
-        ELSE 
-        'RI'END ESTADO,
+        H.HOTEL_ID,
+		'RINC' AS ESTADO,
         C.CLIENTE_ID
-FROM GD_ESQUEMA.MAESTRA M , CONTROL_ZETA.REGIMEN R, CONTROL_ZETA.CLIENTE C
+FROM GD_ESQUEMA.MAESTRA M , CONTROL_ZETA.REGIMEN R, CONTROL_ZETA.CLIENTE C, CONTROL_ZETA.HOTEL H
 WHERE M.REGIMEN_DESCRIPCION = R.REG_DESCRIPCION
 AND M.CLIENTE_APELLIDO = C.CLIENTE_APELLIDO
 AND M.CLIENTE_NOMBRE = C.CLIENTE_NOMBRE
-AND M.CLIENTE_PASAPORTE_NRO = C.CLIENTE_DOC; -- 100740
+AND M.CLIENTE_PASAPORTE_NRO = C.CLIENTE_DOC
+AND H.HOTEL_CALLE=M.Hotel_Calle
+AND H.HOTEL_NRO_CALLE=M.Hotel_Nro_Calle
+group by M.RESERVA_CODIGO,
+        M.RESERVA_FECHA_INICIO,
+        M.RESERVA_FECHA_INICIO + M.RESERVA_CANT_NOCHES ,
+        R.REG_ID,
+        H.HOTEL_ID,
+		--'RINC' ,
+        C.CLIENTE_ID; -- 100740
 GO
+
+---UPDATES RSF
+UPDATE CONTROL_ZETA.RESERVA SET RESERVA_ESTADO='RSF' WHERE RESERVA_ID IN 
+(select m.Reserva_Codigo from gd_esquema.Maestra m  where  m.Factura_Nro is null group by m.Reserva_Codigo,m.Factura_Nro
+except
+select  m.Reserva_Codigo from gd_esquema.Maestra m where  m.Factura_Nro is not null group by m.Reserva_Codigo,m.Factura_Nro 
+) and RESERVA_FECHA_HASTA<GETDATE()
+
+GO
+---UPDATE RI para Reservas en curso
+UPDATE CONTROL_ZETA.RESERVA SET RESERVA_ESTADO='RI' WHERE RESERVA_ID IN 
+(select m.Reserva_Codigo from gd_esquema.Maestra m  where  m.Factura_Nro is null group by m.Reserva_Codigo,m.Factura_Nro
+except
+select  m.Reserva_Codigo from gd_esquema.Maestra m where  m.Factura_Nro is not null group by m.Reserva_Codigo,m.Factura_Nro 
+)and RESERVA_FECHA_INICIO<GETDATE()
+and RESERVA_FECHA_HASTA>=GETDATE()
+
+GO
+---UPDATE RC
+UPDATE CONTROL_ZETA.RESERVA SET RESERVA_ESTADO='RC' WHERE RESERVA_ID IN
+(select m.Reserva_Codigo from gd_esquema.Maestra m  where  m.Factura_Nro is null group by m.Reserva_Codigo,m.Factura_Nro
+except
+select  m.Reserva_Codigo from gd_esquema.Maestra m where  m.Factura_Nro is not null group by m.Reserva_Codigo,m.Factura_Nro 
+)
+and RESERVA_FECHA_HASTA>GETDATE()
+and RESERVA_ESTADO='RINC'
+
+GO
+---UPDATES RI
+
+UPDATE CONTROL_ZETA.RESERVA SET RESERVA_ESTADO='RI' 
+WHERE RESERVA_ESTADO='RINC' 
+AND RESERVA_FECHA_HASTA<GETDATE()
+
+--Los casos RINC son reservas con factura que no finalizaron, o reservas a futuro q tienen factura
 
 --TABLA ESTADIA
 INSERT INTO CONTROL_ZETA.ESTADIA (EST_RESERVA_ID, EST_FECHA_DESDE, EST_FECHA_HASTA)
@@ -365,14 +398,14 @@ GO
 GO
  
 ---TABLA RESERVA (Actualizacion de Estado)
- 
+ /*
  UPDATE CONTROL_ZETA.RESERVA 
  SET RESERVA_ESTADO = 'RI'
  WHERE EXISTS
  (SELECT DISTINCT R1.RESERVA_ID 
  FROM CONTROL_ZETA.ESTADIA E , CONTROL_ZETA.FACTURA F, CONTROL_ZETA.RESERVA R1
  WHERE E.EST_RESERVA_ID = R1.RESERVA_ID
-  AND F.EST_ID = E.EST_ID ); -- 100740
+  AND F.EST_ID = E.EST_ID ); -- 100740*/
 GO
   
   -----------------------------------
