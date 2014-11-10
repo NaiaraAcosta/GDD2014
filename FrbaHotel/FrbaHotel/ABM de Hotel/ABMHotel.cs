@@ -134,7 +134,7 @@ namespace FrbaHotel.ABM_de_Hotel
             if (dataGridView1.SelectedCells.Count != 0)
             {
                 new BajaHotel(this,
-                    dataGridView1.SelectedCells[1].Value.ToString()).Show(); //hotelID
+                    dataGridView1.SelectedCells[0].Value.ToString()).Show(); //hotelID
                 this.Hide();
             }
             else

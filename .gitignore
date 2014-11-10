@@ -82,3 +82,6 @@ FrbaHotel/FrbaHotel/obj/Debug/FrbaHotel.csproj.FileListAbsolute.txt
 FrbaHotel/FrbaHotel/obj/Debug/FrbaHotel.exe
 FrbaHotel/FrbaHotel/obj/Debug/FrbaHotel.pdb
 FrbaHotel/FrbaHotel/obj/Release/FrbaHotel.csproj.GenerateResource.Cache
+*.exe
+FrbaHotel/FrbaHotel/bin/Debug/FrbaHotel.exe
+FrbaHotel/FrbaHotel/bin/Debug/FrbaHotel.pdb

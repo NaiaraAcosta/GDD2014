@@ -14,12 +14,12 @@ namespace FrbaHotel.Facturacion
     public partial class Factura : Form
     {
         Form back = null;
-        string estID = "";
-        public Factura(Form atras, string estadia)
+        int factura = 0;
+        public Factura(Form atras, int nroFactura)
         {
             InitializeComponent();
             back = atras;
-            estID = estadia;
+            factura = nroFactura;
         }
 
         private void Factura_Load(object sender, EventArgs e)
@@ -28,9 +28,9 @@ namespace FrbaHotel.Facturacion
             string sSel2 = string.Format(@"SELECT fac.FACTURA_NRO as NroFactura, ITEM_DESCRIPCION as Descripcion, ITEM_FACTURA_CANTIDAD as Cantidad, ITEM_FACTURA_MONTO as Monto, fac.FACTURA_TOTAL as Total
                         FROM [GD2C2014].[CONTROL_ZETA].[FACTURA] fac,
                         [GD2C2014].[CONTROL_ZETA].[ITEM_FACTURA] item            
-                        where fac.EST_ID = {0}
+                        where fac.FACTURA_NRO = {0}
                         and fac.FACTURA_NRO = item.FACTURA_NRO
-						order by ITEM_FACTURA_MONTO desc", estID);
+						order by ITEM_FACTURA_MONTO desc", factura);
             SqlDataAdapter da;
             DataTable dt = new DataTable();
             try

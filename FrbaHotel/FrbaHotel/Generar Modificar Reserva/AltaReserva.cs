@@ -34,8 +34,11 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             InitializeComponent();
             back = atras;
             cargarDatos();
-            dateTimePicker1.MinDate = DateTime.Today;
-            dateTimePicker2.MinDate = DateTime.Today;
+            int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+                int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+                int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+                dateTimePicker1.MinDate = new DateTime(año, mes, dia);
+            dateTimePicker2.MinDate = new DateTime (año, mes, dia);
         }
 
         public AltaReserva(Form atras, SqlDataReader reader, SqlConnection conn)
@@ -252,18 +255,12 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             {
                 SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.LIMPIAR_PEDIDO", con);
                 scCommand.CommandType = CommandType.StoredProcedure;
-                try
-                {
                     if (scCommand.Connection.State == ConnectionState.Closed)
                     {
                         scCommand.Connection.Open();
                     }
                     scCommand.ExecuteNonQuery();
-                }
-                catch (Exception)
-                {
-                }
-            }
+                            }
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)

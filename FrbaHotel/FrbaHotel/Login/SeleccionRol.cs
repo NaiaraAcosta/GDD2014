@@ -55,14 +55,26 @@ namespace FrbaHotel.Login
             i = 0;
             while (reader.Read())
             {
-                detalle = string.Format("{0} - {1} - {2} {3}",
-                    reader["ROL_NOMBRE"].ToString(),
-                    reader["LOC_DETALLE"].ToString().Trim(),
-                    reader["HOTEL_CALLE"].ToString(),
-                    reader["HOTEL_NRO_CALLE"].ToString());
-                idHotel[i] = int.Parse(reader["HOTEL_ID"].ToString());
-                i++;
-                listBox1.Items.Add(detalle);
+                if (reader["HOTEL_NOMBRE"].ToString() == "")
+                {
+                    detalle = string.Format("{0} - {1} - {2} {3}",
+                        reader["ROL_NOMBRE"].ToString(),
+                        reader["LOC_DETALLE"].ToString().Trim(),
+                        reader["HOTEL_CALLE"].ToString(),
+                        reader["HOTEL_NRO_CALLE"].ToString());
+                    idHotel[i] = int.Parse(reader["HOTEL_ID"].ToString());
+                    i++;
+                    listBox1.Items.Add(detalle);
+                }
+                else
+                {
+                    detalle = string.Format("{0} - {1}",
+                        reader["ROL_NOMBRE"].ToString(),
+                        reader["HOTEL_NOMBRE"].ToString().Trim());
+                    idHotel[i] = int.Parse(reader["HOTEL_ID"].ToString());
+                    i++;
+                    listBox1.Items.Add(detalle);
+                }
             }
             reader.Close();
             conn.Close(); 

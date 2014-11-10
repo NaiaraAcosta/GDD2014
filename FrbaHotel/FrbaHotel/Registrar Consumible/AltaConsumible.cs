@@ -82,9 +82,12 @@ namespace FrbaHotel.Registrar_Consumible
         {
             string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
-            string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA_HAB_CON] estahabcon 
+            string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA_HAB_CON] estahabcon,
+	                    [GD2C2014].[CONTROL_ZETA].[HABITACION] hab
                     where estahabcon.EST_ID = '{0}' 
-                    and estahabcon.HAB_ID = '{1}'", param[0], param[1]);
+                    and hab.HAB_NRO = '{1}'
+                    and hab.HAB_ID_HOTEL = '{2}'
+                    and hab.HAB_ID = estahabcon.HAB_ID", param[0], param[1], Login.Class1.hotel);
             SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
             conn2.Open();
             SqlDataReader reader2 = cmd2.ExecuteReader();

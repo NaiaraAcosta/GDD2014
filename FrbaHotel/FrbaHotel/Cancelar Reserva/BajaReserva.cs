@@ -76,7 +76,14 @@ namespace FrbaHotel.Cancelar_Reserva
             int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
             scCommand.Parameters.Add("@fecha_canc ", SqlDbType.Date).Value = new DateTime(año,mes,dia);
             scCommand.Parameters.Add("@id_usr", SqlDbType.VarChar, 50).Value = Login.Class1.user;
-            scCommand.Parameters.Add("@id_est", SqlDbType.VarChar, 4).Value = "RCC";
+            if (Login.Class1.user == "Guest")
+            {
+                scCommand.Parameters.Add("@id_est", SqlDbType.VarChar, 4).Value = "RCC";
+            }
+            else
+            {
+                scCommand.Parameters.Add("@id_est", SqlDbType.VarChar, 4).Value = "RCR";
+            }
             scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
             if (scCommand.Connection.State == ConnectionState.Closed)
             {
@@ -92,6 +99,10 @@ namespace FrbaHotel.Cancelar_Reserva
             else if (error == 5)
             {
                 MessageBox.Show("No se puede cancelar una reserva pasada", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (error == 6)
+            {
+                MessageBox.Show("Reserva ya cancelada", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {

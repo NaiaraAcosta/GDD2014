@@ -57,14 +57,14 @@ namespace FrbaHotel.Facturacion
             {
                 textBox2.Enabled = false;
                 textBox3.Enabled = false;
-                textBox4.Enabled = false;
+                dateTimePicker1.Enabled = false;
                 textBox5.Enabled = false;
             }
             else
             {
                 textBox2.Enabled = true;
                 textBox3.Enabled = true;
-                textBox4.Enabled = true;
+                dateTimePicker1.Enabled = true;
                 textBox5.Enabled = true;
             }
         }
@@ -75,14 +75,14 @@ namespace FrbaHotel.Facturacion
             {
                 textBox2.Enabled = true;
                 textBox3.Enabled = true;
-                textBox4.Enabled = true;
+                dateTimePicker1.Enabled = true;
                 textBox5.Enabled = true;
             }
             else
             {
                 textBox2.Enabled = false;
                 textBox3.Enabled = false;
-                textBox4.Enabled = false;
+                dateTimePicker1.Enabled = false;
                 textBox5.Enabled = false;
             }
         }
@@ -115,20 +115,26 @@ namespace FrbaHotel.Facturacion
                 scCommand.Parameters.Add("@FORMAPAGO", SqlDbType.VarChar, 2).Value = "E";
                 scCommand.Parameters.AddWithValue("@NROTARJETA", DBNull.Value);
                 scCommand.Parameters.AddWithValue("@COD_VERIF", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@FECHA_VENC", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@NRO_CUOTAS", DBNull.Value);
             }
             else
             {
                 scCommand.Parameters.Add("@FORMAPAGO", SqlDbType.VarChar, 2).Value = "T";
-                scCommand.Parameters.Add("@NROTARJETA", SqlDbType.VarChar, 2).Value = textBox2.Text;
-                scCommand.Parameters.Add("@COD_VERIF", SqlDbType.VarChar, 2).Value = textBox3.Text;
+                scCommand.Parameters.Add("@NROTARJETA", SqlDbType.Int).Value = int.Parse(textBox2.Text);
+                scCommand.Parameters.Add("@COD_VERIF", SqlDbType.Int).Value = int.Parse(textBox3.Text);
+                scCommand.Parameters.Add("@FECHA_VENC", SqlDbType.Date).Value = dateTimePicker1.Value;
+                scCommand.Parameters.Add("@NRO_CUOTAS", SqlDbType.TinyInt).Value = int.Parse(textBox5.Text);
             }
             scCommand.Parameters.Add("@CODIGO", SqlDbType.Int).Direction = ParameterDirection.Output;
+            scCommand.Parameters.Add("@FACTURA_NRO", SqlDbType.Int).Direction = ParameterDirection.Output;
             if (scCommand.Connection.State == ConnectionState.Closed)
             {
                 scCommand.Connection.Open();
             }
             scCommand.ExecuteNonQuery();
             int result = int.Parse(scCommand.Parameters["@CODIGO"].Value.ToString());
+            
             if (result != 1)
             {
                 string mensaje = string.Format("Error en la facturacion, COD: {0}", result);
@@ -136,13 +142,14 @@ namespace FrbaHotel.Facturacion
             }
             else
             {
-                mostrarFactura();
+                int factura = int.Parse(scCommand.Parameters["@FACTURA_NRO"].Value.ToString());
+                mostrarFactura(factura);
             }
         }
 
-        private void mostrarFactura()
+        private void mostrarFactura(int factura)
         {
-            Form f = new Facturacion.Factura(this, estID);
+            Form f = new Facturacion.Factura(this, factura);
             f.Show();
             this.Hide();
         }

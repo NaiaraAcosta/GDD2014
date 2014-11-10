@@ -93,15 +93,14 @@ namespace FrbaHotel.ABM_de_Hotel
                 cmd2 = new SqlCommand(sSel2, conn2);
                 conn2.Open();
                 reader2 = cmd2.ExecuteReader();
-                int i = 0;
                 while (reader2.Read())
                 {
+                    int regID = int.Parse(reader2["REG_ID"].ToString());
                     if (reader2["REG_ESTADO"].ToString() != "I")
                     {
-                        listReg[i] = true;
-                        checkedListBox1.SetItemChecked(i, true);
+                        listReg[regID - 1] = true;
+                        checkedListBox1.SetItemChecked(regID - 1, true);
                     }
-                    i++;
                 }
                 reader2.Close();
                 conn2.Close();
@@ -308,7 +307,7 @@ namespace FrbaHotel.ABM_de_Hotel
             int result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
             if (result != 1)
             {
-                string mensaje = string.Format("Error en la carga, COD: {0}", result);
+                string mensaje = string.Format("Error en la carga de hotel, COD: {0}", result);
                 MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 conError = true;
 
@@ -337,64 +336,70 @@ namespace FrbaHotel.ABM_de_Hotel
             con.Close();
         }
 
-        private void spregimen(string idHotel, SqlConnection con, SqlTransaction transaction, bool conError)
+        private void spregimen(string Hotel, SqlConnection con, SqlTransaction transaction, bool conError)
         {
-            if (checkedListBox1.CheckedItems.Count != 0)
-            {
-                for (int i = 0; i < checkedListBox1.Items.Count; i++)
+            //if (idHotel != "")
+            //{
+                if (checkedListBox1.CheckedItems.Count != 0)
                 {
-                    if (checkedListBox1.GetItemChecked(i) && !listReg[i])
+                    for (int i = 0; i < checkedListBox1.Items.Count; i++)
                     {
-                        SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_REGIMEN_HOTEL", con, transaction);
-                        scCommand.CommandType = CommandType.StoredProcedure;
-                        scCommand.Parameters.Add("@accion", SqlDbType.TinyInt).Value = 1;
-                        scCommand.Parameters.Add("@id_hotel", SqlDbType.Int).Value = int.Parse(idHotel);
-                        scCommand.Parameters.Add("@id_regimen", SqlDbType.TinyInt).Value = i + 1;
-                        int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
-                        int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
-                        int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
-                        scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(año, mes, dia);
-                        scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
-                        if (scCommand.Connection.State == ConnectionState.Closed)
+                        if (checkedListBox1.GetItemChecked(i) && !listReg[i])
                         {
-                            scCommand.Connection.Open();
+                            SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_REGIMEN_HOTEL", con, transaction);
+                            scCommand.CommandType = CommandType.StoredProcedure;
+                            scCommand.Parameters.Add("@accion", SqlDbType.TinyInt).Value = 1;
+                            scCommand.Parameters.Add("@id_hotel", SqlDbType.Int).Value = int.Parse(Hotel);
+                            scCommand.Parameters.Add("@id_regimen", SqlDbType.TinyInt).Value = i + 1;
+                            int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+                            int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+                            int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+                            scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(año, mes, dia);
+                            scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
+                            if (scCommand.Connection.State == ConnectionState.Closed)
+                            {
+                                scCommand.Connection.Open();
+                            }
+                            scCommand.ExecuteNonQuery();
+                            int result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+                            if (result != 1)
+                            {
+                                string mensaje = string.Format("Error en la alta de regimen, COD: {0}", result);
+                                MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                conError = true;
+                            }
                         }
-                        scCommand.ExecuteNonQuery();
-                        int result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
-                        if (result != 1)
+                        if (!checkedListBox1.GetItemChecked(i) && listReg[i])
                         {
-                            string mensaje = string.Format("Error en la carga, COD: {0}", result);
-                            MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            conError = true;
+                            SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_REGIMEN_HOTEL", con, transaction);
+                            scCommand.CommandType = CommandType.StoredProcedure;
+                            scCommand.Parameters.Add("@accion", SqlDbType.TinyInt).Value = 3;
+                            scCommand.Parameters.Add("@id_hotel", SqlDbType.Int).Value = int.Parse(Hotel);
+                            scCommand.Parameters.Add("@id_regimen", SqlDbType.TinyInt).Value = i + 1;
+                            int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+                            int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+                            int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+                            scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(año, mes, dia);
+                            scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
+                            if (scCommand.Connection.State == ConnectionState.Closed)
+                            {
+                                scCommand.Connection.Open();
+                            }
+                            scCommand.ExecuteNonQuery();
+                            int result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+                            if (result != 1)
+                            {
+                                string mensaje = string.Format("Error en la baja de regimen, COD: {0}", result);
+                                MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                conError = true;
+                            }
                         }
                     }
-                    if (!checkedListBox1.GetItemChecked(i) && listReg[i])
-                    {
-                        SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_REGIMEN_HOTEL", con, transaction);
-                        scCommand.CommandType = CommandType.StoredProcedure;
-                        scCommand.Parameters.Add("@accion", SqlDbType.TinyInt).Value = 3;
-                        scCommand.Parameters.Add("@id_hotel", SqlDbType.Int).Value = int.Parse(idHotel);
-                        scCommand.Parameters.Add("@id_regimen", SqlDbType.TinyInt).Value = i + 1;
-                        int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
-                        int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
-                        int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
-                        scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = new DateTime(año, mes, dia);
-                        scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
-                        if (scCommand.Connection.State == ConnectionState.Closed)
-                        {
-                            scCommand.Connection.Open();
-                        }
-                        scCommand.ExecuteNonQuery();
-                        int result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
-                        if (result != 1)
-                        {
-                            string mensaje = string.Format("Error en la carga, COD: {0}", result);
-                            MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            conError = true;
-                        }
-                    }
-                }
+                //}
+                //else
+                //{
 
+                //}
             }
             else
             {
