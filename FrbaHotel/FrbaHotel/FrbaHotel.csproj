@@ -288,6 +288,9 @@
     <EmbeddedResource Include="Registrar Estadia\RegistrarEstadia.resx">
       <DependentUpon>RegistrarEstadia.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reservas Inconsistentes\ReservasInconsistentes.resx">
+      <DependentUpon>ReservasInconsistentes.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -319,6 +322,12 @@
     </Compile>
     <Compile Include="Registrar Estadia\RegistrarEstadia.Designer.cs">
       <DependentUpon>RegistrarEstadia.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reservas Inconsistentes\ReservasInconsistentes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reservas Inconsistentes\ReservasInconsistentes.Designer.cs">
+      <DependentUpon>ReservasInconsistentes.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -338,5 +338,11 @@ namespace FrbaHotel
             f.Show();
             this.Hide();
         }
+
+        private void reservasInconsistentesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Reservas_Inconsistentes.ReservasInconsistentes(this).Show();
+            this.Hide();
+        }
     }
 }
