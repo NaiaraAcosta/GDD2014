@@ -65,8 +65,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string sCnn;
-            sCnn = ConfigurationManager.AppSettings["stringConexion"];
+            string sCnn = ConfigurationManager.AppSettings["stringConexion"];
             string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[CLIENTE] where 1=1");
             if (comboBox1.Text != "")
             {

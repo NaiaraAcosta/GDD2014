@@ -27,91 +27,79 @@ namespace FrbaHotel.Listado_Estadistico
 
         private void button1_Click(object sender, EventArgs e)
         {
+            System.Data.DataTable ds = new DataTable();
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+            SqlConnection conn = new SqlConnection(ConnStr);
+            System.Data.SqlClient.SqlCommand cmd = new SqlCommand("CONTROL_ZETA.SP_ESTADISTICAS", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
             if (radioButton1.Checked)
             {
-                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
-                SqlConnection conn = new SqlConnection(ConnStr);
-                conn.Open();
-                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ESTADISTICAS", conn);
-                scCommand.CommandType = CommandType.StoredProcedure;
-                scCommand.Parameters.Add("@CODIGO_LISTADO", SqlDbType.TinyInt).Value = 1;
-                scCommand.Parameters.Add("@FECHA", SqlDbType.Date).Value = dateTimePicker1.Value;
-                scCommand.Parameters.Add("@P_CURSOR", SqlDbType.Int).Direction = ParameterDirection.Output;
-                if (scCommand.Connection.State == ConnectionState.Closed)
+                cmd.Parameters.Add("@CODIGO_LISTADO", SqlDbType.TinyInt).Value = 1;
+                cmd.Parameters.Add("@FECHA", SqlDbType.Date).Value = dateTimePicker1.Value;
+                if (cmd.Connection.State == ConnectionState.Closed)
                 {
-                    scCommand.Connection.Open();
+                    cmd.Connection.Open();
                 }
-                scCommand.ExecuteNonQuery();
-                int error = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);  
+                sda.Fill(ds);  
+                new Resultado(this, 1, ds, dateTimePicker1.Value).Show();
+                
             }
             if (radioButton2.Checked)
             {
-                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
-                SqlConnection conn = new SqlConnection(ConnStr);
-                conn.Open();
-                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ESTADISTICAS", conn);
-                scCommand.CommandType = CommandType.StoredProcedure;
-                scCommand.Parameters.Add("@CODIGO_LISTADO", SqlDbType.TinyInt).Value = 2;
-                scCommand.Parameters.Add("@FECHA", SqlDbType.Date).Value = dateTimePicker1.Value;
-                scCommand.Parameters.Add("@P_CURSOR", SqlDbType.Int).Direction = ParameterDirection.Output;
-                if (scCommand.Connection.State == ConnectionState.Closed)
+                cmd.Parameters.Add("@CODIGO_LISTADO", SqlDbType.TinyInt).Value = 2;
+                cmd.Parameters.Add("@FECHA", SqlDbType.Date).Value = dateTimePicker1.Value;
+                if (cmd.Connection.State == ConnectionState.Closed)
                 {
-                    scCommand.Connection.Open();
+                    cmd.Connection.Open();
                 }
-                scCommand.ExecuteNonQuery();
-                int error = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(ds);
+                new Resultado(this, 2, ds, dateTimePicker1.Value).Show();
             }
             if (radioButton3.Checked)
             {
-                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
-                SqlConnection conn = new SqlConnection(ConnStr);
-                conn.Open();
-                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ESTADISTICAS", conn);
-                scCommand.CommandType = CommandType.StoredProcedure;
-                scCommand.Parameters.Add("@CODIGO_LISTADO", SqlDbType.TinyInt).Value = 3;
-                scCommand.Parameters.Add("@FECHA", SqlDbType.Date).Value = dateTimePicker1.Value;
-                scCommand.Parameters.Add("@P_CURSOR", SqlDbType.Int).Direction = ParameterDirection.Output;
-                if (scCommand.Connection.State == ConnectionState.Closed)
+                cmd.Parameters.Add("@CODIGO_LISTADO", SqlDbType.TinyInt).Value = 4;
+                cmd.Parameters.Add("@FECHA", SqlDbType.Date).Value = dateTimePicker1.Value;
+                if (cmd.Connection.State == ConnectionState.Closed)
                 {
-                    scCommand.Connection.Open();
+                    cmd.Connection.Open();
                 }
-                scCommand.ExecuteNonQuery();
-                int error = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(ds);
+                new Resultado(this, 4, ds, dateTimePicker1.Value).Show();
             }
             if (radioButton4.Checked)
             {
-                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
-                SqlConnection conn = new SqlConnection(ConnStr);
-                conn.Open();
-                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ESTADISTICAS", conn);
-                scCommand.CommandType = CommandType.StoredProcedure;
-                scCommand.Parameters.Add("@CODIGO_LISTADO", SqlDbType.TinyInt).Value = 4;
-                scCommand.Parameters.Add("@FECHA", SqlDbType.Date).Value = dateTimePicker1.Value;
-                scCommand.Parameters.Add("@P_CURSOR", SqlDbType.Int).Direction = ParameterDirection.Output;
-                if (scCommand.Connection.State == ConnectionState.Closed)
+                cmd.Parameters.Add("@CODIGO_LISTADO", SqlDbType.TinyInt).Value = 5;
+                cmd.Parameters.Add("@FECHA", SqlDbType.Date).Value = dateTimePicker1.Value;
+                if (cmd.Connection.State == ConnectionState.Closed)
                 {
-                    scCommand.Connection.Open();
+                    cmd.Connection.Open();
                 }
-                scCommand.ExecuteNonQuery();
-                int error = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(ds);
+                new Resultado(this, 5, ds, dateTimePicker1.Value).Show();
             }
             if (radioButton5.Checked)
             {
-                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
-                SqlConnection conn = new SqlConnection(ConnStr);
-                conn.Open();
-                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ESTADISTICAS", conn);
-                scCommand.CommandType = CommandType.StoredProcedure;
-                scCommand.Parameters.Add("@CODIGO_LISTADO", SqlDbType.TinyInt).Value = 5;
-                scCommand.Parameters.Add("@FECHA", SqlDbType.Date).Value = dateTimePicker1.Value;
-                scCommand.Parameters.Add("@P_CURSOR", SqlDbType.Int).Direction = ParameterDirection.Output;
-                if (scCommand.Connection.State == ConnectionState.Closed)
+                cmd.Parameters.Add("@CODIGO_LISTADO", SqlDbType.TinyInt).Value = 3;
+                cmd.Parameters.Add("@FECHA", SqlDbType.Date).Value = dateTimePicker1.Value;
+                if (cmd.Connection.State == ConnectionState.Closed)
                 {
-                    scCommand.Connection.Open();
+                    cmd.Connection.Open();
                 }
-                scCommand.ExecuteNonQuery();
-                int error = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(ds);
+                new Resultado(this, 3, ds, dateTimePicker1.Value).Show();
             }
+            this.Hide();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            back.Show();
+            this.Close();
         }
     }
 }
