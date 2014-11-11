@@ -35,6 +35,34 @@ namespace FrbaHotel.Registrar_Estadia
             if (textBox1.Text != "")
             {
                 string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+                SqlConnection conn2 = new SqlConnection(ConnStr);
+                string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA] est,
+                        [GD2C2014].[CONTROL_ZETA].[RESERVA] res 
+                        where res.RESERVA_ID = est.EST_RESERVA_ID
+                        and res.RESERVA_ID = {0}", textBox1.Text);
+                SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
+                conn2.Open();
+                SqlDataReader reader2 = cmd2.ExecuteReader();
+                if (reader2.HasRows)
+                {
+                    reader2.Read();
+                    if (reader2["RES_PRECIO_TOTAL"].ToString() == "")
+                    {
+                        SqlConnection con2 = new SqlConnection(ConnStr);
+                        con2.Open();
+                        SqlCommand scCommand2 = new SqlCommand("CONTROL_ZETA.SP_ACT_PRECIO_RES", con2);
+                        scCommand2.CommandType = CommandType.StoredProcedure;
+                        scCommand2.Parameters.Add("@id_reserva", SqlDbType.Int).Value = int.Parse(textBox1.Text);
+                        if (scCommand2.Connection.State == ConnectionState.Closed)
+                        {
+                            scCommand2.Connection.Open();
+                        }
+                        scCommand2.ExecuteNonQuery();
+                        con2.Close();
+                    }
+                }
+
+
                 SqlConnection con = new SqlConnection(ConnStr);
                 con.Open();
                 SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_REGISTRAR_ESTADIA", con);
@@ -68,9 +96,25 @@ namespace FrbaHotel.Registrar_Estadia
                             MessageBox.Show("Reserva fuera de tiempo", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             break;
                         }
-                    default:
+                    case 1:
                         {
                             MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                        }
+                    case 6:
+                        {
+                            MessageBox.Show("No existe al reserva indicada", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    case 7:
+                        {
+                            MessageBox.Show("Error en la actualizacion", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    default:
+                        {
+                            string mensaje = string.Format("Error en la operacion, COD: {0}", result);
+                            MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             break;
                         }
                 }

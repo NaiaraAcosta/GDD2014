@@ -163,7 +163,7 @@ namespace FrbaHotel.ABM_de_Cliente
         {
             if (textBox7.TextLength > 70)
             {
-                textBox7.Text = textBox7.Text.Substring(0, 17);
+                textBox7.Text = textBox7.Text.Substring(0, 70);
                 textBox7.SelectionStart = 70;
             }
         }
@@ -228,6 +228,11 @@ namespace FrbaHotel.ABM_de_Cliente
 
             //Abaixo só é permito de 0 a 9
             //if ((e.KeyChar < '0') || (e.KeyChar > '9')) e.Handled = true; //Allow only numbers
+        }
+
+        private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
         }
 
         

@@ -32,6 +32,17 @@ namespace FrbaHotel
         {
             InitializeComponent();
             principal = (FrbaHotel.MenuPrincipal) menu;
+            deshabilitarFunciones(func);
+        }
+
+        public MenuPrincipal(bool[] func)
+        {
+            InitializeComponent();
+            deshabilitarFunciones(func);
+        }
+
+        private void deshabilitarFunciones(bool[] func)
+        {
             if (!func[0])//abm de rol
             {
                 this.aBMDeRolToolStripMenuItem.Visible = false;
@@ -80,23 +91,35 @@ namespace FrbaHotel
             }
             if (!func[11])//facturar estadia
             {
-                //todavia sin hacer
+                this.facturarToolStripMenuItem.Visible = false;
             }
             if (!func[12])//listado estadistico
             {
                 this.estadísticasToolStripMenuItem.Visible = false;
             }
+            if (!func[13])//reservasInconsistentes
+            {
+                this.reservasInconsistentesToolStripMenuItem.Visible = false;
+            }
             if (!func[0] && !func[2] && !func[3] && !func[4] && !func[5])
             {
                 this.qweToolStripMenuItem1.Visible = false;
             }
-            if (!func[7] && !func[8])
+            if (!func[7] && !func[8] && !func[13])
             {
                 this.asdToolStripMenuItem2.Visible = false;
             }
             if (!func[9] && !func[10])
             {
                 this.estadíaToolStripMenuItem.Visible = false;
+            }
+            if (func.All(x => x))
+            {
+                button2.Visible = true;
+            }
+            else
+            {
+                button2.Visible = false;
             }
         }
 
@@ -233,6 +256,12 @@ namespace FrbaHotel
         {
             new desarrollador(this).Show();
             this.Hide();
+        }
+
+        private void asdToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            Form f = new Login.Ingresar(this);
+            f.Show();
         }
     }
 }

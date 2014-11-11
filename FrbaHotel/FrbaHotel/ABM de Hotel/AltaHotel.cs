@@ -147,32 +147,58 @@ namespace FrbaHotel.ABM_de_Hotel
 
         private void textBox6_TextChanged(object sender, EventArgs e)
         {
-
+            int salida = int.Parse(textBox6.Text);
+            if (salida > 10)
+            {
+                textBox6.Text = "10";
+                textBox6.SelectionStart = 2;
+            }
         }
 
         private void textBox5_TextChanged(object sender, EventArgs e)
         {
-
+            int salida = int.Parse(textBox5.Text);
+            if (salida > 5)
+            {
+                textBox5.Text = "5";
+                textBox5.SelectionStart = 1;
+            }
         }
 
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
-
+            if (textBox4.TextLength > 50)
+            {
+                textBox4.Text = textBox4.Text.Substring(0, 50);
+                textBox4.SelectionStart = 50;
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-
+            if (textBox1.TextLength > 100)
+            {
+                textBox1.Text = textBox1.Text.Substring(0, 100);
+                textBox1.SelectionStart = 100;
+            }
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
-
+            if (textBox3.TextLength > 10)
+            {
+                textBox3.Text = textBox3.Text.Substring(0, 10);
+                textBox3.SelectionStart = 10;
+            }
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-
+            if (textBox2.TextLength > 50)
+            {
+                textBox2.Text = textBox2.Text.Substring(0, 50);
+                textBox2.SelectionStart = 50;
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -425,6 +451,39 @@ namespace FrbaHotel.ABM_de_Hotel
         }
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        public static void AllowNumber(KeyPressEventArgs e)
+        {
+            if (char.IsLetter(e.KeyChar) || //Letras
+                char.IsSymbol(e.KeyChar) || //Símbolos
+                char.IsWhiteSpace(e.KeyChar) || //Espaço
+                char.IsPunctuation(e.KeyChar)) //Pontuação
+                e.Handled = true; //Não permitir
+            //Com o script acima é possível utilizar Números, 'Del', 'BackSpace'..
+
+            //Abaixo só é permito de 0 a 9
+            //if ((e.KeyChar < '0') || (e.KeyChar > '9')) e.Handled = true; //Allow only numbers
+        }
+
+        private void textBox9_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
+
+        private void textBox5_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
+
+        private void textBox6_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
+
+        private void textBox9_TextChanged(object sender, EventArgs e)
         {
 
         }

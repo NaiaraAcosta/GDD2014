@@ -87,6 +87,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                 da.Fill(dt);
                 this.dataGridView1.DataSource = dt;
                 groupBox1.Text = String.Format("Total de resultados: {0}", dt.Rows.Count);
+                button2.Enabled = true;
             }
             catch (Exception ex)
             {

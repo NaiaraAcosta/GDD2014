@@ -163,6 +163,7 @@
             this.textBox5.Size = new System.Drawing.Size(217, 20);
             this.textBox5.TabIndex = 13;
             this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
+            this.textBox5.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox5_KeyPress);
             // 
             // textBox6
             // 
@@ -171,6 +172,7 @@
             this.textBox6.Size = new System.Drawing.Size(217, 20);
             this.textBox6.TabIndex = 14;
             this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
+            this.textBox6.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox6_KeyPress);
             // 
             // button1
             // 
@@ -226,6 +228,8 @@
             this.textBox9.Name = "textBox9";
             this.textBox9.Size = new System.Drawing.Size(217, 20);
             this.textBox9.TabIndex = 26;
+            this.textBox9.TextChanged += new System.EventHandler(this.textBox9_TextChanged);
+            this.textBox9.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox9_KeyPress);
             // 
             // comboBox1
             // 

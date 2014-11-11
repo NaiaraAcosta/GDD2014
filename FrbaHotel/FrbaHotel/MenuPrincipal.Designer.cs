@@ -125,20 +125,21 @@
             // asdToolStripMenuItem3
             // 
             this.asdToolStripMenuItem3.Name = "asdToolStripMenuItem3";
-            this.asdToolStripMenuItem3.Size = new System.Drawing.Size(134, 22);
+            this.asdToolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
             this.asdToolStripMenuItem3.Text = "Ingresar";
+            this.asdToolStripMenuItem3.Click += new System.EventHandler(this.asdToolStripMenuItem3_Click);
             // 
             // estadísticasToolStripMenuItem
             // 
             this.estadísticasToolStripMenuItem.Name = "estadísticasToolStripMenuItem";
-            this.estadísticasToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.estadísticasToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.estadísticasToolStripMenuItem.Text = "Estadísticas";
             this.estadísticasToolStripMenuItem.Click += new System.EventHandler(this.estadísticasToolStripMenuItem_Click);
             // 
             // gfdToolStripMenuItem1
             // 
             this.gfdToolStripMenuItem1.Name = "gfdToolStripMenuItem1";
-            this.gfdToolStripMenuItem1.Size = new System.Drawing.Size(134, 22);
+            this.gfdToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.gfdToolStripMenuItem1.Text = "Cerrar";
             this.gfdToolStripMenuItem1.Click += new System.EventHandler(this.gfdToolStripMenuItem1_Click);
             // 

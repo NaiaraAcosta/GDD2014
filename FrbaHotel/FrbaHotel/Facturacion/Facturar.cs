@@ -103,47 +103,97 @@ namespace FrbaHotel.Facturacion
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
-            SqlConnection con = new SqlConnection(ConnStr);
-            con.Open();
-            SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_REALIZAR_FACTURACION", con);
-            scCommand.CommandType = CommandType.StoredProcedure;
-            scCommand.Parameters.Add("@RESERVA_ID", SqlDbType.Int).Value = int.Parse(reservaID);
-            
-            if (radioButton1.Checked)
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
+            SqlConnection conn2 = new SqlConnection(ConnStr2);
+            string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA] est,
+                        [GD2C2014].[CONTROL_ZETA].[RESERVA] res 
+                        where res.RESERVA_ID = est.EST_RESERVA_ID");
+            if (radioButton3.Checked)
             {
-                scCommand.Parameters.Add("@FORMAPAGO", SqlDbType.VarChar, 2).Value = "E";
-                scCommand.Parameters.AddWithValue("@NROTARJETA", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@COD_VERIF", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@FECHA_VENC", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@NRO_CUOTAS", DBNull.Value);
+                sSel2 = string.Format(" {0} and res.RESERVA_ID = {1}", sSel2, textBox1.Text);
             }
             else
             {
-                scCommand.Parameters.Add("@FORMAPAGO", SqlDbType.VarChar, 2).Value = "T";
-                scCommand.Parameters.Add("@NROTARJETA", SqlDbType.Int).Value = int.Parse(textBox2.Text);
-                scCommand.Parameters.Add("@COD_VERIF", SqlDbType.Int).Value = int.Parse(textBox3.Text);
-                scCommand.Parameters.Add("@FECHA_VENC", SqlDbType.Date).Value = dateTimePicker1.Value;
-                scCommand.Parameters.Add("@NRO_CUOTAS", SqlDbType.TinyInt).Value = int.Parse(textBox5.Text);
+                sSel2 = string.Format(" {0} and est.EST_ID = {1}", sSel2, textBox6.Text);
             }
-            scCommand.Parameters.Add("@CODIGO", SqlDbType.Int).Direction = ParameterDirection.Output;
-            scCommand.Parameters.Add("@FACTURA_NRO", SqlDbType.Int).Direction = ParameterDirection.Output;
-            if (scCommand.Connection.State == ConnectionState.Closed)
+            SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
+            conn2.Open();
+            SqlDataReader reader2 = cmd2.ExecuteReader();
+            string precio = "";
+            if (reader2.HasRows)
             {
-                scCommand.Connection.Open();
-            }
-            scCommand.ExecuteNonQuery();
-            int result = int.Parse(scCommand.Parameters["@CODIGO"].Value.ToString());
+                while (reader2.Read())
+                {
+                    precio = reader2["RES_PRECIO_TOTAL"].ToString();
+                    label1.Text = "El valor a facturar es de: " + precio;
+                    reservaID = reader2["RESERVA_ID"].ToString();
+                    estID = reader2["EST_ID"].ToString();
+                }
+                if (precio == "")
+                {
+                    SqlConnection con = new SqlConnection(ConnStr2);
+                    con.Open();
+                    SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ACT_PRECIO_RES", con);
+                    scCommand.CommandType = CommandType.StoredProcedure;
+                    scCommand.Parameters.Add("@id_reserva", SqlDbType.Int).Value = int.Parse(reservaID);
+                    if (scCommand.Connection.State == ConnectionState.Closed)
+                    {
+                        scCommand.Connection.Open();
+                    }
+                    scCommand.ExecuteNonQuery();
+                    con.Close();
+                }
             
-            if (result != 1)
-            {
-                string mensaje = string.Format("Error en la facturacion, COD: {0}", result);
-                MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                reader2.Close();
+                conn2.Close();
+                
+                
+                
+                SqlConnection con2 = new SqlConnection(ConnStr2);
+                con2.Open();
+                SqlCommand scCommand2 = new SqlCommand("CONTROL_ZETA.SP_REALIZAR_FACTURACION", con2);
+                scCommand2.CommandType = CommandType.StoredProcedure;
+                scCommand2.Parameters.Add("@RESERVA_ID", SqlDbType.Int).Value = int.Parse(reservaID);
+                
+                if (radioButton1.Checked)
+                {
+                    scCommand2.Parameters.Add("@FORMAPAGO", SqlDbType.VarChar, 2).Value = "E";
+                    scCommand2.Parameters.AddWithValue("@NROTARJETA", DBNull.Value);
+                    scCommand2.Parameters.AddWithValue("@COD_VERIF", DBNull.Value);
+                    scCommand2.Parameters.AddWithValue("@FECHA_VENC", DBNull.Value);
+                    scCommand2.Parameters.AddWithValue("@NRO_CUOTAS", DBNull.Value);
+                }
+                else
+                {
+                    scCommand2.Parameters.Add("@FORMAPAGO", SqlDbType.VarChar, 2).Value = "T";
+                    scCommand2.Parameters.Add("@NROTARJETA", SqlDbType.Int).Value = int.Parse(textBox2.Text);
+                    scCommand2.Parameters.Add("@COD_VERIF", SqlDbType.Int).Value = int.Parse(textBox3.Text);
+                    scCommand2.Parameters.Add("@FECHA_VENC", SqlDbType.Date).Value = dateTimePicker1.Value;
+                    scCommand2.Parameters.Add("@NRO_CUOTAS", SqlDbType.TinyInt).Value = int.Parse(textBox5.Text);
+                }
+                scCommand2.Parameters.Add("@CODIGO", SqlDbType.Int).Direction = ParameterDirection.Output;
+                scCommand2.Parameters.Add("@FACTURA_NRO", SqlDbType.Int).Direction = ParameterDirection.Output;
+                if (scCommand2.Connection.State == ConnectionState.Closed)
+                {
+                    scCommand2.Connection.Open();
+                }
+                scCommand2.ExecuteNonQuery();
+                int result = int.Parse(scCommand2.Parameters["@CODIGO"].Value.ToString());
+                
+                //if (result != 1)
+                //{
+                //    string mensaje = string.Format("Error en la facturacion, COD: {0}", result);
+                //    MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //}
+                //else
+                //{
+                    int factura = int.Parse(scCommand2.Parameters["@FACTURA_NRO"].Value.ToString());
+                    mostrarFactura(factura);
+                //}
             }
             else
             {
-                int factura = int.Parse(scCommand.Parameters["@FACTURA_NRO"].Value.ToString());
-                mostrarFactura(factura);
+                MessageBox.Show("No existe la reserva, o no se ha realizado el check-in de la misma", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -156,6 +206,9 @@ namespace FrbaHotel.Facturacion
 
         private void button3_Click(object sender, EventArgs e)
         {
+            
+            
+            
             string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA] est,

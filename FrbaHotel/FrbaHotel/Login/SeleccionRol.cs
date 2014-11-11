@@ -130,7 +130,7 @@ namespace FrbaHotel.Login
                 }
                 reader.Close();
                 reader = cmd.ExecuteReader();
-                func = new bool[i];
+                func = new bool[14];
                 while (reader.Read())
                 {
                     func[int.Parse(reader["FUNC_ID"].ToString()) - 1] = true;
@@ -142,7 +142,7 @@ namespace FrbaHotel.Login
             }
             else
             {
-                func = new bool[13];
+                func = new bool[15];
                 Login.Class1.hotel = 0;
             }
         }

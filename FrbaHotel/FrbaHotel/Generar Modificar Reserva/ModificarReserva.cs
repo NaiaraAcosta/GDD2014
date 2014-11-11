@@ -49,10 +49,26 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.HasRows)
                 {
+                    if (reader["RES_PRECIO_TOTAL"].ToString() == "")
+                    {
+                        SqlConnection con = new SqlConnection(ConnStr);
+                        con.Open();
+                        SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ACT_PRECIO_RES", con);
+                        scCommand.CommandType = CommandType.StoredProcedure;
+                        scCommand.Parameters.Add("@id_reserva", SqlDbType.Int).Value = int.Parse(textBox1.Text);
+                        if (scCommand.Connection.State == ConnectionState.Closed)
+                        {
+                            scCommand.Connection.Open();
+                        }
+                        scCommand.ExecuteNonQuery();
+                        con.Close();
+                    }
                     Form f = new AltaReserva(this, reader, conn);
                     f.Show();
                     this.Hide();
                 }
+
+                    
                 else
                 {
                     MessageBox.Show("No existe la reserva especificada", "Error de ingreso de datos", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -217,7 +217,8 @@ namespace FrbaHotel.Registrar_Consumible
         private void button1_Click(object sender, EventArgs e)
         {
             int idHotel = buscarHotel(param[0]);
-            int nroHab = buscarHab(idHotel, param[1]);
+            //int nroHab = buscarHab(idHotel, param[1]);
+            int nroHab = int.Parse(param[1]);
             string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection con = new SqlConnection(ConnStr);
             con.Open();
