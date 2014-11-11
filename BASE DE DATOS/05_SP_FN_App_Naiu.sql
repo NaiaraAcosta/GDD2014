@@ -118,10 +118,10 @@ AS
 BEGIN
 RETURN (SELECT COUNT (R.RESERVA_ID) 
 FROM CONTROL_ZETA.RESERVA R 
-WHERE R.RESERVA_FECHA_INICIO>@fe_inicio_cierre AND 
-R.RESERVA_FECHA_HASTA<@fe_fin_cierre AND 
-R.RESERVA_ID_HOTEL=@id_hotel AND
-R.RESERVA_ESTADO IN ('RC','RM','RI'))
+WHERE ((R.RESERVA_FECHA_INICIO between @fe_inicio_cierre AND @fe_fin_cierre) 
+OR (R.RESERVA_FECHA_HASTA between @fe_inicio_cierre AND @fe_fin_cierre))
+AND R.RESERVA_ID_HOTEL=@id_hotel 
+AND R.RESERVA_ESTADO IN ('RC','RM','REC'))
 END
 
 GO
