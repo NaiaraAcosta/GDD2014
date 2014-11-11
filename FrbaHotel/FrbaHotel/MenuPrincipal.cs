@@ -102,95 +102,7 @@ namespace FrbaHotel
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
-
-            SqlConnection conn = new SqlConnection(ConnStr);
-            SqlCommand cmd = new SqlCommand("SELECT TOP 10 [Hotel_Ciudad] FROM [GD2C2014].[gd_esquema].[Maestra]", conn);
-            conn.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                listBox1.Items.Add(reader["Hotel_Ciudad"].ToString());
-            }
-            reader.Close();
-            conn.Close(); 
-
-            string sCnn;
-            sCnn = ConfigurationManager.AppSettings["stringConexion"];
-
-            string sSel = @"SELECT TOP 1000 [Hotel_Ciudad]
-                                 ,[Hotel_Calle]
-                                 ,[Hotel_Nro_Calle]
-                                 ,[Hotel_CantEstrella]
-                                 ,[Hotel_Recarga_Estrella]
-                                 ,[Habitacion_Numero]
-                                  ,[Habitacion_Piso]
-                                    ,[Habitacion_Frente]
-                                    ,[Habitacion_Tipo_Codigo]
-                                 ,[Habitacion_Tipo_Descripcion]
-      ,[Habitacion_Tipo_Porcentual]
-      ,[Regimen_Descripcion]
-      ,[Regimen_Precio]
-      ,[Reserva_Fecha_Inicio]
-      ,[Reserva_Codigo]
-      ,[Reserva_Cant_Noches]
-      ,[Estadia_Fecha_Inicio]
-      ,[Estadia_Cant_Noches]
-      ,[Consumible_Codigo]
-      ,[Consumible_Descripcion]
-      ,[Consumible_Precio]
-      ,[Item_Factura_Cantidad]
-      ,[Item_Factura_Monto]
-      ,[Factura_Nro]
-      ,[Factura_Fecha]
-      ,[Factura_Total]
-      ,[Cliente_Pasaporte_Nro]
-      ,[Cliente_Apellido]
-      ,[Cliente_Nombre]
-      ,[Cliente_Fecha_Nac]
-      ,[Cliente_Mail]
-      ,[Cliente_Dom_Calle]
-      ,[Cliente_Nro_Calle]
-      ,[Cliente_Piso]
-      ,[Cliente_Depto]
-      ,[Cliente_Nacionalidad]
-  FROM [GD2C2014].[gd_esquema].[Maestra]";
-
-            SqlDataAdapter da;
-            DataTable dt = new DataTable();
-
-            try
-            {
-                da = new SqlDataAdapter(sSel, sCnn);
-                da.Fill(dt);
-
-                this.dataGridView1.DataSource = dt;
-                //this.dataGridView1.DataBind();
-                label1.Text = String.Format("Total datos en la tabla: {0}", dt.Rows.Count);
-            }
-            catch (Exception ex)
-            {
-                label1.Text = "Error: " + ex.Message;
-            }
-
-
-            string sCnn2 = ConfigurationManager.AppSettings["stringConexion"];
-            string sSel2 = @"uspGetAddress";
-            SqlDataAdapter da2;
-            DataTable dt2 = new DataTable();
-            try
-            {
-                da2 = new SqlDataAdapter(sSel2, sCnn2);
-                da2.Fill(dt2);
-
-                this.dataGridView2.DataSource = dt2;
-                //this.dataGridView1.DataBind();
-                label2.Text = String.Format("Total datos en la tabla: {0}", dt2.Rows.Count);
-            }
-            catch (Exception ex)
-            {
-                label2.Text = "Error: " + ex.Message;
-            }
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -199,11 +111,6 @@ namespace FrbaHotel
             f.Show();
         }
 
-        private void asdToolStripMenuItem3_Click(object sender, EventArgs e)
-        {
-            Form f = new Login.SeleccionRol();
-            f.Show();
-        }
 
         private void estadísticasToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -219,7 +126,8 @@ namespace FrbaHotel
 
         private void modificacionBajaDeClienteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form f = new ABM_de_Habitacion.ABMHabitacion();
+            MessageBox.Show("La siguiente funcionalidad no esta desarrollada en su totalidad", "Funcionalidad sin terminar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Form f = new ABM_de_Habitacion.ABMHabitacion(this);
             f.Show();
             this.Hide();
         }
@@ -233,14 +141,16 @@ namespace FrbaHotel
 
         private void aBMDeRolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form f = new ABM_de_Rol.ABMRol();
+            MessageBox.Show("La siguiente funcionalidad no esta desarrollada en su totalidad", "Funcionalidad sin terminar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Form f = new ABM_de_Rol.ABMRol(this);
             f.Show();
             this.Hide();
         }
 
         private void aBMDeUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form f = new ABM_de_Usuario.ABMUsuario();
+            MessageBox.Show("La siguiente funcionalidad no esta desarrollada en su totalidad", "Funcionalidad sin terminar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Form f = new ABM_de_Usuario.ABMUsuario(this);
             f.Show();
             this.Hide();
         }
@@ -273,33 +183,6 @@ namespace FrbaHotel
             this.Hide();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            textBox2.Text = SHA256Encrypt(textBox1.Text);
-        }
-
-        public string SHA256Encrypt(string input)
-        {
-            SHA256CryptoServiceProvider provider = new SHA256CryptoServiceProvider();
-
-            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
-            byte[] hashedBytes = provider.ComputeHash(inputBytes);
-
-            StringBuilder output = new StringBuilder();
-
-            for (int i = 0; i < hashedBytes.Length; i++)
-                output.Append(hashedBytes[i].ToString("x2").ToLower());
-
-            return output.ToString();
-        }
-
-        
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void button3_Click(object sender, EventArgs e)
         {
             if (principal != null)
@@ -320,6 +203,7 @@ namespace FrbaHotel
 
         private void altaDeClienteToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("La siguiente funcionalidad no esta desarrollada en su totalidad", "Funcionalidad sin terminar", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Form f = new ABM_de_Cliente.ABMCliente(this);
             f.Show();
             this.Hide();
@@ -342,6 +226,12 @@ namespace FrbaHotel
         private void reservasInconsistentesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new Reservas_Inconsistentes.ReservasInconsistentes(this).Show();
+            this.Hide();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            new desarrollador(this).Show();
             this.Hide();
         }
     }

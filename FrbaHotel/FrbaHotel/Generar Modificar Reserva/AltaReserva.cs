@@ -38,6 +38,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                 int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
                 int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
                 dateTimePicker1.MinDate = new DateTime(año, mes, dia);
+                dateTimePicker1.Value = new DateTime(año, mes, dia);
             dateTimePicker2.MinDate = new DateTime (año, mes, dia);
         }
 
@@ -46,6 +47,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             InitializeComponent();
             back = atras;
             cargarDatos();
+           
             //dateTimePicker1.MinDate = DateTime.Today;
             string fechaInicio = "";
             string fechaHasta = "";

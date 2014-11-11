@@ -13,9 +13,11 @@ namespace FrbaHotel.ABM_de_Usuario
 {
     public partial class ABMUsuario : Form
     {
-        public ABMUsuario()
+        Form back = null;
+        public ABMUsuario(Form atras)
         {
             InitializeComponent();
+            back = null;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -49,6 +51,12 @@ namespace FrbaHotel.ABM_de_Usuario
         private void ABMUsuario_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            back.Show();
+            this.Close();
         }
     }
 }
