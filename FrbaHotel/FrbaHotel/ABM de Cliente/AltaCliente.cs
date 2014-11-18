@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace FrbaHotel.ABM_de_Cliente
 {
@@ -83,10 +85,67 @@ namespace FrbaHotel.ABM_de_Cliente
             validarDatos();
             if (param != null)
             {
-                param[4] = ""; //MOCK!!!!!
+                param[4] = ""; //MOCK es el id de usuario!!!!!
                 Form f = new Generar_Modificar_Reserva.ReservaFinalizada(this, back, back2, back3, param);
                 f.Show();
                 this.Hide();
+            }
+            else
+            {
+                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_REGISTRAR_ESTADIA", con);
+                scCommand.CommandType = CommandType.StoredProcedure;
+                scCommand.Parameters.Add("@RESERVA_ID", SqlDbType.Int).Value = int.Parse(codReserva);
+                scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = Login.Class1.user;
+                if (radioButton1.Checked)
+                {
+                    scCommand.Parameters.Add("@CODIGO_IN_OUT", SqlDbType.TinyInt).Value = 1;
+                }
+                else
+                {
+                    scCommand.Parameters.Add("@CODIGO_IN_OUT", SqlDbType.TinyInt).Value = 2;
+                }
+                int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+                int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+                int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+                scCommand.Parameters.Add("@FECHA", SqlDbType.Date).Value = new DateTime(año, mes, dia);
+                scCommand.Parameters.Add("@CODIGO", SqlDbType.Int).Direction = ParameterDirection.Output;
+                if (scCommand.Connection.State == ConnectionState.Closed)
+                {
+                    scCommand.Connection.Open();
+                }
+                scCommand.ExecuteNonQuery();
+                int result = int.Parse(scCommand.Parameters["@CODIGO"].Value.ToString());
+
+                switch (result)
+                {
+                    case 5:
+                        {
+                            MessageBox.Show("Reserva fuera de tiempo", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    case 1:
+                        {
+                            MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                        }
+                    case 6:
+                        {
+                            MessageBox.Show("No existe al reserva indicada", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    case 7:
+                        {
+                            MessageBox.Show("Error en la actualizacion", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    default:
+                        {
+                            string mensaje = string.Format("Error en la operacion, COD: {0}", result);
+                            MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                }
+                con.Close();
             }
         }
         private bool validarDatos()

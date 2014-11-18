@@ -259,6 +259,7 @@ namespace FrbaHotel.Registrar_Consumible
                 if (seguro == DialogResult.Yes)
                 {
                     transaction.Commit();
+                    MessageBox.Show("Consumibles agregados correctamente", "Operacion realizada correctamente", MessageBoxButtons.OK, MessageBoxIcon.None);
                 }
                 else
                 {

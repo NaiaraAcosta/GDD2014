@@ -32,94 +32,164 @@ namespace FrbaHotel.Registrar_Estadia
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text != "")
+            if ((textBox1.Text != "") ||  (dataGridView1.SelectedCells.Count != 0))
             {
-                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
-                SqlConnection conn2 = new SqlConnection(ConnStr);
-                string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA] est,
-                        [GD2C2014].[CONTROL_ZETA].[RESERVA] res 
-                        where res.RESERVA_ID = est.EST_RESERVA_ID
-                        and res.RESERVA_ID = {0}", textBox1.Text);
-                SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
-                conn2.Open();
-                SqlDataReader reader2 = cmd2.ExecuteReader();
-                if (reader2.HasRows)
+                if (textBox1.Text != "")
                 {
-                    reader2.Read();
-                    if (reader2["RES_PRECIO_TOTAL"].ToString() == "")
+                    DialogResult result = MessageBox.Show("Se registrara la estadia de la reserva: " + textBox1.Text + " esta seguro?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
                     {
-                        SqlConnection con2 = new SqlConnection(ConnStr);
-                        con2.Open();
-                        SqlCommand scCommand2 = new SqlCommand("CONTROL_ZETA.SP_ACT_PRECIO_RES", con2);
-                        scCommand2.CommandType = CommandType.StoredProcedure;
-                        scCommand2.Parameters.Add("@id_reserva", SqlDbType.Int).Value = int.Parse(textBox1.Text);
-                        if (scCommand2.Connection.State == ConnectionState.Closed)
-                        {
-                            scCommand2.Connection.Open();
-                        }
-                        scCommand2.ExecuteNonQuery();
-                        con2.Close();
+                        registrarEstadia(textBox1.Text);
                     }
-                }
-
-
-                SqlConnection con = new SqlConnection(ConnStr);
-                con.Open();
-                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_REGISTRAR_ESTADIA", con);
-                scCommand.CommandType = CommandType.StoredProcedure;
-                scCommand.Parameters.Add("@RESERVA_ID", SqlDbType.Int).Value = int.Parse(textBox1.Text);
-                scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = Login.Class1.user;
-                if (radioButton1.Checked)
-                {
-                    scCommand.Parameters.Add("@CODIGO_IN_OUT", SqlDbType.TinyInt).Value = 1;
                 }
                 else
                 {
-                    scCommand.Parameters.Add("@CODIGO_IN_OUT", SqlDbType.TinyInt).Value = 2;
+                    DialogResult result = MessageBox.Show("Se registrara la estadia de la reserva: " + dataGridView1.SelectedCells[0].Value.ToString() + " esta seguro?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        registrarEstadia(dataGridView1.SelectedCells[0].Value.ToString());
+                    }
                 }
-                int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
-                int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
-                int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
-                scCommand.Parameters.Add("@FECHA", SqlDbType.Date).Value = new DateTime(año,mes,dia);
-                scCommand.Parameters.Add("@CODIGO", SqlDbType.Int).Direction = ParameterDirection.Output;
-                if (scCommand.Connection.State == ConnectionState.Closed)
-                {
-                    scCommand.Connection.Open();
-                }
-                scCommand.ExecuteNonQuery();
-                int result = int.Parse(scCommand.Parameters["@CODIGO"].Value.ToString());
-
-                switch (result)
-                {
-                    case 5:
-                        {
-                            MessageBox.Show("Reserva fuera de tiempo", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            break;
-                        }
-                    case 1:
-                        {
-                            MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            break;
-                        }
-                    case 6:
-                        {
-                            MessageBox.Show("No existe al reserva indicada", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            break;
-                        }
-                    case 7:
-                        {
-                            MessageBox.Show("Error en la actualizacion", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            break;
-                        }
-                    default:
-                        {
-                            string mensaje = string.Format("Error en la operacion, COD: {0}", result);
-                            MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            break;
-                        }
-                }
-                con.Close();
             }
+            MessageBox.Show("Debe seleccionar colocar, o seleccionar una estadia", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void registrarEstadia(string codReserva)
+        {
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+            SqlConnection conn2 = new SqlConnection(ConnStr);
+            string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA] est,
+                        [GD2C2014].[CONTROL_ZETA].[RESERVA] res 
+                        where res.RESERVA_ID = est.EST_RESERVA_ID
+                        and res.RESERVA_ID = {0}", codReserva);
+            SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
+            conn2.Open();
+            SqlDataReader reader2 = cmd2.ExecuteReader();
+            if (reader2.HasRows)
+            {
+                reader2.Read();
+                if (reader2["RES_PRECIO_TOTAL"].ToString() == "")
+                {
+                    SqlConnection con2 = new SqlConnection(ConnStr);
+                    con2.Open();
+                    SqlCommand scCommand2 = new SqlCommand("CONTROL_ZETA.SP_ACT_PRECIO_RES", con2);
+                    scCommand2.CommandType = CommandType.StoredProcedure;
+                    scCommand2.Parameters.Add("@id_reserva", SqlDbType.Int).Value = int.Parse(codReserva);
+                    if (scCommand2.Connection.State == ConnectionState.Closed)
+                    {
+                        scCommand2.Connection.Open();
+                    }
+                    scCommand2.ExecuteNonQuery();
+                    con2.Close();
+                }
+            }
+
+
+            SqlConnection con = new SqlConnection(ConnStr);
+            con.Open();
+            SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_REGISTRAR_ESTADIA", con);
+            scCommand.CommandType = CommandType.StoredProcedure;
+            scCommand.Parameters.Add("@RESERVA_ID", SqlDbType.Int).Value = int.Parse(codReserva);
+            scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = Login.Class1.user;
+            if (radioButton1.Checked)
+            {
+                scCommand.Parameters.Add("@CODIGO_IN_OUT", SqlDbType.TinyInt).Value = 1;
+            }
+            else
+            {
+                scCommand.Parameters.Add("@CODIGO_IN_OUT", SqlDbType.TinyInt).Value = 2;
+            }
+            int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+            int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+            int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+            scCommand.Parameters.Add("@FECHA", SqlDbType.Date).Value = new DateTime(año, mes, dia);
+            scCommand.Parameters.Add("@CODIGO", SqlDbType.Int).Direction = ParameterDirection.Output;
+            if (scCommand.Connection.State == ConnectionState.Closed)
+            {
+                scCommand.Connection.Open();
+            }
+            scCommand.ExecuteNonQuery();
+            int result = int.Parse(scCommand.Parameters["@CODIGO"].Value.ToString());
+
+            switch (result)
+            {
+                case 5:
+                    {
+                        MessageBox.Show("Reserva fuera de tiempo", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    }
+                case 1:
+                    {
+                        MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        break;
+                    }
+                case 6:
+                    {
+                        MessageBox.Show("No existe al reserva indicada", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    }
+                case 7:
+                    {
+                        MessageBox.Show("Error en la actualizacion", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    }
+                default:
+                    {
+                        string mensaje = string.Format("Error en la operacion, COD: {0}", result);
+                        MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    }
+            }
+            con.Close();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            dataGridView1.ClearSelection();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            if (textBox2.Text != "")
+            {
+                string sCnn = ConfigurationManager.AppSettings["stringConexion"];
+                string sSel = String.Format(@"SELECT reser.CLIENTE_ID as Cliente, 
+                        hab.HAB_NRO as NroHab, 
+                        esta.EST_ID as Estadia, 
+                        reserhab.RESERVA_ID as Reserva, 
+                        EST_FECHA_DESDE  as 'Estadia Desde'
+                FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA_CLIENTE] estaclie,
+                [GD2C2014].[CONTROL_ZETA].[ESTADIA] esta,
+		        [GD2C2014].[CONTROL_ZETA].[RESERVA_HABITACION] reserhab,
+                [GD2C2014].[CONTROL_ZETA].[RESERVA] reser,
+                [GD2C2014].[CONTROL_ZETA].[HABITACION] hab
+                where esta.EST_FECHA_HASTA is null
+                and esta.EST_ID = estaclie.EST_ID
+                and reserhab.RESERVA_ID = esta.EST_RESERVA_ID
+                and reserhab.RESERVA_ID = reser.RESERVA_ID
+                and reserhab.HAB_ID = hab.HAB_ID
+                and reser.RESERVA_ID_HOTEL = {0}", Login.Class1.hotel);
+                SqlDataAdapter da;
+                DataTable dt = new DataTable();
+                try
+                {
+                    da = new SqlDataAdapter(sSel, sCnn);
+                    da.Fill(dt);
+                    this.dataGridView1.DataSource = dt;
+                    label3.Text = String.Format("Total datos en la tabla: {0}", dt.Rows.Count);
+                }
+                catch (Exception ex)
+                {
+                    label3.Text = "Error: " + ex.Message;
+                }
+                textBox1.Text = "";
+            }
+
         }
     }
 }

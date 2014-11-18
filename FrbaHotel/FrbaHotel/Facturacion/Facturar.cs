@@ -179,17 +179,18 @@ namespace FrbaHotel.Facturacion
                 }
                 scCommand2.ExecuteNonQuery();
                 int result = int.Parse(scCommand2.Parameters["@CODIGO"].Value.ToString());
-                
-                //if (result != 1)
-                //{
-                //    string mensaje = string.Format("Error en la facturacion, COD: {0}", result);
-                //    MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //}
-                //else
-                //{
+
+                if (result != 1)
+                {
+                    string mensaje = string.Format("Error en la facturacion, COD: {0}", result);
+                    MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Factura creada correctamente", "Operacion realizada correctamente", MessageBoxButtons.OK, MessageBoxIcon.None);
                     int factura = int.Parse(scCommand2.Parameters["@FACTURA_NRO"].Value.ToString());
                     mostrarFactura(factura);
-                //}
+                }
             }
             else
             {
