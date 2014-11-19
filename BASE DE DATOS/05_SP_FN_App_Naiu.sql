@@ -714,7 +714,7 @@ AS
 --@Desc:Se registran los consumibles
 BEGIN
 DECLARE 
-@i tinyint =1,
+
 @id_hab numeric =CONTROL_ZETA.get_id_habitacion(@nro_hab,@id_hotel)
 --@id_est numeric = 0
 
@@ -723,13 +723,11 @@ DECLARE
 
 	IF @id_hab>0
 	BEGIN
-		WHILE @i<=@cant
-		BEGIN
-			INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID)
-			VALUES (@id_hab,@id_con,@id_est)
-			set @i=@i+1
-		END
-		set @error=1	
+		
+		INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID,CANTIDAD)
+		VALUES (@id_hab,@id_con,@id_est,@cant)
+		set @error=1
+		
 	END	
 	ELSE set @error=5		
 	
