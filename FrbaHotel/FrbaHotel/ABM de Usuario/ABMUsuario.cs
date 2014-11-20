@@ -17,35 +17,45 @@ namespace FrbaHotel.ABM_de_Usuario
         public ABMUsuario(Form atras)
         {
             InitializeComponent();
-            back = null;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string value1 = string.Empty;
+            back = atras;
 
             string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
-
             SqlConnection conn = new SqlConnection(ConnStr);
-            SqlCommand cmd = new SqlCommand("SELECT TOP 1000 [Hotel_Ciudad] FROM [GD2C2014].[gd_esquema].[Maestra]", conn);
+            string sel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[ROL] rol,
+                    [GD2C2014].[CONTROL_ZETA].[EMPLEADO] emple,
+                    [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] usrrol
+                    where usrrol.HOTEL_ID = '{0}'
+                    and usrrol.USR_USERNAME = emple.USR_USERNAME
+                    and usrrol.ROL_ID = rol.ROL_ID", Login.Class1.hotel);
+            SqlCommand cmd = new SqlCommand(sel, conn);
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                listBox1.Items.Add(reader["Hotel_Ciudad"].ToString());
+                listBox1.Items.Add(reader[3].ToString());
             }
             reader.Close();
             conn.Close(); 
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            new AltaUsuario(this).Show();
+            this.Hide();
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
-
+            if (listBox1.SelectedItem != null)
+            {
+                new AltaUsuario(this, listBox1.SelectedItem.ToString()).Show();
+                this.Hide();
+            }
         }
 
         private void ABMUsuario_Load(object sender, EventArgs e)

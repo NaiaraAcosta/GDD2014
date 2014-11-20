@@ -14,6 +14,7 @@ namespace FrbaHotel.Registrar_Estadia
     public partial class RegistrarEstadia : Form
     {
         Form back = null;
+        List<int> tipoDoc = new List<int>();
         public RegistrarEstadia()
         {
             InitializeComponent();
@@ -22,6 +23,23 @@ namespace FrbaHotel.Registrar_Estadia
         {
             InitializeComponent();
             back = atras;
+            cargarCombo();
+        }
+
+        private void cargarCombo()
+        {
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+            SqlConnection conn = new SqlConnection(ConnStr);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[TIPO_DOC]", conn);
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                comboBox1.Items.Add(reader["TIPO_DOC_DETALLE"].ToString());
+                tipoDoc.Add(int.Parse(reader["TIPO_DOC_ID"].ToString()));
+            }
+            reader.Close();
+            conn.Close(); 
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -158,22 +176,11 @@ namespace FrbaHotel.Registrar_Estadia
             if (textBox2.Text != "")
             {
                 string sCnn = ConfigurationManager.AppSettings["stringConexion"];
-                string sSel = String.Format(@"SELECT reser.CLIENTE_ID as Cliente, 
-                        hab.HAB_NRO as NroHab, 
-                        esta.EST_ID as Estadia, 
-                        reserhab.RESERVA_ID as Reserva, 
-                        EST_FECHA_DESDE  as 'Estadia Desde'
-                FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA_CLIENTE] estaclie,
-                [GD2C2014].[CONTROL_ZETA].[ESTADIA] esta,
-		        [GD2C2014].[CONTROL_ZETA].[RESERVA_HABITACION] reserhab,
-                [GD2C2014].[CONTROL_ZETA].[RESERVA] reser,
-                [GD2C2014].[CONTROL_ZETA].[HABITACION] hab
-                where esta.EST_FECHA_HASTA is null
-                and esta.EST_ID = estaclie.EST_ID
-                and reserhab.RESERVA_ID = esta.EST_RESERVA_ID
-                and reserhab.RESERVA_ID = reser.RESERVA_ID
-                and reserhab.HAB_ID = hab.HAB_ID
-                and reser.RESERVA_ID_HOTEL = {0}", Login.Class1.hotel);
+                string sSel = String.Format(@"select c.CLIENTE_ID,c.CLIENTE_NOMBRE,c.CLIENTE_APELLIDO, c.CLIENTE_FECHA_NAC, r.RESERVA_ID 
+                    from CONTROL_ZETA.CLIENTE c, CONTROL_ZETA.RESERVA r 
+                    where c.CLIENTE_ID_TIPO_DOC={0}
+                    and c.CLIENTE_DOC={1}
+                    and r.CLIENTE_ID=c.CLIENTE_ID", tipoDoc[comboBox1.SelectedIndex], textBox2.Text);
                 SqlDataAdapter da;
                 DataTable dt = new DataTable();
                 try
@@ -189,6 +196,11 @@ namespace FrbaHotel.Registrar_Estadia
                 }
                 textBox1.Text = "";
             }
+
+        }
+
+        private void RegistrarEstadia_Load(object sender, EventArgs e)
+        {
 
         }
     }

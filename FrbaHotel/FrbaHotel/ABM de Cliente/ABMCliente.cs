@@ -14,6 +14,7 @@ namespace FrbaHotel.ABM_de_Cliente
     public partial class ABMCliente : Form
     {
         Form back = null;
+        List<int> tipoDoc = new List<int>();
         public ABMCliente(Form atras)
         {
             InitializeComponent();
@@ -21,12 +22,13 @@ namespace FrbaHotel.ABM_de_Cliente
             string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
 
             SqlConnection conn = new SqlConnection(ConnStr);
-            SqlCommand cmd = new SqlCommand("SELECT distinct CLIENTE_ID_TIPO_DOC FROM [GD2C2014].[CONTROL_ZETA].[CLIENTE]", conn);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[TIPO_DOC]", conn);
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                comboBox1.Items.Add(reader["CLIENTE_ID_TIPO_DOC"].ToString());
+                comboBox1.Items.Add(reader["TIPO_DOC_DETALLE"].ToString());
+                tipoDoc.Add(int.Parse(reader["TIPO_DOC_ID"].ToString()));
             }
             reader.Close();
             conn.Close(); 
@@ -94,12 +96,12 @@ namespace FrbaHotel.ABM_de_Cliente
             {
                 if (first)
                 {
-                    sSel = String.Format("{0} where CLIENTE_ID_TIPO_DOC = {1}", sSel, comboBox1.Text);
+                    sSel = String.Format("{0} where CLIENTE_ID_TIPO_DOC = {1}", sSel, tipoDoc[comboBox1.SelectedIndex]);
                     first = false;
                 }
                 else
                 {
-                    sSel = String.Format("{0} and CLIENTE_ID_TIPO_DOC = {1}", sSel, comboBox1.Text);
+                    sSel = String.Format("{0} and CLIENTE_ID_TIPO_DOC = {1}", sSel, tipoDoc[comboBox1.SelectedIndex]);
                 }
             }
 
@@ -144,18 +146,24 @@ namespace FrbaHotel.ABM_de_Cliente
             if (dataGridView1.SelectedCells.Count != 0)
             {
                 //string[] result = dataGridView1.SelectedCells[1].Value.ToString().Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                Form f = new ABM_de_Cliente.AltaCliente(this,
-                    dataGridView1.SelectedCells[1].Value.ToString(), //nombre
-                    dataGridView1.SelectedCells[2].Value.ToString(), //apellido
-                    dataGridView1.SelectedCells[3].Value.ToString(), //tipo doc
-                    dataGridView1.SelectedCells[4].Value.ToString(), //numero
-                    dataGridView1.SelectedCells[5].Value.ToString(), //mail
-                    dataGridView1.SelectedCells[6].Value.ToString(), //telefono
-                    dataGridView1.SelectedCells[9].Value.ToString(), //calle
-                    dataGridView1.SelectedCells[7].Value.ToString(), //localidad
-                    dataGridView1.SelectedCells[8].Value.ToString(), //pais
-                    dataGridView1.SelectedCells[13].Value.ToString(), //nacionalidad
-                    dataGridView1.SelectedCells[15].Value.ToString()); //nacimiento
+                string[] param = new string[16];
+                param[0] = dataGridView1.SelectedCells[0].Value.ToString(); //id
+                param[1] = dataGridView1.SelectedCells[1].Value.ToString(); //nombre
+                param[2] = dataGridView1.SelectedCells[2].Value.ToString(); //apellido
+                param[3] = dataGridView1.SelectedCells[3].Value.ToString(); //tipo doc
+                param[4] = dataGridView1.SelectedCells[4].Value.ToString(); //numero
+                param[5] = dataGridView1.SelectedCells[5].Value.ToString(); //mail
+                param[6] = dataGridView1.SelectedCells[6].Value.ToString(); //telefono
+                param[7] = dataGridView1.SelectedCells[7].Value.ToString(); //localidad
+                param[8] = dataGridView1.SelectedCells[8].Value.ToString(); //pais
+                param[9] = dataGridView1.SelectedCells[9].Value.ToString(); //calle
+                param[10] = dataGridView1.SelectedCells[10].Value.ToString(); //nro calle
+                param[11] = dataGridView1.SelectedCells[11].Value.ToString(); //depto
+                param[12] = dataGridView1.SelectedCells[12].Value.ToString(); //piso
+                param[13] = dataGridView1.SelectedCells[13].Value.ToString(); //nacionalidad
+                param[14] = dataGridView1.SelectedCells[14].Value.ToString(); //estado
+                param[15] = dataGridView1.SelectedCells[15].Value.ToString(); //nacimiento
+                Form f = new ABM_de_Cliente.AltaCliente(this, param, 2);
                 f.Show();
             }
             else
@@ -171,8 +179,13 @@ namespace FrbaHotel.ABM_de_Cliente
 
         private void button5_Click(object sender, EventArgs e)
         {
-            new AltaCliente(this).Show();
+            new AltaCliente(this, 1).Show();
             this.Hide();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

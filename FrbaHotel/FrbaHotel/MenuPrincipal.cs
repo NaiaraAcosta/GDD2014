@@ -172,7 +172,7 @@ namespace FrbaHotel
 
         private void aBMDeUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("La siguiente funcionalidad no esta desarrollada en su totalidad", "Funcionalidad sin terminar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //MessageBox.Show("La siguiente funcionalidad no esta desarrollada en su totalidad", "Funcionalidad sin terminar", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Form f = new ABM_de_Usuario.ABMUsuario(this);
             f.Show();
             this.Hide();
@@ -226,7 +226,7 @@ namespace FrbaHotel
 
         private void altaDeClienteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("La siguiente funcionalidad no esta desarrollada en su totalidad", "Funcionalidad sin terminar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //MessageBox.Show("La siguiente funcionalidad no esta desarrollada en su totalidad", "Funcionalidad sin terminar", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Form f = new ABM_de_Cliente.ABMCliente(this);
             f.Show();
             this.Hide();
