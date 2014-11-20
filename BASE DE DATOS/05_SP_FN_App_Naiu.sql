@@ -646,8 +646,11 @@ IF EXISTS(SELECT *FROM CONTROL_ZETA.RESERVA R WHERE R.RESERVA_ID=@id_reserva AND
 		END
 		ELSE
 		BEGIN
-			UPDATE CONTROL_ZETA.RESERVA SET RESERVA_ESTADO=@id_est, RESERVA_MOTIVO_CANC=@motivo, RESERVA_FECHA_CANC=@fecha_canc,USR_USERNAME_CANC=@id_usr
+			UPDATE CONTROL_ZETA.RESERVA SET RESERVA_ESTADO=@id_est
 			WHERE RESERVA_ID=@id_reserva
+			
+			INSERT INTO  CONTROL_ZETA.RESERVA_CANCELADA (RESERVA_ID, USR_USERNAME_CANC,RESERVA_MOTIVO_CANC, RESERVA_FECHA_CANC)
+			VALUES(@id_reserva,@id_usr,@motivo,@fecha_canc)
 			set @error=1
 			COMMIT
 		END
@@ -711,7 +714,7 @@ AS
 --@Desc:Se registran los consumibles
 BEGIN
 DECLARE 
-@i tinyint =1,
+
 @id_hab numeric =CONTROL_ZETA.get_id_habitacion(@nro_hab,@id_hotel)
 --@id_est numeric = 0
 
@@ -720,13 +723,11 @@ DECLARE
 
 	IF @id_hab>0
 	BEGIN
-		WHILE @i<=@cant
-		BEGIN
-			INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID)
-			VALUES (@id_hab,@id_con,@id_est)
-			set @i=@i+1
-		END
-		set @error=1	
+		
+		INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID,CANTIDAD)
+		VALUES (@id_hab,@id_con,@id_est,@cant)
+		set @error=1
+		
 	END	
 	ELSE set @error=5		
 	
