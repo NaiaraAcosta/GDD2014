@@ -161,7 +161,8 @@ namespace FrbaHotel.ABM_de_Usuario
             string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection con = new SqlConnection(ConnStr);
             con.Open();
-            SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ABM_USUARIO", con);
+            SqlTransaction transaction = con.BeginTransaction();
+            SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ABM_USUARIO", con, transaction);
             scCommand.CommandType = CommandType.StoredProcedure;
             scCommand.Parameters.Add("@ACCION", SqlDbType.SmallInt).Value = modo;
             scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = textBox1.Text;
@@ -182,12 +183,13 @@ namespace FrbaHotel.ABM_de_Usuario
             }
             scCommand.ExecuteNonQuery();
             int result = int.Parse(scCommand.Parameters["@ERROR"].Value.ToString());
-
+            bool conError = true;
             switch (result)
             {
                 case 1:
                     {
                         MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        conError = false;
                         break;
                     }
                 case 2:
@@ -207,9 +209,39 @@ namespace FrbaHotel.ABM_de_Usuario
                         break;
                     }
             }
+            
+            for (int i = 0; i < checkedListBox1.Items.Count; i++)
+            {
+                if (checkedListBox1.GetItemChecked(i))
+                {
+                    scCommand = new SqlCommand("CONTROL_ZETA.SP_USR_ROL_HOTEL", con, transaction);
+                    scCommand.CommandType = CommandType.StoredProcedure;
+                    scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = textBox1.Text;
+                    scCommand.Parameters.Add("@ROL_ID", SqlDbType.TinyInt).Value = i+1;
+                    scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
+                    if (scCommand.Connection.State == ConnectionState.Closed)
+                    {
+                        scCommand.Connection.Open();
+                    }
+                    scCommand.ExecuteNonQuery();
+                    //result = int.Parse(scCommand.Parameters["@ERROR"].Value.ToString());
+                    //if (result == 1)
+                    //{
+                    //    conError = false;
+                    //}
+                }
+            }
+            
+            if (conError)
+            {
+                transaction.Rollback();
+            }
+            else
+            {
+                transaction.Commit();
+            }
             con.Close();
         }
-
         private string encriptarPass()
         {
             return SHA256Encrypt(textBox2.Text);
