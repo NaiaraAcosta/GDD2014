@@ -712,21 +712,35 @@ GO
 CREATE PROCEDURE CONTROL_ZETA.SP_REGISTRAR_CONSUMIBLE(@id_hotel int, @nro_hab SMALLINT, @id_con smallint, @id_est numeric,@cant tinyint, @error tinyint OUTPUT )
 AS
 --@Desc:Se registran los consumibles
-BEGIN
-DECLARE 
-
-@id_hab numeric =CONTROL_ZETA.get_id_habitacion(@nro_hab,@id_hotel)
+DECLARE @CANT_ANT tinyint
+DECLARE @id_hab numeric =CONTROL_ZETA.get_id_habitacion(@nro_hab,@id_hotel)
 --@id_est numeric = 0
 
 --set @id_est=CONTROL_ZETA.get_estadia(@id_hab)
 
+BEGIN
 
 	IF @id_hab>0
 	BEGIN
-		
-		INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID,CANTIDAD)
-		VALUES (@id_hab,@id_con,@id_est,@cant)
-		set @error=1
+		IF EXISTS (SELECT 1 FROM CONTROL_ZETA.ESTADIA_HAB_CON EHC  WHERE EHC.HAB_ID=@id_hab AND EHC.CON_ID=@id_con)
+		BEGIN
+			SELECT @CANT_ANT=EHC.CANTIDAD 
+			FROM CONTROL_ZETA.ESTADIA_HAB_CON EHC  
+			WHERE EHC.HAB_ID=@id_hab AND EHC.CON_ID=@id_con
+			
+			UPDATE CONTROL_ZETA.ESTADIA_HAB_CON 
+			SET CANTIDAD=@CANT_ANT+@cant 
+			WHERE HAB_ID=@id_hab 
+			AND CON_ID=@id_con
+			
+			set @error=1
+		END
+		ELSE
+		BEGIN
+			INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID,CANTIDAD)
+			VALUES (@id_hab,@id_con,@id_est,@cant)
+			set @error=1
+		END
 		
 	END	
 	ELSE set @error=5		
