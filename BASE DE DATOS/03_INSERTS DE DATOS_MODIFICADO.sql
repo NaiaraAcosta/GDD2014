@@ -388,7 +388,7 @@ INSERT INTO CONTROL_ZETA.ITEM_FACTURA
   UNION all
  SELECT  M.FACTURA_NRO,  
        case  C.CON_ES_MODERADO
-       when 'S'
+       when 'N'
        then COUNT(1)
        else COUNT(0) end ITEM_FACTURA_CANTIDAD,
         -SUM(M.Consumible_Precio) as ITEM_FACTURA_MONTO, 
@@ -397,12 +397,12 @@ INSERT INTO CONTROL_ZETA.ITEM_FACTURA
  WHERE M.FACTURA_NRO IS NOT NULL AND ITEM_FACTURA_CANTIDAD IS NOT NULL
  and M.Regimen_Descripcion = 'All inclusive' --AND factura_nro = 2396782
  AND M.Consumible_Descripcion = C.CON_DESCRIPCION
- AND C.CON_ES_MODERADO = 'S' 
+ AND C.CON_ES_MODERADO = 'N' 
  group by M.FACTURA_NRO, M.Factura_Total , C.CON_ES_MODERADO, M.Consumible_Precio
  UNION ALL
   SELECT  M.FACTURA_NRO,  
        case  C.CON_ES_MODERADO
-       when 'N'
+       when 'S'
        then COUNT(1)
        else COUNT(0) end ITEM_FACTURA_CANTIDAD,
         -SUM(M.Consumible_Precio) as ITEM_FACTURA_MONTO, 
@@ -411,8 +411,8 @@ INSERT INTO CONTROL_ZETA.ITEM_FACTURA
  WHERE M.FACTURA_NRO IS NOT NULL AND ITEM_FACTURA_CANTIDAD IS NOT NULL
  and M.Regimen_Descripcion = 'All inclusive moderado' --AND factura_nro = 2396782
  AND M.Consumible_Descripcion = C.CON_DESCRIPCION
- AND C.CON_ES_MODERADO = 'N' 
- group by M.FACTURA_NRO, M.Factura_Total , C.CON_ES_MODERADO, M.Consumible_Precio
+ AND C.CON_ES_MODERADO = 'S' 
+ group by M.FACTURA_NRO, M.Factura_Total , C.CON_ES_MODERADO--, M.Consumible_Precio
 -- ORDER BY M.FACTURA_NRO;  -- 380972
 GO
 
