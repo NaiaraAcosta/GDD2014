@@ -372,7 +372,9 @@ INSERT INTO CONTROL_ZETA.ITEM_FACTURA
  AND Consumible_Codigo IS  NULL --and factura_nro = 2396782
   UNION all
   SELECT  M.FACTURA_NRO,  COUNT(Consumible_Codigo) ITEM_FACTURA_CANTIDAD, 
-         sum(M.Consumible_Precio) as ITEM_FACTURA_MONTO, M.Consumible_Descripcion as 'CONSUMIBLES',
+         sum(M.Consumible_Precio) as ITEM_FACTURA_MONTO, 
+         M.Consumible_Descripcion + ' - Habitacion: ' + 
+         CAST(M.Habitacion_Numero AS CHAR(5) ) 'CONSUMIBLES',
          ehc.EST_HAB_CON_ID
  FROM GD_ESQUEMA.MAESTRA M, CONTROL_ZETA.ESTADIA e, CONTROL_ZETA.ESTADIA_HAB_CON ehc
  WHERE M.FACTURA_NRO IS NOT NULL AND ITEM_FACTURA_CANTIDAD IS NOT NULL 
@@ -381,9 +383,9 @@ INSERT INTO CONTROL_ZETA.ITEM_FACTURA
    AND E.EST_ID = ehc.EST_ID
    AND M.Consumible_Codigo = ehc.CON_ID
  --AND factura_nro = 2396782
-  GROUP BY M.FACTURA_NRO, M.Consumible_Codigo,M.Factura_Total,M.Consumible_Precio, 
-  M.Consumible_Descripcion,ehc.EST_HAB_CON_ID
- UNION all
+  GROUP BY M.FACTURA_NRO, M.Consumible_Codigo,M.Consumible_Precio, 
+  M.Consumible_Descripcion,ehc.EST_HAB_CON_ID, M.Habitacion_Numero
+  UNION all
  SELECT  M.FACTURA_NRO,  
        case  C.CON_ES_MODERADO
        when 'S'
