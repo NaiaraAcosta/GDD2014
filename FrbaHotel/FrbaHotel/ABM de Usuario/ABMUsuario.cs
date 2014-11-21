@@ -21,7 +21,7 @@ namespace FrbaHotel.ABM_de_Usuario
 
             string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn = new SqlConnection(ConnStr);
-            string sel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[ROL] rol,
+            string sel = string.Format(@"SELECT distinct emple.USR_USERNAME from [GD2C2014].[CONTROL_ZETA].[ROL] rol,
                     [GD2C2014].[CONTROL_ZETA].[EMPLEADO] emple,
                     [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] usrrol
                     where usrrol.HOTEL_ID = '{0}'

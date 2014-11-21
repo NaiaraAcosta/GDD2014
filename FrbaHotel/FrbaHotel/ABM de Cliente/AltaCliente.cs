@@ -235,12 +235,17 @@ namespace FrbaHotel.ABM_de_Cliente
                         }
                     case 2:
                         {
-                            MessageBox.Show("Error 2", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Modificacion/Baja de usuario inexistente", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    case 3:
+                        {
+                            MessageBox.Show("Alta de usuario existente", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             break;
                         }
                     case 4:
                         {
-                            MessageBox.Show("Error 4", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Se esta modificando un cliente con inconsistencias, debe solucionarse", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             break;
                         }
                     default:

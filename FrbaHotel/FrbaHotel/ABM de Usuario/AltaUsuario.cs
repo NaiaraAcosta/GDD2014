@@ -176,6 +176,7 @@ namespace FrbaHotel.ABM_de_Usuario
             scCommand.Parameters.Add("@DOM", SqlDbType.VarChar, 50).Value = textBox9.Text;
             scCommand.Parameters.Add("@FECHA_NAC", SqlDbType.Date).Value = dateTimePicker1.Value;
             scCommand.Parameters.Add("@ESTADO", SqlDbType.VarChar, 1).Value = "H";
+            scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
             scCommand.Parameters.Add("@ERROR", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
             if (scCommand.Connection.State == ConnectionState.Closed)
             {
