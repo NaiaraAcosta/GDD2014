@@ -95,12 +95,15 @@ namespace FrbaHotel.Registrar_Consumible
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string[] param = new string[2];
-            param[0] = dataGridView1.SelectedCells[2].Value.ToString();
-            param[1] = dataGridView1.SelectedCells[1].Value.ToString();
-            AltaConsumible f = new AltaConsumible(this, param);
-            f.Show();
-            this.Hide();
+            if (dataGridView1.SelectedCells.Count != 0)
+            {
+                string[] param = new string[2];
+                param[0] = dataGridView1.SelectedCells[2].Value.ToString();
+                param[1] = dataGridView1.SelectedCells[1].Value.ToString();
+                AltaConsumible f = new AltaConsumible(this, param);
+                f.Show();
+                this.Hide();
+            }
         }
 
         private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
