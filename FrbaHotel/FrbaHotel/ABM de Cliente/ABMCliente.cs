@@ -15,6 +15,7 @@ namespace FrbaHotel.ABM_de_Cliente
     {
         Form back = null;
         List<int> tipoDoc = new List<int>();
+        bool inconsistente = false;
         public ABMCliente(Form atras)
         {
             InitializeComponent();
@@ -174,7 +175,83 @@ namespace FrbaHotel.ABM_de_Cliente
 
         private void button3_Click(object sender, EventArgs e)
         {
-            
+            if (dataGridView1.SelectedCells.Count != 0)
+            {
+                System.Data.DataTable ds = new DataTable();
+                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+                SqlConnection con = new SqlConnection(ConnStr);
+                con.Open();
+                SqlCommand scCommand;
+                if (!inconsistente)
+                {
+                    scCommand = new SqlCommand("CONTROL_ZETA.ABM_CLIENTE", con);
+                }
+                else
+                {
+                    scCommand = new SqlCommand("CONTROL_ZETA.MB_CLIENTE", con);
+                }
+                scCommand.CommandType = CommandType.StoredProcedure;
+                scCommand.Parameters.AddWithValue("@NOMBRE", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@APELLIDO", DBNull.Value);
+                scCommand.Parameters.Add("@TIPO_IDENT", SqlDbType.TinyInt).Value = int.Parse(dataGridView1.SelectedCells[3].Value.ToString());
+                scCommand.Parameters.Add("@NRO_IDENT", SqlDbType.VarChar, 15).Value = dataGridView1.SelectedCells[4].Value.ToString();
+                scCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar, 50).Value = dataGridView1.SelectedCells[5].Value.ToString();
+                scCommand.Parameters.AddWithValue("@TEL", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@NOMBRE_LOC", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@NOMBRE_PAIS", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@DOM_CALLE", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@DOM_NRO", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@DEPTO", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@DOM_PISO", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@NACIONALIDAD_NOMBRE", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@FECHA_NAC", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@CODIGO_ENTRADA", SqlDbType.TinyInt).Value = 3;
+                scCommand.Parameters.Add("@CLIENTE_ID", SqlDbType.Int).Value = int.Parse(dataGridView1.SelectedCells[0].Value.ToString());
+                scCommand.Parameters.Add("@CODIGO", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
+                scCommand.Parameters.Add("@CLIENTE_ID_NEW", SqlDbType.Int).Direction = ParameterDirection.Output;
+                if (scCommand.Connection.State == ConnectionState.Closed)
+                {
+                    scCommand.Connection.Open();
+                }
+                scCommand.ExecuteNonQuery();
+
+                int result = int.Parse(scCommand.Parameters["@CODIGO"].Value.ToString());
+
+                switch (result)
+                {
+                    case 1:
+                        {
+                            MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                        }
+                    case 2:
+                        {
+                            MessageBox.Show("Modificacion/Baja de usuario inexistente", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    case 3:
+                        {
+                            MessageBox.Show("Alta de usuario existente", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    case 4:
+                        {
+                            MessageBox.Show("Se esta modificando un cliente con inconsistencias, debe solucionarse", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            SqlDataAdapter sda = new SqlDataAdapter(scCommand);
+                            sda.Fill(ds);
+                            new InconsistenciasCliente(this, ds, 3).Show();
+                            this.Hide();
+                            break;
+                        }
+                    default:
+                        {
+                            string mensaje = string.Format("Error en la operacion, COD: {0}", result);
+                            MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                }
+                con.Close();
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)

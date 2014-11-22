@@ -14,7 +14,7 @@ namespace FrbaHotel.ABM_de_Usuario
 {
     public partial class AltaUsuario : Form
     {
-        Form back = null;
+        ABM_de_Usuario.ABMUsuario back = null;
         List<int> codRol = new List<int>();
         List<int> tipoDoc = new List<int>();
         int modo;
@@ -25,7 +25,7 @@ namespace FrbaHotel.ABM_de_Usuario
         public AltaUsuario(Form atras, string user)
         {
             InitializeComponent();
-            back = atras;
+            back = (ABM_de_Usuario.ABMUsuario) atras;
             llenarChecked();
             actualizarChecked(user);
             llenarCombo();
@@ -37,7 +37,7 @@ namespace FrbaHotel.ABM_de_Usuario
         public AltaUsuario(Form atras)
         {
             InitializeComponent();
-            back = atras;
+            back = (ABM_de_Usuario.ABMUsuario) atras;
             llenarChecked();
             llenarCombo();
             cargarHotel();
@@ -60,6 +60,31 @@ namespace FrbaHotel.ABM_de_Usuario
             }
             reader.Close();
             conn.Close();
+
+            SqlConnection con = new SqlConnection(ConnStr);
+            con.Open();
+            SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.FN_USUARIO_HABILITADO", con);
+            scCommand.CommandType = CommandType.StoredProcedure;
+            scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = user;
+            scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
+            scCommand.Parameters.Add("@RETURN_VALUE", SqlDbType.VarChar, 1).Direction = ParameterDirection.ReturnValue;
+
+            if (scCommand.Connection.State == ConnectionState.Closed)
+            {
+                scCommand.Connection.Open();
+            }
+            scCommand.ExecuteNonQuery();
+            string result = scCommand.Parameters["@RETURN_VALUE"].Value.ToString();
+            if (result == "H")
+            {
+                checkBox1.Checked = true;
+            }
+            else
+            {
+                checkBox1.Checked = false;
+            }
+            con.Close();
+
         }
 
         private void llenarCombo()
@@ -182,7 +207,6 @@ namespace FrbaHotel.ABM_de_Usuario
             scCommand.Parameters.Add("@TEL", SqlDbType.VarChar, 10).Value = textBox8.Text;
             scCommand.Parameters.Add("@DOM", SqlDbType.VarChar, 50).Value = textBox9.Text;
             scCommand.Parameters.Add("@FECHA_NAC", SqlDbType.Date).Value = dateTimePicker1.Value;
-            scCommand.Parameters.Add("@ESTADO", SqlDbType.VarChar, 1).Value = "H";
             scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
             scCommand.Parameters.Add("@ERROR", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
             if (scCommand.Connection.State == ConnectionState.Closed)
@@ -196,7 +220,7 @@ namespace FrbaHotel.ABM_de_Usuario
             {
                 case 1:
                     {
-                        MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        
                         conError = false;
                         break;
                     }
@@ -239,6 +263,24 @@ namespace FrbaHotel.ABM_de_Usuario
                     //}
                 }
             }
+
+            scCommand = new SqlCommand("CONTROL_ZETA.SP_DES_HAB_USUARIO", con, transaction);
+            scCommand.CommandType = CommandType.StoredProcedure;
+            scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = textBox1.Text;
+            scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
+            if (checkBox1.Checked)
+            {
+                scCommand.Parameters.Add("@HAB", SqlDbType.TinyInt).Value = 1;
+            }
+            else
+            {
+                scCommand.Parameters.Add("@HAB", SqlDbType.TinyInt).Value = 0;
+            }
+            if (scCommand.Connection.State == ConnectionState.Closed)
+            {
+                scCommand.Connection.Open();
+            }
+            scCommand.ExecuteNonQuery();
             
             if (conError)
             {
@@ -246,9 +288,12 @@ namespace FrbaHotel.ABM_de_Usuario
             }
             else
             {
+                MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 transaction.Commit();
             }
             con.Close();
+
+            back.refrescar();
         }
         private string encriptarPass()
         {

@@ -69,7 +69,10 @@ namespace FrbaHotel.Registrar_Estadia
                     }
                 }
             }
-            MessageBox.Show("Debe seleccionar colocar, o seleccionar una estadia", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if ((textBox1.Text != "") && (dataGridView1.SelectedCells.Count != 0))
+            {
+                MessageBox.Show("Debe seleccionar colocar, o seleccionar una estadia", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void registrarEstadia(string codReserva)
@@ -176,7 +179,7 @@ namespace FrbaHotel.Registrar_Estadia
             if (textBox2.Text != "")
             {
                 string sCnn = ConfigurationManager.AppSettings["stringConexion"];
-                string sSel = String.Format(@"select c.CLIENTE_ID,c.CLIENTE_NOMBRE,c.CLIENTE_APELLIDO, c.CLIENTE_FECHA_NAC, r.RESERVA_ID 
+                string sSel = String.Format(@"select r.RESERVA_ID, c.CLIENTE_ID,c.CLIENTE_NOMBRE,c.CLIENTE_APELLIDO, c.CLIENTE_FECHA_NAC 
                     from CONTROL_ZETA.CLIENTE c, CONTROL_ZETA.RESERVA r 
                     where c.CLIENTE_ID_TIPO_DOC={0}
                     and c.CLIENTE_DOC={1}

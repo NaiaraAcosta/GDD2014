@@ -189,10 +189,94 @@ namespace FrbaHotel.ABM_de_Cliente
 
         private void button1_Click(object sender, EventArgs e)
         {
-            validarDatos();
+            //validarDatos();
             if (param != null)
             {
                 param[4] = ""; //MOCK es el id de usuario!!!!!
+
+                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+                SqlConnection con = new SqlConnection(ConnStr);
+                con.Open();
+                SqlCommand scCommand;
+                if (!inconsistente)
+                {
+                    scCommand = new SqlCommand("CONTROL_ZETA.ABM_CLIENTE", con);
+                }
+                else
+                {
+                    scCommand = new SqlCommand("CONTROL_ZETA.MB_CLIENTE", con);
+                }
+                scCommand.CommandType = CommandType.StoredProcedure;
+                scCommand.Parameters.Add("@NOMBRE", SqlDbType.VarChar, 50).Value = textBox1.Text;
+                scCommand.Parameters.Add("@APELLIDO", SqlDbType.VarChar, 50).Value = textBox2.Text;
+                scCommand.Parameters.Add("@TIPO_IDENT", SqlDbType.TinyInt).Value = buscarTipoIdent();
+                scCommand.Parameters.Add("@NRO_IDENT", SqlDbType.VarChar, 15).Value = textBox4.Text;
+                scCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar, 50).Value = textBox5.Text;
+                scCommand.Parameters.Add("@TEL", SqlDbType.VarChar, 10).Value = textBox6.Text;
+                scCommand.Parameters.Add("@NOMBRE_LOC", SqlDbType.VarChar, 50).Value = comboBox2.Text;
+                scCommand.Parameters.Add("@NOMBRE_PAIS", SqlDbType.VarChar, 50).Value = comboBox3.Text;
+                scCommand.Parameters.Add("@DOM_CALLE", SqlDbType.VarChar, 50).Value = textBox7.Text;
+                if (textBox11.Text != "")
+                {
+                    scCommand.Parameters.Add("@DOM_NRO", SqlDbType.Int).Value = int.Parse(textBox11.Text);
+                }
+                else
+                {
+                    scCommand.Parameters.AddWithValue("@DOM_NRO", DBNull.Value);
+                }
+                scCommand.Parameters.Add("@DEPTO", SqlDbType.VarChar, 2).Value = textBox8.Text;
+                scCommand.Parameters.Add("@DOM_PISO", SqlDbType.VarChar, 10).Value = textBox3.Text;
+                scCommand.Parameters.Add("@NACIONALIDAD_NOMBRE", SqlDbType.VarChar, 50).Value = comboBox4.Text;
+                scCommand.Parameters.Add("@FECHA_NAC", SqlDbType.Date).Value = dateTimePicker1.Value;
+                scCommand.Parameters.Add("@CODIGO_ENTRADA", SqlDbType.TinyInt).Value = 1;
+                scCommand.Parameters.AddWithValue("@CLIENTE_ID", DBNull.Value);
+
+                scCommand.Parameters.Add("@CODIGO", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
+                scCommand.Parameters.Add("@CLIENTE_ID_NEW", SqlDbType.Int).Direction = ParameterDirection.Output;
+                if (scCommand.Connection.State == ConnectionState.Closed)
+                {
+                    scCommand.Connection.Open();
+                }
+                scCommand.ExecuteNonQuery();
+
+                int result = int.Parse(scCommand.Parameters["@CODIGO"].Value.ToString());
+
+                switch (result)
+                {
+                    case 1:
+                        {
+                            MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            param[4] = scCommand.Parameters["@CLIENTE_ID_NEW"].Value.ToString();
+                            break;
+                        }
+                    case 2:
+                        {
+                            MessageBox.Show("Modificacion/Baja de usuario inexistente", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    case 3:
+                        {
+                            MessageBox.Show("Alta de usuario existente", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    //case 4:
+                    //    {
+                    //        MessageBox.Show("Se esta modificando un cliente con inconsistencias, debe solucionarse", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //        SqlDataAdapter sda = new SqlDataAdapter(scCommand);
+                    //        sda.Fill(ds);
+                    //        new InconsistenciasCliente(this, ds, 2).Show();
+                    //        this.Hide();
+                    //        break;
+                    //    }
+                    default:
+                        {
+                            string mensaje = string.Format("Error en la operacion, COD: {0}", result);
+                            MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                }
+                con.Close();
+                
                 Form f = new Generar_Modificar_Reserva.ReservaFinalizada(this, back, back2, back3, param);
                 f.Show();
                 this.Hide();
@@ -235,8 +319,6 @@ namespace FrbaHotel.ABM_de_Cliente
                 scCommand.Parameters.Add("@NACIONALIDAD_NOMBRE", SqlDbType.VarChar , 50).Value = comboBox4.Text;
                 scCommand.Parameters.Add("@FECHA_NAC", SqlDbType.Date).Value = dateTimePicker1.Value;
                 scCommand.Parameters.Add("@CODIGO_ENTRADA", SqlDbType.TinyInt).Value = modo;
-                scCommand.Parameters.AddWithValue("@HOTEL", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@RESERVA_ID", DBNull.Value);
                 if (modo == 2)
                 {
                     scCommand.Parameters.Add("@CLIENTE_ID", SqlDbType.Int).Value = int.Parse(IDClie);
@@ -247,6 +329,7 @@ namespace FrbaHotel.ABM_de_Cliente
                 }
                 
                 scCommand.Parameters.Add("@CODIGO", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
+                scCommand.Parameters.Add("@CLIENTE_ID_NEW", SqlDbType.Int).Direction = ParameterDirection.Output;
                 if (scCommand.Connection.State == ConnectionState.Closed)
                 {
                     scCommand.Connection.Open();

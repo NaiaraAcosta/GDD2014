@@ -14,28 +14,56 @@ namespace FrbaHotel.ABM_de_Usuario
     public partial class ABMUsuario : Form
     {
         Form back = null;
+        List<string> usuario = new List<string>();
         public ABMUsuario(Form atras)
         {
             InitializeComponent();
             back = atras;
 
+            refrescar();
+        }
+
+        public void refrescar()
+        {
+            listBox1.Items.Clear();
+            usuario.Clear();
             string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn = new SqlConnection(ConnStr);
-            string sel = string.Format(@"SELECT distinct emple.USR_USERNAME from [GD2C2014].[CONTROL_ZETA].[ROL] rol,
+            string sel = string.Format(@"SELECT distinct usuario.USR_USERNAME from [GD2C2014].[CONTROL_ZETA].[ROL] rol,
                     [GD2C2014].[CONTROL_ZETA].[EMPLEADO] emple,
-                    [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] usrrol
+                    [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] usrrol,
+                    [GD2C2014].[CONTROL_ZETA].[USUARIO] usuario
                     where usrrol.HOTEL_ID = '{0}'
                     and usrrol.USR_USERNAME = emple.USR_USERNAME
-                    and usrrol.ROL_ID = rol.ROL_ID", Login.Class1.hotel);
+                    and usrrol.ROL_ID = rol.ROL_ID
+                    and usuario.USR_USERNAME = usrrol.USR_USERNAME", Login.Class1.hotel);
             SqlCommand cmd = new SqlCommand(sel, conn);
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                listBox1.Items.Add(reader[0].ToString());
+                SqlConnection con = new SqlConnection(ConnStr);
+                con.Open();
+                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.FN_USUARIO_HABILITADO", con);
+                scCommand.CommandType = CommandType.StoredProcedure;
+                scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = reader[0].ToString();
+                scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
+                scCommand.Parameters.Add("@RETURN_VALUE", SqlDbType.VarChar, 1).Direction = ParameterDirection.ReturnValue;
+
+                if (scCommand.Connection.State == ConnectionState.Closed)
+                {
+                    scCommand.Connection.Open();
+                }
+                scCommand.ExecuteNonQuery();
+                string result = scCommand.Parameters["@RETURN_VALUE"].Value.ToString();
+                con.Close();
+
+                string detalle = string.Format("{0} - {1}", result, reader[0].ToString());
+                listBox1.Items.Add(detalle);
+                usuario.Add(reader[0].ToString());
             }
             reader.Close();
-            conn.Close(); 
+            conn.Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -53,7 +81,7 @@ namespace FrbaHotel.ABM_de_Usuario
         {
             if (listBox1.SelectedItem != null)
             {
-                new AltaUsuario(this, listBox1.SelectedItem.ToString()).Show();
+                new AltaUsuario(this, usuario[listBox1.SelectedIndex]).Show();
                 this.Hide();
             }
         }
@@ -76,54 +104,20 @@ namespace FrbaHotel.ABM_de_Usuario
                 string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
                 SqlConnection con = new SqlConnection(ConnStr);
                 con.Open();
-                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ABM_USUARIO", con);
+                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_DES_HAB_USUARIO", con);
                 scCommand.CommandType = CommandType.StoredProcedure;
-                scCommand.Parameters.Add("@ACCION", SqlDbType.SmallInt).Value = 3;
-                scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = listBox1.SelectedItem.ToString();
-                scCommand.Parameters.AddWithValue("@PASS", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@NOMBRE", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@APELLIDO", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@TIPO_DOC", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@DOC", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@MAIL", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@TEL", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@DOM", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@FECHA_NAC", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@ESTADO", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@HOTEL_ID", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@ERROR", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
+                scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = usuario[listBox1.SelectedIndex];
+                scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
+                scCommand.Parameters.Add("@HAB", SqlDbType.TinyInt).Value = 0;
                 if (scCommand.Connection.State == ConnectionState.Closed)
                 {
                     scCommand.Connection.Open();
                 }
                 scCommand.ExecuteNonQuery();
-                int result = int.Parse(scCommand.Parameters["@ERROR"].Value.ToString());
-                switch (result)
-                {
-                    case 1:
-                        {
-                            MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            break;
-                        }
-                    case 2:
-                        {
-                            MessageBox.Show("Error 2", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            break;
-                        }
-                    case 4:
-                        {
-                            MessageBox.Show("Error 4", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            break;
-                        }
-                    default:
-                        {
-                            string mensaje = string.Format("Error en la operacion, COD: {0}", result);
-                            MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            break;
-                        }
-                }
+                
                 con.Close();
             }
+            refrescar();
         }
     }
 }
