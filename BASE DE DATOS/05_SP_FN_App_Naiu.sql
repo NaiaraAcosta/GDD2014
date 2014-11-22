@@ -733,14 +733,15 @@ BEGIN
 			SET CANTIDAD=@CANT_ANT+@cant 
 			WHERE HAB_ID=@id_hab 
 			AND CON_ID=@id_con
+			AND EST_ID=@id_est
 			
-			set @error=1
+			set @error=7
 		END
 		ELSE
 		BEGIN
 			INSERT INTO CONTROL_ZETA.ESTADIA_HAB_CON (HAB_ID,CON_ID,EST_ID,CANTIDAD)
 			VALUES (@id_hab,@id_con,@id_est,@cant)
-			set @error=1
+			set @error=9
 		END
 		
 	END	
