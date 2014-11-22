@@ -486,5 +486,10 @@ namespace FrbaHotel.ABM_de_Hotel
         {
 
         }
+
+        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
     }
 }

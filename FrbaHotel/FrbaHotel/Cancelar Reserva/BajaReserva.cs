@@ -111,5 +111,27 @@ namespace FrbaHotel.Cancelar_Reserva
             }
 
         }
+
+        private void BajaReserva_Load(object sender, EventArgs e)
+        {
+
+        }
+        public static void AllowNumber(KeyPressEventArgs e)
+        {
+            if (char.IsLetter(e.KeyChar) || //Letras
+                char.IsSymbol(e.KeyChar) || //Símbolos
+                char.IsWhiteSpace(e.KeyChar) || //Espaço
+                char.IsPunctuation(e.KeyChar)) //Pontuação
+                e.Handled = true; //Não permitir
+            //Com o script acima é possível utilizar Números, 'Del', 'BackSpace'..
+
+            //Abaixo só é permito de 0 a 9
+            //if ((e.KeyChar < '0') || (e.KeyChar > '9')) e.Handled = true; //Allow only numbers
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
     }
 }

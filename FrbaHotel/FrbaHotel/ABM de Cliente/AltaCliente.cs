@@ -18,7 +18,9 @@ namespace FrbaHotel.ABM_de_Cliente
         Form back3 = null;
         string[] param = null;
         int modo = 0;
+        string IDClie;
         List<int> tipoDoc = new List<int>();
+        bool inconsistente = false;
         public AltaCliente(Form atras,string nombre, string apellido, string tipo, string numero, string mail, string telefono, string calle,
             string localidad, string pais, string nacionalidad, string nacimiento)
         {
@@ -40,12 +42,14 @@ namespace FrbaHotel.ABM_de_Cliente
             dateTimePicker1.Value = new DateTime(int.Parse(result[2]), int.Parse(result[1]), int.Parse(result[0]));
             
         }
-        public AltaCliente(Form atras, string[] param, int mod)
+        public AltaCliente(Form atras, string[] param, int mod, bool inconsis)
         {
             InitializeComponent();
             cargarCombos();
             back = atras;
             modo = mod;
+            inconsistente = inconsis;
+            IDClie = param[0];
             textBox1.Text = param[1];
             textBox2.Text = param[2];
             comboBox1.SelectedIndex = int.Parse(param[3]) - 1;
@@ -95,6 +99,7 @@ namespace FrbaHotel.ABM_de_Cliente
         public AltaCliente(Form atras, int mod)
         {
             InitializeComponent();
+            cargarCombos();
             back = atras;
             modo = mod;
         }
@@ -102,6 +107,7 @@ namespace FrbaHotel.ABM_de_Cliente
         public AltaCliente(Form atras, Form atras2, Form atras3, string[] parametros)
         {
             InitializeComponent();
+            cargarCombos();
             back = atras;
             back2 = atras2;
             back3 = atras3;
@@ -193,10 +199,19 @@ namespace FrbaHotel.ABM_de_Cliente
             }
             else
             {
+                System.Data.DataTable ds = new DataTable();
                 string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
                 SqlConnection con = new SqlConnection(ConnStr);
                 con.Open();
-                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.ABM_CLIENTE", con);
+                SqlCommand scCommand;
+                if (!inconsistente)
+                {
+                    scCommand = new SqlCommand("CONTROL_ZETA.ABM_CLIENTE", con);
+                }
+                else
+                {
+                    scCommand = new SqlCommand("CONTROL_ZETA.MB_CLIENTE", con);
+                }
                 scCommand.CommandType = CommandType.StoredProcedure;
                 scCommand.Parameters.Add("@NOMBRE", SqlDbType.VarChar, 50).Value = textBox1.Text;
                 scCommand.Parameters.Add("@APELLIDO", SqlDbType.VarChar, 50).Value = textBox2.Text;
@@ -207,23 +222,37 @@ namespace FrbaHotel.ABM_de_Cliente
                 scCommand.Parameters.Add("@NOMBRE_LOC", SqlDbType.VarChar , 50).Value = comboBox2.Text;
                 scCommand.Parameters.Add("@NOMBRE_PAIS", SqlDbType.VarChar , 50).Value = comboBox3.Text;
                 scCommand.Parameters.Add("@DOM_CALLE", SqlDbType.VarChar , 50).Value = textBox7.Text;
-                scCommand.Parameters.Add("@DOM_NRO", SqlDbType.Int).Value = int.Parse(textBox11.Text);
-                scCommand.Parameters.Add("@DEPTO", SqlDbType.VarChar , 2).Value = textBox7.Text;
-                scCommand.Parameters.Add("@DOM_PISO", SqlDbType.VarChar , 10).Value = textBox7.Text;
+                if (textBox11.Text != "")
+                {
+                    scCommand.Parameters.Add("@DOM_NRO", SqlDbType.Int).Value = int.Parse(textBox11.Text);
+                }
+                else
+                {
+                    scCommand.Parameters.AddWithValue("@DOM_NRO", DBNull.Value);
+                }
+                scCommand.Parameters.Add("@DEPTO", SqlDbType.VarChar , 2).Value = textBox8.Text;
+                scCommand.Parameters.Add("@DOM_PISO", SqlDbType.VarChar , 10).Value = textBox3.Text;
                 scCommand.Parameters.Add("@NACIONALIDAD_NOMBRE", SqlDbType.VarChar , 50).Value = comboBox4.Text;
                 scCommand.Parameters.Add("@FECHA_NAC", SqlDbType.Date).Value = dateTimePicker1.Value;
                 scCommand.Parameters.Add("@CODIGO_ENTRADA", SqlDbType.TinyInt).Value = modo;
                 scCommand.Parameters.AddWithValue("@HOTEL", DBNull.Value);
                 scCommand.Parameters.AddWithValue("@RESERVA_ID", DBNull.Value);
-                scCommand.Parameters.AddWithValue("@CLIENTE_ID", DBNull.Value);
+                if (modo == 2)
+                {
+                    scCommand.Parameters.Add("@CLIENTE_ID", SqlDbType.Int).Value = int.Parse(IDClie);
+                }
+                else
+                {
+                    scCommand.Parameters.AddWithValue("@CLIENTE_ID", DBNull.Value);
+                }
                 
                 scCommand.Parameters.Add("@CODIGO", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
-                scCommand.Parameters.Add("@P_CURSOR", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
                 if (scCommand.Connection.State == ConnectionState.Closed)
                 {
                     scCommand.Connection.Open();
                 }
                 scCommand.ExecuteNonQuery();
+                
                 int result = int.Parse(scCommand.Parameters["@CODIGO"].Value.ToString());
 
                 switch (result)
@@ -246,6 +275,10 @@ namespace FrbaHotel.ABM_de_Cliente
                     case 4:
                         {
                             MessageBox.Show("Se esta modificando un cliente con inconsistencias, debe solucionarse", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            SqlDataAdapter sda = new SqlDataAdapter(scCommand);
+                            sda.Fill(ds);
+                            new InconsistenciasCliente(this, ds, 2).Show();
+                            this.Hide();
                             break;
                         }
                     default:
@@ -261,14 +294,14 @@ namespace FrbaHotel.ABM_de_Cliente
 
         private int buscarTipoIdent()
         {
-            return 1;//MOCK!
+            return tipoDoc[comboBox1.SelectedIndex];//MOCK!
         }
         private bool validarDatos()
         {
-            //if (textBox1.Text == "" || textBox2.Text == "" || textBox3.Text == "" || textBox5.Text == "")
-            //{
+            if (textBox1.Text == "" || textBox2.Text == "" || textBox3.Text == "" || textBox5.Text == "")
+            {
                 MessageBox.Show("Existen datos cuyos valores no pueden dejarse vacios","Error de ingreso de datos",MessageBoxButtons.OK,MessageBoxIcon.Error);
-            //}
+            }
             return true;
         }
 

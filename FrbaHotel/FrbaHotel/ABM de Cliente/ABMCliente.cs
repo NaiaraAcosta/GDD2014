@@ -163,7 +163,7 @@ namespace FrbaHotel.ABM_de_Cliente
                 param[13] = dataGridView1.SelectedCells[13].Value.ToString(); //nacionalidad
                 param[14] = dataGridView1.SelectedCells[14].Value.ToString(); //estado
                 param[15] = dataGridView1.SelectedCells[15].Value.ToString(); //nacimiento
-                Form f = new ABM_de_Cliente.AltaCliente(this, param, 2);
+                Form f = new ABM_de_Cliente.AltaCliente(this, param, 2, false);
                 f.Show();
             }
             else
@@ -186,6 +186,24 @@ namespace FrbaHotel.ABM_de_Cliente
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
+
+        public static void AllowNumber(KeyPressEventArgs e)
+        {
+            if (char.IsLetter(e.KeyChar) || //Letras
+                char.IsSymbol(e.KeyChar) || //Símbolos
+                char.IsWhiteSpace(e.KeyChar) || //Espaço
+                char.IsPunctuation(e.KeyChar)) //Pontuação
+                e.Handled = true; //Não permitir
+            //Com o script acima é possível utilizar Números, 'Del', 'BackSpace'..
+
+            //Abaixo só é permito de 0 a 9
+            //if ((e.KeyChar < '0') || (e.KeyChar > '9')) e.Handled = true; //Allow only numbers
         }
     }
 }

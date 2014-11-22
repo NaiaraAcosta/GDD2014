@@ -30,7 +30,7 @@ namespace FrbaHotel.ABM_de_Usuario
             actualizarChecked(user);
             llenarCombo();
             llenarText(user);
-
+            cargarHotel();
             modo = 2;
         }
 
@@ -40,6 +40,7 @@ namespace FrbaHotel.ABM_de_Usuario
             back = atras;
             llenarChecked();
             llenarCombo();
+            cargarHotel();
             modo = 1;
         }
 
@@ -121,14 +122,20 @@ namespace FrbaHotel.ABM_de_Usuario
             reader.Close();
             conn.Close();
 
-            conn = new SqlConnection(ConnStr);
+            
+        }
+
+        private void cargarHotel()
+        {
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+            SqlConnection conn = new SqlConnection(ConnStr);
             string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HOTEL] hotel, 
 				[GD2C2014].[CONTROL_ZETA].[LOCALIDAD] loc
                 where  hotel.HOTEL_ID = '{0}'
                 and loc.LOC_ID = hotel.HOTEL_ID_LOC", Login.Class1.hotel);
-            cmd = new SqlCommand(sSel, conn);
+            SqlCommand cmd = new SqlCommand(sSel, conn);
             conn.Open();
-            reader = cmd.ExecuteReader();
+            SqlDataReader reader = cmd.ExecuteReader();
             string detalle = "";
             while (reader.Read())
             {
@@ -148,7 +155,7 @@ namespace FrbaHotel.ABM_de_Usuario
                 }
             }
             reader.Close();
-            conn.Close(); 
+            conn.Close();
         }
 
         private void AltaUsuario_Load(object sender, EventArgs e)
@@ -277,6 +284,29 @@ namespace FrbaHotel.ABM_de_Usuario
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void textBox6_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
+
+        public static void AllowNumber(KeyPressEventArgs e)
+        {
+            if (char.IsLetter(e.KeyChar) || //Letras
+                char.IsSymbol(e.KeyChar) || //Símbolos
+                char.IsWhiteSpace(e.KeyChar) || //Espaço
+                char.IsPunctuation(e.KeyChar)) //Pontuação
+                e.Handled = true; //Não permitir
+            //Com o script acima é possível utilizar Números, 'Del', 'BackSpace'..
+
+            //Abaixo só é permito de 0 a 9
+            //if ((e.KeyChar < '0') || (e.KeyChar > '9')) e.Handled = true; //Allow only numbers
+        }
+
+        private void textBox8_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
         }
     }
 }

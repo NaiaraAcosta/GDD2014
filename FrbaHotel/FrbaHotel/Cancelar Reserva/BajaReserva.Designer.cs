@@ -60,6 +60,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(159, 20);
             this.textBox1.TabIndex = 2;
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
             // 
             // richTextBox1
             // 
@@ -102,6 +103,7 @@
             this.Controls.Add(this.label1);
             this.Name = "BajaReserva";
             this.Text = "Cancelar reserva";
+            this.Load += new System.EventHandler(this.BajaReserva_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
