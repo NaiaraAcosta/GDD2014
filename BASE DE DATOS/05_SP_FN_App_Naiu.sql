@@ -249,7 +249,7 @@ GO
 ------------------
 DROP PROCEDURE CONTROL_ZETA.SP_ABM_HABITACION
 GO
-CREATE PROCEDURE CONTROL_ZETA.SP_ABM_HABITACION(@accion tinyint,@nro_hab smallint,@id_hab numeric, @hab_piso SMALLINT,@ubi_hab varchar(70),@obs varchar(150),@id_hotel int, @id_tipo_hab smallint, @error tinyint output,@id_hab_new numeric output)
+CREATE PROCEDURE CONTROL_ZETA.SP_ABM_HABITACION(@accion tinyint,@nro_hab smallint,@id_hab numeric, @hab_piso SMALLINT,@ubi_hab varchar(70),@obs varchar(150),@id_hotel int, @id_tipo_hab smallint,@estado varchar(1), @error tinyint output,@id_hab_new numeric output)
 AS
 --@Desc: Realiza ABM de habitacion
 BEGIN
@@ -278,7 +278,8 @@ BEGIN
 			HAB_NRO=@nro_hab,
 			HAB_OBSERVACION=@obs,
 			HAB_PISO=@hab_piso,
-			HAB_UBI_HOTEL=@ubi_hab 
+			HAB_UBI_HOTEL=@ubi_hab, 
+			HAB_ESTADO=@estado
 			WHERE HAB_ID=@id_hab
 			set @error=1
 		END;
@@ -301,7 +302,7 @@ IF EXISTS (SELECT * FROM CONTROL_ZETA.HABITACION H WHERE H.HAB_ID=@id_hab)
 	END
 	ELSE
 	set @error=2
-END;
+END
 END;
 
 GO
@@ -775,7 +776,7 @@ INTO @V_USR ,@V_PASS , @V_ESTADO ,@V_INTENTOS
 
 IF (@@fetch_status=0) 
 BEGIN
-	IF (@V_ESTADO ='H') 
+	IF EXISTS(@V_ESTADO='H') 
 	BEGIN
 		IF (@V_INTENTOS<4)
 		BEGIN
