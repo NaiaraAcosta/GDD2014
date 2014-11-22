@@ -776,7 +776,7 @@ INTO @V_USR ,@V_PASS , @V_ESTADO ,@V_INTENTOS
 
 IF (@@fetch_status=0) 
 BEGIN
-	IF EXISTS(@V_ESTADO='H') 
+	IF (@V_ESTADO='H') 
 	BEGIN
 		IF (@V_INTENTOS<4)
 		BEGIN
