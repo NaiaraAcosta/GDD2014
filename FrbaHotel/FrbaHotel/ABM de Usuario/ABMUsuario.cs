@@ -32,7 +32,7 @@ namespace FrbaHotel.ABM_de_Usuario
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                listBox1.Items.Add(reader[3].ToString());
+                listBox1.Items.Add(reader[0].ToString());
             }
             reader.Close();
             conn.Close(); 
@@ -71,7 +71,59 @@ namespace FrbaHotel.ABM_de_Usuario
 
         private void button3_Click(object sender, EventArgs e)
         {
-
+            if (listBox1.SelectedItem != null)
+            {
+                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+                SqlConnection con = new SqlConnection(ConnStr);
+                con.Open();
+                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ABM_USUARIO", con);
+                scCommand.CommandType = CommandType.StoredProcedure;
+                scCommand.Parameters.Add("@ACCION", SqlDbType.SmallInt).Value = 3;
+                scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = listBox1.SelectedItem.ToString();
+                scCommand.Parameters.AddWithValue("@PASS", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@NOMBRE", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@APELLIDO", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@TIPO_DOC", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@DOC", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@MAIL", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@TEL", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@DOM", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@FECHA_NAC", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@ESTADO", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@HOTEL_ID", DBNull.Value);
+                scCommand.Parameters.AddWithValue("@ERROR", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
+                if (scCommand.Connection.State == ConnectionState.Closed)
+                {
+                    scCommand.Connection.Open();
+                }
+                scCommand.ExecuteNonQuery();
+                int result = int.Parse(scCommand.Parameters["@ERROR"].Value.ToString());
+                switch (result)
+                {
+                    case 1:
+                        {
+                            MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                        }
+                    case 2:
+                        {
+                            MessageBox.Show("Error 2", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    case 4:
+                        {
+                            MessageBox.Show("Error 4", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                    default:
+                        {
+                            string mensaje = string.Format("Error en la operacion, COD: {0}", result);
+                            MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        }
+                }
+                con.Close();
+            }
         }
     }
 }

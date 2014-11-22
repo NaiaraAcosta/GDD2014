@@ -114,6 +114,14 @@ namespace FrbaHotel.ABM_de_Habitacion
             scCommand.Parameters.Add("@id_hab", SqlDbType.Int).Value = idHab;
             scCommand.Parameters.Add("@hab_piso", SqlDbType.SmallInt).Value = int.Parse(textBox2.Text);
             scCommand.Parameters.Add("@ubi_hab", SqlDbType.VarChar, 70).Value = textBox3.Text;
+            if (checkBox1.Checked)
+            {
+                scCommand.Parameters.Add("@estado", SqlDbType.VarChar, 1).Value = "H";
+            }
+            else
+            {
+                scCommand.Parameters.Add("@estado", SqlDbType.VarChar, 1).Value = "I";
+            }
             scCommand.Parameters.Add("@obs", SqlDbType.VarChar, 150).Value = richTextBox1.Text;
             scCommand.Parameters.Add("@id_hotel", SqlDbType.Int).Value = Login.Class1.hotel;
             scCommand.Parameters.Add("@id_tipo_hab", SqlDbType.SmallInt).Value = tipoHabId[comboBox1.SelectedIndex];
