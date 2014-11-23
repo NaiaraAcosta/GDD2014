@@ -32,13 +32,13 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.textBox11 = new System.Windows.Forms.TextBox();
-            this.textBox10 = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
@@ -55,6 +55,7 @@
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -87,13 +88,13 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.dateTimePicker1);
+            this.groupBox1.Controls.Add(this.comboBox1);
             this.groupBox1.Controls.Add(this.textBox11);
-            this.groupBox1.Controls.Add(this.textBox10);
             this.groupBox1.Controls.Add(this.textBox9);
             this.groupBox1.Controls.Add(this.textBox8);
             this.groupBox1.Controls.Add(this.textBox7);
             this.groupBox1.Controls.Add(this.textBox6);
-            this.groupBox1.Controls.Add(this.textBox5);
             this.groupBox1.Controls.Add(this.textBox4);
             this.groupBox1.Controls.Add(this.textBox3);
             this.groupBox1.Controls.Add(this.label12);
@@ -105,26 +106,39 @@
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Location = new System.Drawing.Point(16, 162);
+            this.groupBox1.Location = new System.Drawing.Point(16, 180);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(312, 260);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Datos personales";
             // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimePicker1.Location = new System.Drawing.Point(128, 189);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(171, 20);
+            this.dateTimePicker1.TabIndex = 19;
+            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(128, 65);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(171, 21);
+            this.comboBox1.TabIndex = 18;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
             // textBox11
             // 
+            this.textBox11.Enabled = false;
             this.textBox11.Location = new System.Drawing.Point(128, 215);
             this.textBox11.Name = "textBox11";
             this.textBox11.Size = new System.Drawing.Size(171, 20);
             this.textBox11.TabIndex = 17;
-            // 
-            // textBox10
-            // 
-            this.textBox10.Location = new System.Drawing.Point(128, 190);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(171, 20);
-            this.textBox10.TabIndex = 16;
+            this.textBox11.Tag = "";
             // 
             // textBox9
             // 
@@ -139,6 +153,7 @@
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(171, 20);
             this.textBox8.TabIndex = 14;
+            this.textBox8.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox8_KeyPress);
             // 
             // textBox7
             // 
@@ -153,13 +168,7 @@
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(171, 20);
             this.textBox6.TabIndex = 12;
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(128, 65);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(171, 20);
-            this.textBox5.TabIndex = 11;
+            this.textBox6.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox6_KeyPress);
             // 
             // textBox4
             // 
@@ -189,9 +198,9 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(6, 198);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(112, 13);
+            this.label11.Size = new System.Drawing.Size(106, 13);
             this.label11.TabIndex = 7;
-            this.label11.Text = "Fecha de naciemiento";
+            this.label11.Text = "Fecha de nacimiento";
             // 
             // label10
             // 
@@ -267,6 +276,7 @@
             // 
             this.textBox2.Location = new System.Drawing.Point(99, 52);
             this.textBox2.Name = "textBox2";
+            this.textBox2.PasswordChar = '*';
             this.textBox2.Size = new System.Drawing.Size(216, 20);
             this.textBox2.TabIndex = 5;
             // 
@@ -280,27 +290,42 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(171, 438);
+            this.button1.Location = new System.Drawing.Point(171, 456);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 7;
             this.button1.Text = "Aceptar";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(253, 438);
+            this.button2.Location = new System.Drawing.Point(253, 456);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 8;
             this.button2.Text = "Cancelar";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(16, 155);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(73, 17);
+            this.checkBox1.TabIndex = 9;
+            this.checkBox1.Text = "Habilitado";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // AltaUsuario
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(342, 471);
+            this.ClientSize = new System.Drawing.Size(342, 488);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.checkedListBox1);
@@ -339,15 +364,16 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.TextBox textBox11;
-        private System.Windows.Forms.TextBox textBox10;
         private System.Windows.Forms.TextBox textBox9;
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

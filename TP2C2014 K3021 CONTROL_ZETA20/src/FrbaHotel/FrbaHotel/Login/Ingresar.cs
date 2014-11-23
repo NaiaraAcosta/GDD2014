@@ -133,7 +133,7 @@ namespace FrbaHotel.Login
 
         private void Form2_Load(object sender, EventArgs e)
         {
-
+            this.AcceptButton = button1;
         }
     }
 }

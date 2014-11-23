@@ -61,6 +61,12 @@
     <Compile Include="ABM de Cliente\ABMCliente.Designer.cs">
       <DependentUpon>ABMCliente.cs</DependentUpon>
     </Compile>
+    <Compile Include="ABM de Cliente\InconsistenciasCliente.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ABM de Cliente\InconsistenciasCliente.Designer.cs">
+      <DependentUpon>InconsistenciasCliente.cs</DependentUpon>
+    </Compile>
     <Compile Include="ABM de Habitacion\AltaHabitacion.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -214,6 +220,9 @@
     <EmbeddedResource Include="ABM de Cliente\ABMCliente.resx">
       <DependentUpon>ABMCliente.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ABM de Cliente\InconsistenciasCliente.resx">
+      <DependentUpon>InconsistenciasCliente.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ABM de Habitacion\AltaHabitacion.resx">
       <DependentUpon>AltaHabitacion.cs</DependentUpon>
     </EmbeddedResource>
@@ -294,6 +303,9 @@
     <EmbeddedResource Include="Registrar Consumible\ABMConsumible.resx">
       <DependentUpon>ABMConsumible.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Registrar Estadia\cargarCliente.resx">
+      <DependentUpon>cargarCliente.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Registrar Estadia\RegistrarEstadia.resx">
       <DependentUpon>RegistrarEstadia.cs</DependentUpon>
     </EmbeddedResource>
@@ -325,6 +337,12 @@
     </Compile>
     <Compile Include="Registrar Consumible\ABMConsumible.Designer.cs">
       <DependentUpon>ABMConsumible.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Registrar Estadia\cargarCliente.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Registrar Estadia\cargarCliente.Designer.cs">
+      <DependentUpon>cargarCliente.cs</DependentUpon>
     </Compile>
     <Compile Include="Registrar Estadia\RegistrarEstadia.cs">
       <SubType>Form</SubType>

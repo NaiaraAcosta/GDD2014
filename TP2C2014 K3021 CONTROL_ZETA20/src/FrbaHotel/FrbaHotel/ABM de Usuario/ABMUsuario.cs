@@ -14,38 +14,76 @@ namespace FrbaHotel.ABM_de_Usuario
     public partial class ABMUsuario : Form
     {
         Form back = null;
+        List<string> usuario = new List<string>();
         public ABMUsuario(Form atras)
         {
             InitializeComponent();
-            back = null;
+            back = atras;
+
+            refrescar();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public void refrescar()
         {
-
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string value1 = string.Empty;
-
+            listBox1.Items.Clear();
+            usuario.Clear();
             string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
-
             SqlConnection conn = new SqlConnection(ConnStr);
-            SqlCommand cmd = new SqlCommand("SELECT TOP 1000 [Hotel_Ciudad] FROM [GD2C2014].[gd_esquema].[Maestra]", conn);
+            string sel = string.Format(@"SELECT distinct usuario.USR_USERNAME from [GD2C2014].[CONTROL_ZETA].[ROL] rol,
+                    [GD2C2014].[CONTROL_ZETA].[EMPLEADO] emple,
+                    [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] usrrol,
+                    [GD2C2014].[CONTROL_ZETA].[USUARIO] usuario
+                    where usrrol.HOTEL_ID = '{0}'
+                    and usrrol.USR_USERNAME = emple.USR_USERNAME
+                    and usrrol.ROL_ID = rol.ROL_ID
+                    and usuario.USR_USERNAME = usrrol.USR_USERNAME", Login.Class1.hotel);
+            SqlCommand cmd = new SqlCommand(sel, conn);
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                listBox1.Items.Add(reader["Hotel_Ciudad"].ToString());
+                SqlConnection con = new SqlConnection(ConnStr);
+                con.Open();
+                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.FN_USUARIO_HABILITADO", con);
+                scCommand.CommandType = CommandType.StoredProcedure;
+                scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = reader[0].ToString();
+                scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
+                scCommand.Parameters.Add("@RETURN_VALUE", SqlDbType.VarChar, 1).Direction = ParameterDirection.ReturnValue;
+
+                if (scCommand.Connection.State == ConnectionState.Closed)
+                {
+                    scCommand.Connection.Open();
+                }
+                scCommand.ExecuteNonQuery();
+                string result = scCommand.Parameters["@RETURN_VALUE"].Value.ToString();
+                con.Close();
+
+                string detalle = string.Format("{0} - {1}", result, reader[0].ToString());
+                listBox1.Items.Add(detalle);
+                usuario.Add(reader[0].ToString());
             }
             reader.Close();
-            conn.Close(); 
+            conn.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            new AltaUsuario(this).Show();
+            this.Hide();
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-
+            if (listBox1.SelectedItem != null)
+            {
+                new AltaUsuario(this, usuario[listBox1.SelectedIndex]).Show();
+                this.Hide();
+            }
         }
 
         private void ABMUsuario_Load(object sender, EventArgs e)
@@ -57,6 +95,29 @@ namespace FrbaHotel.ABM_de_Usuario
         {
             back.Show();
             this.Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedItem != null)
+            {
+                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+                SqlConnection con = new SqlConnection(ConnStr);
+                con.Open();
+                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_DES_HAB_USUARIO", con);
+                scCommand.CommandType = CommandType.StoredProcedure;
+                scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = usuario[listBox1.SelectedIndex];
+                scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
+                scCommand.Parameters.Add("@HAB", SqlDbType.TinyInt).Value = 0;
+                if (scCommand.Connection.State == ConnectionState.Closed)
+                {
+                    scCommand.Connection.Open();
+                }
+                scCommand.ExecuteNonQuery();
+                
+                con.Close();
+            }
+            refrescar();
         }
     }
 }

@@ -29,7 +29,8 @@ namespace FrbaHotel.ABM_de_Habitacion
             InitializeComponent();
             back = atras;
         }
-        private void Form2_Load(object sender, EventArgs e)
+
+        public void recargar()
         {
             string sCnn;
             sCnn = ConfigurationManager.AppSettings["stringConexion"];
@@ -72,6 +73,11 @@ namespace FrbaHotel.ABM_de_Habitacion
             conn.Close(); 
         }
 
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            recargar();
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedCells.Count != 0)
@@ -102,6 +108,126 @@ namespace FrbaHotel.ABM_de_Habitacion
                 new FrbaHotel.MenuPrincipal().Show();
             }
             this.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            new ABM_de_Habitacion.AltaHabitacion(this).Show();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedCells.Count != 0)
+            {
+                if (dataGridView1.SelectedCells[7].Value.ToString() != "I")
+                {
+                    string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+                    SqlConnection con = new SqlConnection(ConnStr);
+                    con.Open();
+                    SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ABM_HABITACION", con);
+                    scCommand.CommandType = CommandType.StoredProcedure;
+                    scCommand.Parameters.Add("@accion", SqlDbType.TinyInt).Value = 3;
+                    scCommand.Parameters.AddWithValue("@nro_hab", DBNull.Value);
+                    scCommand.Parameters.Add("@id_hab", SqlDbType.Int).Value = int.Parse(dataGridView1.SelectedCells[0].Value.ToString());
+                    scCommand.Parameters.AddWithValue("@hab_piso", DBNull.Value);
+                    scCommand.Parameters.AddWithValue("@ubi_hab", DBNull.Value);
+                    scCommand.Parameters.AddWithValue("@obs", DBNull.Value);
+                    scCommand.Parameters.AddWithValue("@id_hotel", DBNull.Value);
+                    scCommand.Parameters.AddWithValue("@id_tipo_hab", DBNull.Value);
+                    scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
+                    scCommand.Parameters.Add("@id_hab_new", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    if (scCommand.Connection.State == ConnectionState.Closed)
+                    {
+                        scCommand.Connection.Open();
+                    }
+                    scCommand.ExecuteNonQuery();
+
+                    int result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+
+                    switch (result)
+                    {
+                        case 1:
+                            {
+                                MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                break;
+                            }
+                        case 2:
+                            {
+                                MessageBox.Show("No existe la habitacion en ese hotel", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                break;
+                            }
+                        case 3:
+                            {
+                                MessageBox.Show("Ya existe la habitacion en ese hotel", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                break;
+                            }
+                        default:
+                            {
+                                string mensaje = string.Format("Error en la operacion, COD: {0}", result);
+                                MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                break;
+                            }
+                    }
+                    con.Close();
+                }
+                else
+                {
+                    string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+                    SqlConnection con = new SqlConnection(ConnStr);
+                    con.Open();
+                    SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ABM_HABITACION", con);
+                    scCommand.CommandType = CommandType.StoredProcedure;
+                    scCommand.Parameters.Add("@accion", SqlDbType.TinyInt).Value = 2;
+                    scCommand.Parameters.Add("@nro_hab", SqlDbType.SmallInt).Value = int.Parse(dataGridView1.SelectedCells[1].Value.ToString());
+                    scCommand.Parameters.Add("@id_hab", SqlDbType.Int).Value = int.Parse(dataGridView1.SelectedCells[0].Value.ToString());
+                    scCommand.Parameters.Add("@hab_piso", SqlDbType.SmallInt).Value = int.Parse(dataGridView1.SelectedCells[3].Value.ToString());
+                    scCommand.Parameters.Add("@ubi_hab", SqlDbType.VarChar, 70).Value = dataGridView1.SelectedCells[5].Value.ToString();
+                    scCommand.Parameters.Add("@obs", SqlDbType.VarChar, 150).Value = dataGridView1.SelectedCells[6].Value.ToString();
+                    scCommand.Parameters.Add("@id_hotel", SqlDbType.Int).Value = Login.Class1.hotel;
+                    scCommand.Parameters.Add("@id_tipo_hab", SqlDbType.SmallInt).Value = dataGridView1.SelectedCells[4].Value.ToString();
+                    scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
+                    scCommand.Parameters.Add("@id_hab_new", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    if (scCommand.Connection.State == ConnectionState.Closed)
+                    {
+                        scCommand.Connection.Open();
+                    }
+                    scCommand.ExecuteNonQuery();
+
+                    int result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+
+                    switch (result)
+                    {
+                        case 1:
+                            {
+                                MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                break;
+                            }
+                        case 2:
+                            {
+                                MessageBox.Show("No existe la habitacion en ese hotel", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                break;
+                            }
+                        case 3:
+                            {
+                                MessageBox.Show("Ya existe la habitacion en ese hotel", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                break;
+                            }
+                        default:
+                            {
+                                string mensaje = string.Format("Error en la operacion, COD: {0}", result);
+                                MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                break;
+                            }
+                    }
+
+                    con.Close();
+                }
+            }
+            else
+            {
+                MessageBox.Show("No hay datos que borrar", "No se puede eliminar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            this.recargar();
         }
     }
 }
