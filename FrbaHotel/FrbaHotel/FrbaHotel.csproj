@@ -303,6 +303,9 @@
     <EmbeddedResource Include="Registrar Consumible\ABMConsumible.resx">
       <DependentUpon>ABMConsumible.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Registrar Estadia\cargarCliente.resx">
+      <DependentUpon>cargarCliente.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Registrar Estadia\RegistrarEstadia.resx">
       <DependentUpon>RegistrarEstadia.cs</DependentUpon>
     </EmbeddedResource>
@@ -334,6 +337,12 @@
     </Compile>
     <Compile Include="Registrar Consumible\ABMConsumible.Designer.cs">
       <DependentUpon>ABMConsumible.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Registrar Estadia\cargarCliente.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Registrar Estadia\cargarCliente.Designer.cs">
+      <DependentUpon>cargarCliente.cs</DependentUpon>
     </Compile>
     <Compile Include="Registrar Estadia\RegistrarEstadia.cs">
       <SubType>Form</SubType>

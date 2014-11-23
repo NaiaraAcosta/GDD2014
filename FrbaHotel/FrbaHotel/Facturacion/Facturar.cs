@@ -182,7 +182,7 @@ namespace FrbaHotel.Facturacion
 
                 if (result != 1)
                 {
-                    string mensaje = string.Format("Error en la facturacion, COD: {0}", result);
+                    string mensaje = string.Format("Fallo en la facturacion", result);
                     MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else

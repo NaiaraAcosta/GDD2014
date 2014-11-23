@@ -39,7 +39,7 @@ namespace FrbaHotel.Registrar_Consumible
         private void refrescar(string habID, string estadiaID, string clienteID)
         {
             string sCnn = ConfigurationManager.AppSettings["stringConexion"];
-            string sSel = String.Format(@"SELECT reser.CLIENTE_ID as Cliente, 
+            string sSel = String.Format(@"SELECT distinct reser.CLIENTE_ID as Cliente, 
                         hab.HAB_NRO as NroHab, 
                         esta.EST_ID as Estadia, 
                         reserhab.RESERVA_ID as Reserva, 

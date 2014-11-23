@@ -21,27 +21,8 @@ namespace FrbaHotel.ABM_de_Cliente
         string IDClie;
         List<int> tipoDoc = new List<int>();
         bool inconsistente = false;
-        public AltaCliente(Form atras,string nombre, string apellido, string tipo, string numero, string mail, string telefono, string calle,
-            string localidad, string pais, string nacionalidad, string nacimiento)
-        {
-            InitializeComponent();
-            back = atras;
-            textBox1.Text = nombre;
-            textBox2.Text = apellido;
-            //textBox3.Text = tipo;
-            textBox4.Text = numero;
-            textBox5.Text = mail;
-            textBox6.Text = telefono;
-            textBox7.Text = calle;
-            //textBox8.Text = localidad;
-            //textBox9.Text = pais;
-            //textBox10.Text = nacionalidad;
-            string[] stringSeparators = new string[] { "/" };
-            string[] result = nacimiento.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-            result[2] = result[2].Substring(0, 4);
-            dateTimePicker1.Value = new DateTime(int.Parse(result[2]), int.Parse(result[1]), int.Parse(result[0]));
-            
-        }
+        bool modoEstadia = false;
+        Registrar_Estadia.cargarCliente carga = null;
         public AltaCliente(Form atras, string[] param, int mod, bool inconsis)
         {
             InitializeComponent();
@@ -102,6 +83,14 @@ namespace FrbaHotel.ABM_de_Cliente
             cargarCombos();
             back = atras;
             modo = mod;
+            if (mod == 4)
+            {
+                modoEstadia = true;
+                carga = (Registrar_Estadia.cargarCliente) atras;
+                button1.Text = "Agregar";
+                button2.Text = "Terminar";
+                modo = 1;
+            }
         }
 
         public AltaCliente(Form atras, Form atras2, Form atras3, string[] parametros)
@@ -170,16 +159,15 @@ namespace FrbaHotel.ABM_de_Cliente
 
         private void button2_Click(object sender, EventArgs e)
         {
-            /*if (back != null)
+            if (!modoEstadia)
             {
                 back.Show();
+                this.Close();
             }
             else
             {
-                Form f = new ABM_de_Cliente.Form2(this);
-                f.Show();
-            }*/
-            this.Close(); ;
+                this.Close();
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -276,10 +264,21 @@ namespace FrbaHotel.ABM_de_Cliente
                         }
                 }
                 con.Close();
-                
-                Form f = new Generar_Modificar_Reserva.ReservaFinalizada(this, back, back2, back3, param);
-                f.Show();
-                this.Hide();
+                if (!modoEstadia)
+                {
+                    Form f = new Generar_Modificar_Reserva.ReservaFinalizada(this, back, back2, back3, param);
+                    f.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    DialogResult resultado = MessageBox.Show("Esta seguro que quiere cargar a este cliente en la reserva?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (resultado == DialogResult.Yes)
+                    {
+                        carga.cargarClientes(param[4]);
+                        this.Close();
+                    }
+                }
             }
             else
             {
@@ -370,6 +369,16 @@ namespace FrbaHotel.ABM_de_Cliente
                             MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             break;
                         }
+                }
+                
+                if (modoEstadia)
+                {
+                    DialogResult resultado = MessageBox.Show("Esta seguro que quiere cargar a este cliente en la reserva?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (resultado == DialogResult.Yes)
+                    {
+                        carga.cargarClientes(scCommand.Parameters["@CLIENTE_ID_NEW"].Value.ToString());
+                        this.Close();
+                    }
                 }
                 con.Close();
             }

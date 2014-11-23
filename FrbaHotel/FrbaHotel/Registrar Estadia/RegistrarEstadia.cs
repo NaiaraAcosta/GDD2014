@@ -142,6 +142,14 @@ namespace FrbaHotel.Registrar_Estadia
                 case 1:
                     {
                         MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (radioButton1.Checked)
+                        {
+                            cargarCliente cargar = new cargarCliente(this, codReserva);
+                            if (cargar.verificarCant(codReserva) != 1)
+                            {
+                                cargar.Show();
+                            }
+                        }
                         break;
                     }
                 case 6:

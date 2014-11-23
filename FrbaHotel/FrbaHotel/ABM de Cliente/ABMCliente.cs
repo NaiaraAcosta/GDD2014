@@ -16,12 +16,18 @@ namespace FrbaHotel.ABM_de_Cliente
         Form back = null;
         List<int> tipoDoc = new List<int>();
         bool inconsistente = false;
+        bool modoEstadia = false;
+        Registrar_Estadia.cargarCliente carga = null;
         public ABMCliente(Form atras)
         {
             InitializeComponent();
             back = atras;
-            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+            cargarTipoDoc();
+        }
 
+        private void cargarTipoDoc()
+        {
+            string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn = new SqlConnection(ConnStr);
             SqlCommand cmd = new SqlCommand("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[TIPO_DOC]", conn);
             conn.Open();
@@ -32,7 +38,22 @@ namespace FrbaHotel.ABM_de_Cliente
                 tipoDoc.Add(int.Parse(reader["TIPO_DOC_ID"].ToString()));
             }
             reader.Close();
-            conn.Close(); 
+            conn.Close();
+        }
+        public ABMCliente(Form atras, int tipo)
+        {
+            InitializeComponent();
+            back = atras;
+            carga = (Registrar_Estadia.cargarCliente)atras;
+            cargarTipoDoc();
+            if (tipo == 4)
+            {
+                modoEstadia = true;
+                button2.Visible = false;
+                button3.Visible = false;
+                button5.Text = "Seleccionar";
+                button4.Text = "Terminar";
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -129,16 +150,15 @@ namespace FrbaHotel.ABM_de_Cliente
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (back != null)
+            if (!modoEstadia)
             {
                 back.Show();
+                this.Close();
             }
             else
             {
-                Form f = new FrbaHotel.MenuPrincipal();
-                f.Show();
+                this.Close();
             }
-            this.Close();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -256,8 +276,23 @@ namespace FrbaHotel.ABM_de_Cliente
 
         private void button5_Click(object sender, EventArgs e)
         {
-            new AltaCliente(this, 1).Show();
-            this.Hide();
+            if (!modoEstadia)
+            {
+                new AltaCliente(this, 1).Show();
+                this.Hide();
+            }
+            else
+            {
+                if (dataGridView1.SelectedCells.Count != 0)
+                {
+                    DialogResult result = MessageBox.Show("Esta seguro que quiere cargar a este cliente en la reserva?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        carga.cargarClientes(dataGridView1.SelectedCells[0].Value.ToString());
+                        this.Close();
+                    }
+                }
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
