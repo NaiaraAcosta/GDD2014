@@ -52,8 +52,8 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             string fechaInicio = "";
             string fechaHasta = "";
             string detalle = "";
-            while (reader.Read())
-            {
+            //while (reader.Read())
+            //{
                 fechaInicio = reader["RESERVA_FECHA_INICIO"].ToString();
                 string[] stringSeparators = new string[] { "/"};
                 string[] result = fechaInicio.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
@@ -76,8 +76,8 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                         reader["HOTEL_NRO_CALLE"].ToString());
                     idHotel.Add(int.Parse(reader["HOTEL_ID"].ToString()));
                     comboBox3.Text = detalle;
-                    comboBox3.Enabled = true;
-            }
+                    //comboBox3.Enabled = true;
+            //}
             reader.Close();
             conn.Close();
             cargarHabitaciones(reserva);
@@ -139,7 +139,9 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             reader2.Close();
             conn2.Close();
 
-            sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[REGIMEN]");
+            sSel2 = string.Format(@"select * from [GD2C2014].[CONTROL_ZETA].[REGIMEN] reg, [GD2C2014].[CONTROL_ZETA].[HOTEL_REGIMEN] hotreg
+	                where hotreg.HOTEL_ID = '{0}'
+	                and hotreg.REG_ID = reg.REG_ID", Login.Class1.hotel);
             cmd2 = new SqlCommand(sSel2, conn2);
             conn2.Open();
             reader2 = cmd2.ExecuteReader();
@@ -531,6 +533,25 @@ namespace FrbaHotel.Generar_Modificar_Reserva
         {
             yaVerificado = false;
             informar(verificado, yaVerificado);
+
+            comboBox2.Items.Clear();
+            idReg.Clear();
+
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
+            SqlConnection conn2 = new SqlConnection(ConnStr2);
+            string sSel2 = string.Format(@"select * from [GD2C2014].[CONTROL_ZETA].[REGIMEN] reg, [GD2C2014].[CONTROL_ZETA].[HOTEL_REGIMEN] hotreg
+	                where hotreg.HOTEL_ID = '{0}'
+	                and hotreg.REG_ID = reg.REG_ID", comboBox3.SelectedIndex + 1);
+            SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
+            conn2.Open();
+            SqlDataReader reader2 = cmd2.ExecuteReader();
+            while (reader2.Read())
+            {
+                comboBox2.Items.Add(reader2["REG_DESCRIPCION"].ToString());
+                idReg.Add(int.Parse(reader2["REG_ID"].ToString()));
+            }
+            reader2.Close();
+            conn2.Close();
         }
 
         private bool sePuedeVerificar()

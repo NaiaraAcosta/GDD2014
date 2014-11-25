@@ -49,8 +49,10 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.HasRows)
                 {
+                    reader.Read();
                     if (reader["RES_PRECIO_TOTAL"].ToString() == "")
                     {
+                        
                         SqlConnection con = new SqlConnection(ConnStr);
                         con.Open();
                         SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_ACT_PRECIO_RES", con);
