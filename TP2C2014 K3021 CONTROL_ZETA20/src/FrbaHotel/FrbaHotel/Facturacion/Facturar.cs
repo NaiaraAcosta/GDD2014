@@ -179,17 +179,18 @@ namespace FrbaHotel.Facturacion
                 }
                 scCommand2.ExecuteNonQuery();
                 int result = int.Parse(scCommand2.Parameters["@CODIGO"].Value.ToString());
-                
-                //if (result != 1)
-                //{
-                //    string mensaje = string.Format("Error en la facturacion, COD: {0}", result);
-                //    MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //}
-                //else
-                //{
+
+                if (result != 1)
+                {
+                    string mensaje = string.Format("Fallo en la facturacion", result);
+                    MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Factura creada correctamente", "Operacion realizada correctamente", MessageBoxButtons.OK, MessageBoxIcon.None);
                     int factura = int.Parse(scCommand2.Parameters["@FACTURA_NRO"].Value.ToString());
                     mostrarFactura(factura);
-                //}
+                }
             }
             else
             {
@@ -234,6 +235,53 @@ namespace FrbaHotel.Facturacion
             }
             reader2.Close();
             conn2.Close();
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
+
+        public static void AllowNumber(KeyPressEventArgs e)
+        {
+            if (char.IsLetter(e.KeyChar) || //Letras
+                char.IsSymbol(e.KeyChar) || //Símbolos
+                char.IsWhiteSpace(e.KeyChar) || //Espaço
+                char.IsPunctuation(e.KeyChar)) //Pontuação
+                e.Handled = true; //Não permitir
+            //Com o script acima é possível utilizar Números, 'Del', 'BackSpace'..
+
+            //Abaixo só é permito de 0 a 9
+            //if ((e.KeyChar < '0') || (e.KeyChar > '9')) e.Handled = true; //Allow only numbers
+        }
+
+        private void textBox6_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
+
+        private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void textBox5_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
+
+        private void textBox5_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
         }
     }
 }

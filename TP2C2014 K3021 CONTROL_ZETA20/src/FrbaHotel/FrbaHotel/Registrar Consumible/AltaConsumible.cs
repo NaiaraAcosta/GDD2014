@@ -95,6 +95,8 @@ namespace FrbaHotel.Registrar_Consumible
             while (reader2.Read())
             {
                 string lectura = reader2["CON_ID"].ToString();
+                int cantidad = int.Parse(reader2["CANTIDAD"].ToString());
+                int j = 1;
                 for (int i = 0; i < checkedListBox2.Items.Count; i++)
                 {
                     int primerUnCheckeado = primerUncheked(i, checkedListBox2);
@@ -102,7 +104,11 @@ namespace FrbaHotel.Registrar_Consumible
                     if (listCon2[primerUnCheckeado] == lectura)
                     {
                         checkedListBox2.SetItemChecked(primerUnCheckeado, true);
-                        lectura = "";
+                        if (j == cantidad)
+                        {
+                            lectura = "";
+                        }
+                        j++;
                     }
                     checkedListBox2.SetSelected(primerUnCheckeado, false);
                 }
@@ -217,7 +223,6 @@ namespace FrbaHotel.Registrar_Consumible
         private void button1_Click(object sender, EventArgs e)
         {
             int idHotel = buscarHotel(param[0]);
-            //int nroHab = buscarHab(idHotel, param[1]);
             int nroHab = int.Parse(param[1]);
             string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection con = new SqlConnection(ConnStr);
@@ -259,6 +264,7 @@ namespace FrbaHotel.Registrar_Consumible
                 if (seguro == DialogResult.Yes)
                 {
                     transaction.Commit();
+                    MessageBox.Show("Consumibles agregados correctamente", "Operacion realizada correctamente", MessageBoxButtons.OK, MessageBoxIcon.None);
                 }
                 else
                 {
@@ -273,13 +279,25 @@ namespace FrbaHotel.Registrar_Consumible
 
         private void limpiarCheckeados()
         {
-            for (int i = 0; i < checkedListBox1.Items.Count; i++)
+            string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
+            SqlConnection conn2 = new SqlConnection(ConnStr2);
+            string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[CONSUMIBLE]");
+            SqlCommand cmd2 = new SqlCommand(sSel2, conn2);
+            conn2.Open();
+            SqlDataReader reader2 = cmd2.ExecuteReader();
+            bloqueado = false;
+            checkedListBox1.Items.Clear();
+            idCon.Clear();
+            listCon.Clear();
+            while (reader2.Read())
             {
-                if (checkedListBox1.GetItemChecked(i))
-                {
-                    checkedListBox1.SetItemChecked(i, false);
-                }
+                checkedListBox1.Items.Add(reader2["CON_DESCRIPCION"].ToString());
+                idCon.Add(reader2["CON_ID"].ToString());
+                listCon.Add(reader2["CON_ID"].ToString());
             }
+            bloqueado = true;
+            reader2.Close();
+            conn2.Close();
         }
         private void button2_Click(object sender, EventArgs e)
         {

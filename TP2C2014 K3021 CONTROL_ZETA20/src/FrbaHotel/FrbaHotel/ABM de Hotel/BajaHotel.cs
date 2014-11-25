@@ -100,6 +100,8 @@ namespace FrbaHotel.ABM_de_Hotel
             if (!conError)
             {
                 transaction.Commit();
+                MessageBox.Show("Hotel dado de baja correctamente", "Operacion realizada correctamente", MessageBoxButtons.OK, MessageBoxIcon.None);
+
             }
             else
             {

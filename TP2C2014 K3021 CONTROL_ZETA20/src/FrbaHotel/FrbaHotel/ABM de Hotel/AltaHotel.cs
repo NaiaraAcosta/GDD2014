@@ -336,8 +336,6 @@ namespace FrbaHotel.ABM_de_Hotel
                 string mensaje = string.Format("Error en la carga de hotel, COD: {0}", result);
                 MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 conError = true;
-
-
             }
             else
             {
@@ -354,6 +352,7 @@ namespace FrbaHotel.ABM_de_Hotel
             if (!conError)
             {
                 transaction.Commit();
+                MessageBox.Show("Hotel agregado correctamente", "Operacion realizada correctamente", MessageBoxButtons.OK, MessageBoxIcon.None);
             }
             else
             {
@@ -486,6 +485,11 @@ namespace FrbaHotel.ABM_de_Hotel
         private void textBox9_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
         }
     }
 }

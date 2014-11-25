@@ -39,10 +39,10 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Funcionalidad no desarrollada", "Funcionalidad no desarrollada", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //ABM_de_Cliente.AltaCliente f = new ABM_de_Cliente.AltaCliente(this, back, back2, param);
-            //f.Show();
-            //this.Hide();
+            //MessageBox.Show("Funcionalidad no desarrollada", "Funcionalidad no desarrollada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            ABM_de_Cliente.AltaCliente f = new ABM_de_Cliente.AltaCliente(this, back, back2, param);
+            f.Show();
+            this.Hide();
         }
 
         private void button2_Click(object sender, EventArgs e)

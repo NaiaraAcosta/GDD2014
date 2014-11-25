@@ -39,7 +39,7 @@ namespace FrbaHotel.Registrar_Consumible
         private void refrescar(string habID, string estadiaID, string clienteID)
         {
             string sCnn = ConfigurationManager.AppSettings["stringConexion"];
-            string sSel = String.Format(@"SELECT reser.CLIENTE_ID as Cliente, 
+            string sSel = String.Format(@"SELECT distinct reser.CLIENTE_ID as Cliente, 
                         hab.HAB_NRO as NroHab, 
                         esta.EST_ID as Estadia, 
                         reserhab.RESERVA_ID as Reserva, 
@@ -95,12 +95,51 @@ namespace FrbaHotel.Registrar_Consumible
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string[] param = new string[2];
-            param[0] = dataGridView1.SelectedCells[2].Value.ToString();
-            param[1] = dataGridView1.SelectedCells[1].Value.ToString();
-            AltaConsumible f = new AltaConsumible(this, param);
-            f.Show();
-            this.Hide();
+            if (dataGridView1.SelectedCells.Count != 0)
+            {
+                string[] param = new string[2];
+                param[0] = dataGridView1.SelectedCells[2].Value.ToString();
+                param[1] = dataGridView1.SelectedCells[1].Value.ToString();
+                AltaConsumible f = new AltaConsumible(this, param);
+                f.Show();
+                this.Hide();
+            }
+        }
+
+        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
+
+        public static void AllowNumber(KeyPressEventArgs e)
+        {
+            if (char.IsLetter(e.KeyChar) || //Letras
+                char.IsSymbol(e.KeyChar) || //Símbolos
+                char.IsWhiteSpace(e.KeyChar) || //Espaço
+                char.IsPunctuation(e.KeyChar)) //Pontuação
+                e.Handled = true; //Não permitir
+            //Com o script acima é possível utilizar Números, 'Del', 'BackSpace'..
+
+            //Abaixo só é permito de 0 a 9
+            //if ((e.KeyChar < '0') || (e.KeyChar > '9')) e.Handled = true; //Allow only numbers
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
         }
 
         
