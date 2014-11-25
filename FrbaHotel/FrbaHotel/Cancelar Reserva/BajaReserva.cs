@@ -75,14 +75,15 @@ namespace FrbaHotel.Cancelar_Reserva
             int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
             int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
             scCommand.Parameters.Add("@fecha_canc ", SqlDbType.Date).Value = new DateTime(año,mes,dia);
-            scCommand.Parameters.Add("@id_usr", SqlDbType.VarChar, 50).Value = Login.Class1.user;
-            if (Login.Class1.user == "Guest")
+            if (Login.Class1.user != null)
             {
-                scCommand.Parameters.Add("@id_est", SqlDbType.VarChar, 4).Value = "RCC";
+                scCommand.Parameters.Add("@id_usr", SqlDbType.VarChar, 50).Value = Login.Class1.user;
+                scCommand.Parameters.Add("@id_est", SqlDbType.VarChar, 4).Value = "RCR";
             }
             else
             {
-                scCommand.Parameters.Add("@id_est", SqlDbType.VarChar, 4).Value = "RCR";
+                scCommand.Parameters.AddWithValue("@id_usr", DBNull.Value);
+                scCommand.Parameters.Add("@id_est", SqlDbType.VarChar, 4).Value = "RCC";
             }
             scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
             if (scCommand.Connection.State == ConnectionState.Closed)
