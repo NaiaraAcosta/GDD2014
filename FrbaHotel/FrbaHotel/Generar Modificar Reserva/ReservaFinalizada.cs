@@ -99,7 +99,14 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                 scCommand.Parameters.Add("@fe_hasta ", SqlDbType.Date).Value = DateTime.Parse(param[2]);
                 scCommand.Parameters.Add("@tipo_reg_id", SqlDbType.TinyInt).Value = int.Parse(param[3]);
                 scCommand.Parameters.Add("@cliente_id", SqlDbType.Int).Value = int.Parse(param[4]);
-                scCommand.Parameters.Add("@id_usr", SqlDbType.VarChar, 50).Value = param[5];
+                if (param[5] != null)
+                {
+                    scCommand.Parameters.Add("@id_usr", SqlDbType.VarChar, 50).Value = param[5];
+                }
+                else
+                {
+                    scCommand.Parameters.AddWithValue("@id_usr", DBNull.Value);
+                }
                 scCommand.Parameters.Add("@id_reserva", SqlDbType.Int).Value = int.Parse(param[6]);
                 scCommand.Parameters.Add("@fe_sist", SqlDbType.Date).Value = DateTime.Parse(param[7]);
                 scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;

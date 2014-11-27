@@ -34,12 +34,17 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             InitializeComponent();
             back = atras;
             cargarDatos();
+            minDates();
+        }
+
+        private void minDates()
+        {
             int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
-                int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
-                int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
-                dateTimePicker1.MinDate = new DateTime(año, mes, dia);
-                dateTimePicker1.Value = new DateTime(año, mes, dia);
-            dateTimePicker2.MinDate = new DateTime (año, mes, dia);
+            int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+            int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+            dateTimePicker1.MinDate = new DateTime(año, mes, dia);
+            dateTimePicker1.Value = new DateTime(año, mes, dia);
+            dateTimePicker2.MinDate = new DateTime(año, mes, dia);
         }
 
         public AltaReserva(Form atras, SqlDataReader reader, SqlConnection conn)
@@ -47,8 +52,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             InitializeComponent();
             back = atras;
             cargarDatos();
-           
-            //dateTimePicker1.MinDate = DateTime.Today;
+            //minDates();
             string fechaInicio = "";
             string fechaHasta = "";
             string detalle = "";
@@ -119,7 +123,6 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
         }
 
         private void cargarDatos()
