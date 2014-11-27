@@ -576,52 +576,60 @@ DECLARE
 BEGIN TRANSACTION
 	IF EXISTS(SELECT *FROM CONTROL_ZETA.RESERVA R WHERE R.RESERVA_ID=@id_reserva)
 	BEGIN
-		IF ((SELECT R.RESERVA_FECHA_INICIO FROM CONTROL_ZETA.RESERVA R WHERE R.RESERVA_ID=@id_reserva)<@fe_desde)
+		IF ((SELECT R.RESERVA_FECHA_INICIO FROM CONTROL_ZETA.RESERVA R WHERE R.RESERVA_ID=@id_reserva)<@fe_sist)
 		BEGIN
-			SET @PRECIO_TOTAL = CONTROL_ZETA.SP_PRECIO_TOTAL(0,@fe_desde,@fe_hasta,@id_reserva,@hotel_id)
-			
-			UPDATE CONTROL_ZETA.RESERVA 
-			SET RESERVA_FECHA=@fe_sist,
-			RESERVA_FECHA_INICIO=@fe_desde, 
-			RESERVA_FECHA_HASTA=@fe_hasta,
-			RESERVA_ID_REGIMEN=@tipo_reg_id, 
-			RESERVA_ID_HOTEL=@hotel_id, 
-			RESERVA_ESTADO='RM', 
-			CLIENTE_ID=@cliente_id,
-			USR_USERNAME=@id_usr,
-			RES_PRECIO_TOTAL=@PRECIO_TOTAL
-			WHERE RESERVA_ID=@id_reserva
-			
-			DELETE CONTROL_ZETA.RESERVA_HABITACION WHERE RESERVA_ID=@id_reserva
-			
-			IF (SELECT COUNT(*) FROM CONTROL_ZETA.TEMP_RESERVA_PEDIDO) > 0
+			IF (CONTROL_ZETA.fe_res_consistente(@fe_desde,@fe_hasta,@fe_sist)=0)
 			BEGIN
-				INSERT INTO CONTROL_ZETA.RESERVA_HABITACION(RESERVA_ID,HAB_ID)
-				SELECT TRP.RESERVA_ID,TRP.HAB_ID 
-				FROM CONTROL_ZETA.TEMP_RESERVA_PEDIDO TRP
-				WHERE TRP.RESERVA_ID=@id_reserva
-			
-				DELETE CONTROL_ZETA.TEMP_RESERVA_PEDIDO
+				SET @PRECIO_TOTAL = CONTROL_ZETA.SP_PRECIO_TOTAL(0,@fe_desde,@fe_hasta,@id_reserva,@hotel_id)
 				
-				set @error=1
-			
-				COMMIT
+				UPDATE CONTROL_ZETA.RESERVA 
+				SET RESERVA_FECHA=@fe_sist,
+				RESERVA_FECHA_INICIO=@fe_desde, 
+				RESERVA_FECHA_HASTA=@fe_hasta,
+				RESERVA_ID_REGIMEN=@tipo_reg_id, 
+				RESERVA_ID_HOTEL=@hotel_id, 
+				RESERVA_ESTADO='RM', 
+				CLIENTE_ID=@cliente_id,
+				USR_USERNAME=@id_usr,
+				RES_PRECIO_TOTAL=@PRECIO_TOTAL
+				WHERE RESERVA_ID=@id_reserva
+				
+				DELETE CONTROL_ZETA.RESERVA_HABITACION WHERE RESERVA_ID=@id_reserva
+				
+				IF (SELECT COUNT(*) FROM CONTROL_ZETA.TEMP_RESERVA_PEDIDO) > 0
+				BEGIN
+					INSERT INTO CONTROL_ZETA.RESERVA_HABITACION(RESERVA_ID,HAB_ID)
+					SELECT TRP.RESERVA_ID,TRP.HAB_ID 
+					FROM CONTROL_ZETA.TEMP_RESERVA_PEDIDO TRP
+					WHERE TRP.RESERVA_ID=@id_reserva
+				
+					DELETE CONTROL_ZETA.TEMP_RESERVA_PEDIDO
+					
+					set @error=1 --Todo ok
+				
+					COMMIT
+				END
+				ELSE 
+				BEGIN
+					set @error=6 --No hizo el pedido 
+					ROLLBACK
+				END
 			END
-			ELSE 
+			ELSE
 			BEGIN
-				set @error=6
+				set @error=7 --Fechas inconsistentes
 				ROLLBACK
 			END
 		END
 		ELSE
 		BEGIN
-			set @error=5
+			set @error=5 --No es un día antes de la reserva
 			ROLLBACK
 		END
 	END	
 	ELSE
 	BEGIN
-		set @error=2
+		set @error=2 --No existe la reserva
 		ROLLBACK
 	END
 
