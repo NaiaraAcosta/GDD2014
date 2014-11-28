@@ -39,9 +39,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(314, 13);
+            this.label1.Size = new System.Drawing.Size(312, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Debe cargar a llos demas huespedes como clientes en el sistema";
+            this.label1.Text = "Debe cargar a los demas huespedes como clientes en el sistema";
             // 
             // button1
             // 
