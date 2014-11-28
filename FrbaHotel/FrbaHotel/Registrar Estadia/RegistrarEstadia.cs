@@ -184,30 +184,40 @@ namespace FrbaHotel.Registrar_Estadia
 
         private void button3_Click_1(object sender, EventArgs e)
         {
-            if (textBox2.Text != "")
+            if (comboBox1.SelectedIndex != -1)
             {
-                string sCnn = ConfigurationManager.AppSettings["stringConexion"];
-                string sSel = String.Format(@"select r.RESERVA_ID, c.CLIENTE_ID,c.CLIENTE_NOMBRE,c.CLIENTE_APELLIDO, c.CLIENTE_FECHA_NAC 
+                if (textBox2.Text != "")
+                {
+                    string sCnn = ConfigurationManager.AppSettings["stringConexion"];
+                    string sSel = String.Format(@"select r.RESERVA_ID, c.CLIENTE_ID,c.CLIENTE_NOMBRE,c.CLIENTE_APELLIDO, c.CLIENTE_FECHA_NAC 
                     from CONTROL_ZETA.CLIENTE c, CONTROL_ZETA.RESERVA r 
                     where c.CLIENTE_ID_TIPO_DOC={0}
                     and c.CLIENTE_DOC={1}
                     and r.CLIENTE_ID=c.CLIENTE_ID", tipoDoc[comboBox1.SelectedIndex], textBox2.Text);
-                SqlDataAdapter da;
-                DataTable dt = new DataTable();
-                try
-                {
-                    da = new SqlDataAdapter(sSel, sCnn);
-                    da.Fill(dt);
-                    this.dataGridView1.DataSource = dt;
-                    label3.Text = String.Format("Total datos en la tabla: {0}", dt.Rows.Count);
+                    SqlDataAdapter da;
+                    DataTable dt = new DataTable();
+                    try
+                    {
+                        da = new SqlDataAdapter(sSel, sCnn);
+                        da.Fill(dt);
+                        this.dataGridView1.DataSource = dt;
+                        label3.Text = String.Format("Total datos en la tabla: {0}", dt.Rows.Count);
+                    }
+                    catch (Exception ex)
+                    {
+                        label3.Text = "Error: " + ex.Message;
+                    }
+                    textBox1.Text = "";
                 }
-                catch (Exception ex)
+                else
                 {
-                    label3.Text = "Error: " + ex.Message;
+                    MessageBox.Show("Para buscar, debe colocar un nro de documento", "Error en la busqueda", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                textBox1.Text = "";
             }
-
+            else
+            {
+                MessageBox.Show("Para buscar, debe colocar un tipo de documento", "Error en la busqueda", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void RegistrarEstadia_Load(object sender, EventArgs e)

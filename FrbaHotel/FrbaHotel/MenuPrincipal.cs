@@ -148,11 +148,15 @@ namespace FrbaHotel
 
         private void gfdToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (principal != null)
+            DialogResult result = MessageBox.Show("Esta seguro que quiere salir?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
             {
-                principal.cerrar();
+                if (principal != null)
+                {
+                    principal.cerrar();
+                }
+                this.Close();
             }
-            this.Close();
         }
 
         private void modificacionBajaDeClienteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -216,11 +220,15 @@ namespace FrbaHotel
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (principal != null)
+            DialogResult result = MessageBox.Show("Esta seguro que quiere salir?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
             {
-                principal.cerrar();
+                if (principal != null)
+                {
+                    principal.cerrar();
+                }
+                this.Close();
             }
-            this.Close();
         }
 
         public void cerrar()
