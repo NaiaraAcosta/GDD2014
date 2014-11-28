@@ -43,15 +43,23 @@ namespace FrbaHotel.Registrar_Estadia
             scCommand.CommandType = CommandType.StoredProcedure;
             scCommand.Parameters.Add("@ID_CLIENTE", SqlDbType.Int).Value = int.Parse(idCliente);
             scCommand.Parameters.Add("@ID_RESERVA", SqlDbType.Int).Value = int.Parse(codReserva);
+            scCommand.Parameters.Add("@ERROR", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
             if (scCommand.Connection.State == ConnectionState.Closed)
             {
                 scCommand.Connection.Open();
             }
             scCommand.ExecuteNonQuery();
             con.Close();
-            cant++;
-            MessageBox.Show("Cliente agregado correctamente", "Operacion correcta", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+            int result = int.Parse(scCommand.Parameters["@ERROR"].Value.ToString());
+            if (result == 1)
+            {
+                cant++;
+                MessageBox.Show("Cliente agregado correctamente", "Operacion correcta", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Cliente ya cargado anteriormente", "Operacion incorrecta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             if (cant == cantMax)
             {
                 MessageBox.Show("Carga de clientes completa", "Carga completa", MessageBoxButtons.OK, MessageBoxIcon.Information);
