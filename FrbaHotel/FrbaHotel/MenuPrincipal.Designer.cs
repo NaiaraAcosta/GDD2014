@@ -62,9 +62,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 186);
+            this.button1.Location = new System.Drawing.Point(12, 172);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(75, 37);
             this.button1.TabIndex = 0;
             this.button1.Text = "Ingresar";
             this.button1.UseVisualStyleBackColor = true;
@@ -125,21 +125,21 @@
             // asdToolStripMenuItem3
             // 
             this.asdToolStripMenuItem3.Name = "asdToolStripMenuItem3";
-            this.asdToolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.asdToolStripMenuItem3.Size = new System.Drawing.Size(134, 22);
             this.asdToolStripMenuItem3.Text = "Ingresar";
             this.asdToolStripMenuItem3.Click += new System.EventHandler(this.asdToolStripMenuItem3_Click);
             // 
             // estadísticasToolStripMenuItem
             // 
             this.estadísticasToolStripMenuItem.Name = "estadísticasToolStripMenuItem";
-            this.estadísticasToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.estadísticasToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.estadísticasToolStripMenuItem.Text = "Estadísticas";
             this.estadísticasToolStripMenuItem.Click += new System.EventHandler(this.estadísticasToolStripMenuItem_Click);
             // 
             // gfdToolStripMenuItem1
             // 
             this.gfdToolStripMenuItem1.Name = "gfdToolStripMenuItem1";
-            this.gfdToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.gfdToolStripMenuItem1.Size = new System.Drawing.Size(134, 22);
             this.gfdToolStripMenuItem1.Text = "Cerrar";
             this.gfdToolStripMenuItem1.Click += new System.EventHandler(this.gfdToolStripMenuItem1_Click);
             // 
@@ -261,9 +261,9 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(212, 186);
+            this.button3.Location = new System.Drawing.Point(212, 172);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.Size = new System.Drawing.Size(75, 37);
             this.button3.TabIndex = 10;
             this.button3.Text = "Salir";
             this.button3.UseVisualStyleBackColor = true;

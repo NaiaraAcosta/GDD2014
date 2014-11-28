@@ -33,12 +33,15 @@ namespace FrbaHotel
             InitializeComponent();
             principal = (FrbaHotel.MenuPrincipal) menu;
             deshabilitarFunciones(func);
+            this.asdToolStripMenuItem3.Text = "Cambiar Usuario";
+            this.button1.Text = "Cambiar Usuario";
         }
 
         public MenuPrincipal(bool[] func)
         {
             InitializeComponent();
             deshabilitarFunciones(func);
+
         }
 
         private void deshabilitarFunciones(bool[] func)
@@ -51,6 +54,7 @@ namespace FrbaHotel
             {
                 this.asdToolStripMenuItem3.Visible = false;
                 this.button1.Visible = false;
+                
             }
             if (!func[2])//abm de usuario
             {
@@ -144,6 +148,10 @@ namespace FrbaHotel
 
         private void gfdToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            if (principal != null)
+            {
+                principal.cerrar();
+            }
             this.Close();
         }
 

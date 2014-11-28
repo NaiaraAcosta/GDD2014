@@ -45,7 +45,7 @@ namespace FrbaHotel.Cancelar_Reserva
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.HasRows)
                 {
-                    DialogResult resultado = MessageBox.Show("Esta seguro que quiere eliminar la reserva?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    DialogResult resultado = MessageBox.Show("Esta seguro que quiere cancelar la reserva?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (resultado == DialogResult.Yes)
                     {
                         darDeBaja();
@@ -82,7 +82,7 @@ namespace FrbaHotel.Cancelar_Reserva
             }
             else
             {
-                scCommand.Parameters.AddWithValue("@id_usr", DBNull.Value);
+                scCommand.Parameters.Add("@id_usr", SqlDbType.VarChar, 50).Value = "Guest";
                 scCommand.Parameters.Add("@id_est", SqlDbType.VarChar, 4).Value = "RCC";
             }
             scCommand.Parameters.Add("@error", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
@@ -96,6 +96,8 @@ namespace FrbaHotel.Cancelar_Reserva
             if (error == 1)
             {
                 MessageBox.Show("Reserva cancelada correctamente", "Reserva cancelada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                textBox1.Text = "";
+                richTextBox1.Text = "";
             }
             else if (error == 5)
             {

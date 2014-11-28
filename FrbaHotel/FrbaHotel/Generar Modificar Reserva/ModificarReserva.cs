@@ -65,9 +65,12 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                         scCommand.ExecuteNonQuery();
                         con.Close();
                     }
-                    Form f = new AltaReserva(this, reader, conn);
+                    AltaReserva f = new AltaReserva(this, reader, conn);
                     f.Show();
-                    this.Hide();
+                    if (!f.tieneError())
+                    {
+                        this.Hide();
+                    }
                 }
 
                     

@@ -24,6 +24,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
         string idResTemp = "";
         string reserva = "";
         string cliente = "";
+        bool errorFatal = false;
         public AltaReserva()
         {
             InitializeComponent();
@@ -52,16 +53,29 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             InitializeComponent();
             back = atras;
             cargarDatos();
-            //minDates();
+            minDates();
             string fechaInicio = "";
             string fechaHasta = "";
             string detalle = "";
-            //while (reader.Read())
-            //{
-                fechaInicio = reader["RESERVA_FECHA_INICIO"].ToString();
-                string[] stringSeparators = new string[] { "/"};
-                string[] result = fechaInicio.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                result[2] = result[2].Substring(0, 4);
+
+            fechaInicio = reader["RESERVA_FECHA_INICIO"].ToString();
+            string[] stringSeparators = new string[] { "/"};
+            string[] result = fechaInicio.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+            result[2] = result[2].Substring(0, 4);
+            
+            string año = ConfigurationManager.AppSettings["Año"];
+            string mes = ConfigurationManager.AppSettings["Mes"];
+            string dia = ConfigurationManager.AppSettings["Dia"];
+            string fechaSis = string.Format("{0}{1}{2}",año, mes,dia);
+            string fechaIni = string.Format("{0}{1}{2}",result[2], result[1],result[0]);
+            if (int.Parse(fechaSis) > int.Parse(fechaIni))
+            {
+                MessageBox.Show("Error, la fecha de inicio de reserva es mayor a la fecha del sistema", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                errorFatal = true;
+            }
+            else
+            {
+                minDates();
                 dateTimePicker1.Value = new DateTime(int.Parse(result[2]), int.Parse(result[1]), int.Parse(result[0]));
 
                 fechaHasta = reader["RESERVA_FECHA_HASTA"].ToString();
@@ -69,22 +83,27 @@ namespace FrbaHotel.Generar_Modificar_Reserva
                 result[2] = result[2].Substring(0, 4);
                 dateTimePicker2.Value = new DateTime(int.Parse(result[2]), int.Parse(result[1]), int.Parse(result[0]));
 
+                detalle = string.Format("{0} - {1} {2}",
+                            reader["LOC_DETALLE"].ToString().Trim(),
+                            reader["HOTEL_CALLE"].ToString(),
+                            reader["HOTEL_NRO_CALLE"].ToString());
+                idHotel.Add(int.Parse(reader["HOTEL_ID"].ToString()));
+                //comboBox3.Text = detalle;
+                comboBox3.SelectedIndex = int.Parse(reader["HOTEL_ID"].ToString()) - 1;
+                //comboBox3.Enabled = true;
+
                 comboBox2.Text = reader["REG_DESCRIPCION"].ToString();
+                comboBox2.SelectedIndex = idReg.FindIndex(x => x == int.Parse(reader["RESERVA_ID_REGIMEN"].ToString()));
+                //comboBox2.SelectedIndex = int.Parse(reader["RESERVA_ID_REGIMEN"].ToString()) - 1;
 
                 reserva = reader["RESERVA_ID"].ToString();
                 cliente = reader["CLIENTE_ID"].ToString();
 
-                detalle = string.Format("{0} - {1} {2}",
-                        reader["LOC_DETALLE"].ToString().Trim(),
-                        reader["HOTEL_CALLE"].ToString(),
-                        reader["HOTEL_NRO_CALLE"].ToString());
-                    idHotel.Add(int.Parse(reader["HOTEL_ID"].ToString()));
-                    comboBox3.Text = detalle;
-                    //comboBox3.Enabled = true;
-            //}
-            reader.Close();
-            conn.Close();
-            cargarHabitaciones(reserva);
+
+                reader.Close();
+                conn.Close();
+                cargarHabitaciones(reserva);
+            }
         }
 
         private void cargarHabitaciones(string reservaID)
@@ -123,6 +142,15 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (errorFatal)
+            {
+                this.Close();
+            }
+        }
+
+        public bool tieneError()
+        {
+            return errorFatal;
         }
 
         private void cargarDatos()
