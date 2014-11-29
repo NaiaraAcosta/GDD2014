@@ -142,6 +142,11 @@ namespace FrbaHotel.Registrar_Consumible
             AllowNumber(e);
         }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+        }
+
         
     }
 }

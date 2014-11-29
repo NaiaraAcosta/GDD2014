@@ -50,6 +50,8 @@ namespace FrbaHotel.Registrar_Estadia
 
         private void button1_Click(object sender, EventArgs e)
         {
+            
+            
             if ((textBox1.Text != "") ||  (dataGridView1.SelectedCells.Count != 0))
             {
                 if (textBox1.Text != "")
@@ -57,7 +59,10 @@ namespace FrbaHotel.Registrar_Estadia
                     DialogResult result = MessageBox.Show("Se registrara la estadia de la reserva: " + textBox1.Text + " esta seguro?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
-                        registrarEstadia(textBox1.Text);
+                        if (verificarHotel(textBox1.Text))
+                        {
+                            registrarEstadia(textBox1.Text);
+                        }
                     }
                 }
                 else
@@ -65,7 +70,10 @@ namespace FrbaHotel.Registrar_Estadia
                     DialogResult result = MessageBox.Show("Se registrara la estadia de la reserva: " + dataGridView1.SelectedCells[0].Value.ToString() + " esta seguro?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
-                        registrarEstadia(dataGridView1.SelectedCells[0].Value.ToString());
+                        if (verificarHotel(dataGridView1.SelectedCells[0].Value.ToString()))
+                        {
+                            registrarEstadia(dataGridView1.SelectedCells[0].Value.ToString());
+                        }
                     }
                 }
             }
@@ -73,6 +81,30 @@ namespace FrbaHotel.Registrar_Estadia
             {
                 MessageBox.Show("Debe seleccionar colocar, o seleccionar una estadia", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private bool verificarHotel(string reserva)
+        {
+            bool verificado = true;
+            if (Login.Class1.hotel != null)
+            {
+                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+                SqlConnection conn = new SqlConnection(ConnStr);
+                string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[RESERVA]
+                        where RESERVA_ID = {0}
+                        and RESERVA_ID_HOTEL =  {1}", reserva, Login.Class1.hotel);
+                SqlCommand cmd = new SqlCommand(sSel, conn);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (!reader.HasRows)
+                {
+                    MessageBox.Show("La reserva especificada no pertenece al hotel en el que esta logueado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    verificado = false;
+                }
+                reader.Close();
+                conn.Close();
+            }
+            return verificado;
         }
 
         private void registrarEstadia(string codReserva)
@@ -154,7 +186,7 @@ namespace FrbaHotel.Registrar_Estadia
                     }
                 case 6:
                     {
-                        MessageBox.Show("No existe al reserva indicada", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("No existe la reserva indicada o ya se hizo el check in de la reserva anteriormente", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         break;
                     }
                 case 7:
