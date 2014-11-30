@@ -92,6 +92,15 @@ namespace FrbaHotel.Facturacion
 
         }
 
+        public void limpiar()
+        {
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
+            textBox5.Text = "";
+            textBox6.Text = "";
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             if (back != null)
@@ -101,13 +110,36 @@ namespace FrbaHotel.Facturacion
             this.Close();
         }
 
+        private bool verificarHotel(string reserva)
+        {
+            bool verificado = true;
+                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+                SqlConnection conn = new SqlConnection(ConnStr);
+                string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[RESERVA]
+                        where RESERVA_ID = {0}
+                        and RESERVA_ID_HOTEL =  {1}", reserva, Login.Class1.hotel);
+                SqlCommand cmd = new SqlCommand(sSel, conn);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (!reader.HasRows)
+                {
+                    MessageBox.Show("La reserva especificada no pertenece al hotel en el que esta logueado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    verificado = false;
+                }
+                reader.Close();
+                conn.Close();
+            return verificado;
+        }
+
+
         private void button1_Click(object sender, EventArgs e)
         {
             string ConnStr2 = ConfigurationManager.AppSettings["stringConexion"];
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA] est,
                         [GD2C2014].[CONTROL_ZETA].[RESERVA] res 
-                        where res.RESERVA_ID = est.EST_RESERVA_ID");
+                        where res.RESERVA_ID = est.EST_RESERVA_ID
+                        and res.RESERVA_ID_HOTEL =  {0}", Login.Class1.hotel);
             if (radioButton3.Checked)
             {
                 sSel2 = string.Format(" {0} and res.RESERVA_ID = {1}", sSel2, textBox1.Text);
@@ -125,7 +157,6 @@ namespace FrbaHotel.Facturacion
                 while (reader2.Read())
                 {
                     precio = reader2["RES_PRECIO_TOTAL"].ToString();
-                    label1.Text = "El valor a facturar es de: " + precio;
                     reservaID = reader2["RESERVA_ID"].ToString();
                     estID = reader2["EST_ID"].ToString();
                 }
@@ -194,7 +225,7 @@ namespace FrbaHotel.Facturacion
             }
             else
             {
-                MessageBox.Show("No existe la reserva, o no se ha realizado el check-in de la misma", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No existe la reserva en el hotel, o no se ha realizado el check-in de la misma", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -214,7 +245,8 @@ namespace FrbaHotel.Facturacion
             SqlConnection conn2 = new SqlConnection(ConnStr2);
             string sSel2 = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[ESTADIA] est,
                         [GD2C2014].[CONTROL_ZETA].[RESERVA] res 
-                        where res.RESERVA_ID = est.EST_RESERVA_ID");
+                        where res.RESERVA_ID = est.EST_RESERVA_ID
+                        and res.RESERVA_ID_HOTEL =  {0}", Login.Class1.hotel);
             if (radioButton3.Checked)
             {
                 sSel2 = string.Format(" {0} and res.RESERVA_ID = {1}", sSel2, textBox1.Text);
@@ -229,7 +261,6 @@ namespace FrbaHotel.Facturacion
             while (reader2.Read())
             {
                 string precio = reader2["RES_PRECIO_TOTAL"].ToString();
-                label1.Text = "El valor a facturar es de: " + precio;
                 reservaID = reader2["RESERVA_ID"].ToString();
                 estID = reader2["EST_ID"].ToString();
             }

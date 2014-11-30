@@ -86,8 +86,6 @@ namespace FrbaHotel.Registrar_Estadia
         private bool verificarHotel(string reserva)
         {
             bool verificado = true;
-            if (Login.Class1.hotel != null)
-            {
                 string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
                 SqlConnection conn = new SqlConnection(ConnStr);
                 string sSel = string.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[RESERVA]
@@ -103,7 +101,6 @@ namespace FrbaHotel.Registrar_Estadia
                 }
                 reader.Close();
                 conn.Close();
-            }
             return verificado;
         }
 
@@ -186,7 +183,7 @@ namespace FrbaHotel.Registrar_Estadia
                     }
                 case 6:
                     {
-                        MessageBox.Show("No existe la reserva indicada o ya se hizo el check in de la reserva anteriormente", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("No existe la reserva indicada o ya se hizo el check in/out de la reserva anteriormente", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         break;
                     }
                 case 7:

@@ -13,9 +13,9 @@ namespace FrbaHotel.Facturacion
 {
     public partial class Factura : Form
     {
-        Form back = null;
+        Facturacion.Facturar back = null;
         int factura = 0;
-        public Factura(Form atras, int nroFactura)
+        public Factura(Facturacion.Facturar atras, int nroFactura)
         {
             InitializeComponent();
             back = atras;
@@ -69,6 +69,7 @@ namespace FrbaHotel.Facturacion
 
         private void button1_Click(object sender, EventArgs e)
         {
+            back.limpiar();
             back.Show();
             this.Close();
         }
