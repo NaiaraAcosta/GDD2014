@@ -189,7 +189,7 @@ namespace FrbaHotel.ABM_de_Cliente
             }
             else
             {
-                MessageBox.Show("No hay datos que modificar", "No se puede modificar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No hay cliente seleccionado que modificar", "No se puede modificar", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -271,6 +271,10 @@ namespace FrbaHotel.ABM_de_Cliente
                         }
                 }
                 con.Close();
+            }
+            else
+            {
+                MessageBox.Show("No hay cliente seleccionado para dar de baja", "No se puede modificar", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

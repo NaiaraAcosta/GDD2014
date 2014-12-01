@@ -28,6 +28,7 @@ namespace FrbaHotel.ABM_de_Habitacion
             cargarCombo();
             back = (ABM_de_Habitacion.ABMHabitacion) atras;
             modo = 1;
+            checkBox1.Enabled = false;
         }
 
         public AltaHabitacion(Form atras, string id ,string num, string piso, string ubi, string tipo, string comodidades)
@@ -91,14 +92,7 @@ namespace FrbaHotel.ABM_de_Habitacion
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (back != null)
-            {
-                back.Show();
-            }
-            else
-            {
-                new ABMHabitacion().Show();
-            }
+            back.Show();
             this.Close();
         }
 
@@ -140,6 +134,10 @@ namespace FrbaHotel.ABM_de_Habitacion
                 case 1:
                     {
                         MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (modo == 1)
+                        {
+                            limpiar();
+                        }
                         break;
                     }
                 case 2:
@@ -162,6 +160,20 @@ namespace FrbaHotel.ABM_de_Habitacion
             
             con.Close();
             back.recargar();
+            if (modo == 2)
+            {
+                back.Show();
+                this.Close();
+            }
+        }
+
+        private void limpiar()
+        {
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
+            comboBox1.Text = "";
+            richTextBox1.Text = "";
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

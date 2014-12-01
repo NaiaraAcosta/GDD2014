@@ -39,7 +39,8 @@ namespace FrbaHotel.Login
                 [GD2C2014].[CONTROL_ZETA].[HOTEL] hotel, [GD2C2014].[CONTROL_ZETA].[ROL] rol, 
                 [GD2C2014].[CONTROL_ZETA].[LOCALIDAD] loc 
                 where usr.USR_USERNAME = '{0}' and usr.HOTEL_ID = hotel.HOTEL_ID 
-                and usr.ROL_ID = rol.ROL_ID and hotel.HOTEL_ID_LOC = loc.LOC_ID", username);
+                and usr.ROL_ID = rol.ROL_ID and hotel.HOTEL_ID_LOC = loc.LOC_ID
+                and rol.ROL_ESTADO = 'H'", username);
             SqlCommand cmd = new SqlCommand(sSel, conn);
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();

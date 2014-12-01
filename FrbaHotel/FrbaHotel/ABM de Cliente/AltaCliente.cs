@@ -235,6 +235,7 @@ namespace FrbaHotel.ABM_de_Cliente
                         {
                             MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             param[4] = scCommand.Parameters["@CLIENTE_ID_NEW"].Value.ToString();
+                            limpiar();
                             break;
                         }
                     case 2:
@@ -342,6 +343,7 @@ namespace FrbaHotel.ABM_de_Cliente
                     case 1:
                         {
                             MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            limpiar();
                             break;
                         }
                     case 2:
@@ -356,7 +358,7 @@ namespace FrbaHotel.ABM_de_Cliente
                         }
                     case 4:
                         {
-                            MessageBox.Show("Se esta modificando un cliente con inconsistencias, debe solucionarse", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Se esta modificando o generando un cliente con inconsistencias, debe solucionarse", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             SqlDataAdapter sda = new SqlDataAdapter(scCommand);
                             sda.Fill(ds);
                             new InconsistenciasCliente(this, ds, 2).Show();
@@ -384,10 +386,28 @@ namespace FrbaHotel.ABM_de_Cliente
             }
         }
 
+        private void limpiar()
+        {
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox4.Text = "";
+            textBox5.Text = "";
+            textBox6.Text = "";
+            textBox7.Text = "";
+            textBox11.Text = "";
+            textBox3.Text = "";
+            textBox8.Text = "";
+            comboBox1.Text = "";
+            comboBox2.Text = "";
+            comboBox3.Text = "";
+            comboBox4.Text = "";
+        }
+
         private int buscarTipoIdent()
         {
             return tipoDoc[comboBox1.SelectedIndex];//MOCK!
         }
+
         private bool validarDatos()
         {
             if (textBox1.Text == "" || textBox2.Text == "" || textBox3.Text == "" || textBox5.Text == "")

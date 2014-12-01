@@ -95,27 +95,29 @@ namespace FrbaHotel.ABM_de_Rol
                         }
                 }
 
-
-                for (int i = 0; i < checkedListBox1.Items.Count; i++)
+                if (!conError)
                 {
-                    if (checkedListBox1.GetItemChecked(i))
+                    for (int i = 0; i < checkedListBox1.Items.Count; i++)
                     {
-                        scCommand = new SqlCommand("CONTROL_ZETA.SP_ROL_FUNC", con, transaction);
-                        scCommand.CommandType = CommandType.StoredProcedure;
-                        scCommand.Parameters.Add("@rol_id", SqlDbType.Int).Value = IDRol;
-                        scCommand.Parameters.Add("@func_id", SqlDbType.SmallInt).Value = i + 1;
-                        scCommand.Parameters.Add("@error", SqlDbType.SmallInt).Direction = ParameterDirection.Output;
-                        if (scCommand.Connection.State == ConnectionState.Closed)
+                        if (checkedListBox1.GetItemChecked(i))
                         {
-                            scCommand.Connection.Open();
-                        }
-                        scCommand.ExecuteNonQuery();
-                        result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
-                        if (result == 2)
-                        {
-                            string mensaje = string.Format("Ya existe ese func({0}) para ese rol({1})", IDRol, i + 1);
-                            MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            conError = true;
+                            scCommand = new SqlCommand("CONTROL_ZETA.SP_ROL_FUNC", con, transaction);
+                            scCommand.CommandType = CommandType.StoredProcedure;
+                            scCommand.Parameters.Add("@rol_id", SqlDbType.Int).Value = IDRol;
+                            scCommand.Parameters.Add("@func_id", SqlDbType.SmallInt).Value = i + 1;
+                            scCommand.Parameters.Add("@error", SqlDbType.SmallInt).Direction = ParameterDirection.Output;
+                            if (scCommand.Connection.State == ConnectionState.Closed)
+                            {
+                                scCommand.Connection.Open();
+                            }
+                            scCommand.ExecuteNonQuery();
+                            result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
+                            if (result == 2)
+                            {
+                                string mensaje = string.Format("Ya existe ese func({0}) para ese rol({1})", IDRol, i + 1);
+                                MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                conError = true;
+                            }
                         }
                     }
                 }
@@ -130,6 +132,11 @@ namespace FrbaHotel.ABM_de_Rol
                 }
             
             back.refrescar();
+            if (!conError)
+            {
+                back.Show();
+                this.Close();
+            }
         }
 
         private void cargarDatos()

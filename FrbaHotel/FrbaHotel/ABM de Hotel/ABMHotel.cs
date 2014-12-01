@@ -48,7 +48,20 @@ namespace FrbaHotel.ABM_de_Hotel
         {
             string sCnn = ConfigurationManager.AppSettings["stringConexion"];
 
-            string sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HOTEL] where 1=1");
+            string sSel;
+            if (Login.Class1.user != null)
+            {
+                sSel = String.Format(@"SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HOTEL] hotel, 
+                    [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] usr 
+                    where 1=1 
+                    and usr.USR_USERNAME = '{0}' 
+                    and usr.HOTEL_ID = hotel.HOTEL_ID
+                    and usr.ESTADO = 'H'", Login.Class1.user);
+            }
+            else
+            {
+                sSel = String.Format("SELECT * FROM [GD2C2014].[CONTROL_ZETA].[HOTEL] hotel, [GD2C2014].[CONTROL_ZETA].[USR_ROL_HOTEL] usr where 1=1");
+            }
             if (textBox1.Text != "")
             {
                 sSel = String.Format("{0} and HOTEL_NOMBRE like '{1}%'", sSel, textBox1.Text); 

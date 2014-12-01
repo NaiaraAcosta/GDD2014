@@ -59,9 +59,9 @@
             // 
             this.button3.Location = new System.Drawing.Point(215, 183);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(93, 23);
+            this.button3.Size = new System.Drawing.Size(107, 23);
             this.button3.TabIndex = 2;
-            this.button3.Text = "Eliminar usuario";
+            this.button3.Text = "Inhabilitar usuario";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -69,7 +69,7 @@
             // 
             this.button4.Location = new System.Drawing.Point(215, 213);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(93, 23);
+            this.button4.Size = new System.Drawing.Size(107, 23);
             this.button4.TabIndex = 3;
             this.button4.Text = "Cancelar";
             this.button4.UseVisualStyleBackColor = true;
@@ -80,7 +80,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(13, 13);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(295, 147);
+            this.listBox1.Size = new System.Drawing.Size(309, 160);
             this.listBox1.TabIndex = 4;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -88,7 +88,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(321, 248);
+            this.ClientSize = new System.Drawing.Size(334, 248);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);

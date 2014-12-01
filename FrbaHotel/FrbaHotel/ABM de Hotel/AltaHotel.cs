@@ -147,21 +147,30 @@ namespace FrbaHotel.ABM_de_Hotel
 
         private void textBox6_TextChanged(object sender, EventArgs e)
         {
-            int salida = int.Parse(textBox6.Text);
-            if (salida > 10)
+            int salida;
+            bool correcto = int.TryParse(textBox6.Text, out salida);
+            if (correcto)
             {
-                textBox6.Text = "10";
-                textBox6.SelectionStart = 2;
+                if (salida > 10)
+                {
+                    textBox6.Text = "10";
+                    textBox6.SelectionStart = 2;
+                }
             }
         }
 
         private void textBox5_TextChanged(object sender, EventArgs e)
         {
-            int salida = int.Parse(textBox5.Text);
-            if (salida > 5)
+            
+            int salida;
+            bool correcto = int.TryParse(textBox5.Text, out salida);
+            if (correcto)
             {
-                textBox5.Text = "5";
-                textBox5.SelectionStart = 1;
+                if (salida > 5)
+                {
+                    textBox5.Text = "5";
+                    textBox5.SelectionStart = 1;
+                }
             }
         }
 
@@ -331,34 +340,68 @@ namespace FrbaHotel.ABM_de_Hotel
             }
             scCommand.ExecuteNonQuery();
             int result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
-            if (result != 1)
+            switch (result)
             {
-                string mensaje = string.Format("Error en la carga de hotel, COD: {0}", result);
-                MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                conError = true;
-            }
-            else
-            {
-                string idHotelNew = scCommand.Parameters["@id_hotel_new"].Value.ToString();
-                if (idHotel != "")
-                {
-                    spregimen(idHotel, con, transaction, conError);
-                }
-                else
-                {
-                    spregimen(idHotelNew, con, transaction, conError);
-                }
+                case 2:
+                    {
+                        string mensaje = string.Format("El hotel no existe", result);
+                        MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        conError = true;
+                        break;
+                    }
+                case 3:
+                    {
+                        string mensaje = string.Format("El hotel ya existe", result);
+                        MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        conError = true;
+                        break;
+                    }
+                case 1:
+                    {
+                        string idHotelNew = scCommand.Parameters["@id_hotel_new"].Value.ToString();
+                        if (idHotel != "")
+                        {
+                            spregimen(idHotel, con, transaction, conError);
+                        }
+                        else
+                        {
+                            spregimen(idHotelNew, con, transaction, conError);
+                        }
+                        break;
+                    }
             }
             if (!conError)
             {
                 transaction.Commit();
-                MessageBox.Show("Hotel agregado correctamente", "Operacion realizada correctamente", MessageBoxButtons.OK, MessageBoxIcon.None);
+                if (idHotel != "")
+                {
+                    MessageBox.Show("Hotel modificado correctamente", "Operacion realizada correctamente", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Hotel agregado correctamente", "Operacion realizada correctamente", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                limpiar();
+                cargarRegimenes();
             }
             else
             {
                 transaction.Rollback();
             }
             con.Close();
+        }
+
+        private void limpiar()
+        {
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
+            textBox4.Text = "";
+            textBox5.Text = "";
+            textBox6.Text = "";
+            textBox9.Text = "";
+            comboBox1.Text = "";
+            comboBox2.Text = "";
         }
 
         private void spregimen(string Hotel, SqlConnection con, SqlTransaction transaction, bool conError)

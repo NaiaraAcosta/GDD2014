@@ -101,21 +101,24 @@ namespace FrbaHotel.ABM_de_Usuario
         {
             if (listBox1.SelectedItem != null)
             {
-                string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
-                SqlConnection con = new SqlConnection(ConnStr);
-                con.Open();
-                SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_DES_HAB_USUARIO", con);
-                scCommand.CommandType = CommandType.StoredProcedure;
-                scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = usuario[listBox1.SelectedIndex];
-                scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
-                scCommand.Parameters.Add("@HAB", SqlDbType.TinyInt).Value = 0;
-                if (scCommand.Connection.State == ConnectionState.Closed)
+                DialogResult result = MessageBox.Show("Esta seguro de deshabilitar el usuario para este hotel?", "Esta seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
                 {
-                    scCommand.Connection.Open();
+                    string ConnStr = ConfigurationManager.AppSettings["stringConexion"];
+                    SqlConnection con = new SqlConnection(ConnStr);
+                    con.Open();
+                    SqlCommand scCommand = new SqlCommand("CONTROL_ZETA.SP_DES_HAB_USUARIO", con);
+                    scCommand.CommandType = CommandType.StoredProcedure;
+                    scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = usuario[listBox1.SelectedIndex];
+                    scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
+                    scCommand.Parameters.Add("@HAB", SqlDbType.TinyInt).Value = 0;
+                    if (scCommand.Connection.State == ConnectionState.Closed)
+                    {
+                        scCommand.Connection.Open();
+                    }
+                    scCommand.ExecuteNonQuery();
+                    con.Close();
                 }
-                scCommand.ExecuteNonQuery();
-                
-                con.Close();
             }
             refrescar();
         }

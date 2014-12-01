@@ -55,7 +55,7 @@ namespace FrbaHotel.ABM_de_Hotel
 
         private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
         {
-            dateTimePicker1.MaxDate = dateTimePicker2.Value;
+            //dateTimePicker1.MaxDate = dateTimePicker2.Value;
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
@@ -83,10 +83,6 @@ namespace FrbaHotel.ABM_de_Hotel
             }
             scCommand.ExecuteNonQuery();
             int result = int.Parse(scCommand.Parameters["@error"].Value.ToString());
-            if (result == 1)
-            {
-                MessageBox.Show("Hotel cerrado correctamente", "Operacion finalizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
             if (result == 3)
             {
                 MessageBox.Show("El hotel ya tiene planeado un cierre para ese período", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -100,8 +96,7 @@ namespace FrbaHotel.ABM_de_Hotel
             if (!conError)
             {
                 transaction.Commit();
-                MessageBox.Show("Hotel dado de baja correctamente", "Operacion realizada correctamente", MessageBoxButtons.OK, MessageBoxIcon.None);
-
+                MessageBox.Show("Hotel cerrado correctamente", "Operacion realizada correctamente", MessageBoxButtons.OK, MessageBoxIcon.None);
             }
             else
             {

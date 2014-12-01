@@ -63,10 +63,17 @@ namespace FrbaHotel.ABM_de_Habitacion
             string detalle = "";
             while (reader.Read())
             {
-                detalle = string.Format("{0} - {1} {2}",
-                    reader["LOC_DETALLE"].ToString().Trim(),
-                    reader["HOTEL_CALLE"].ToString(),
-                    reader["HOTEL_NRO_CALLE"].ToString());
+                if (reader["HOTEL_NOMBRE"].ToString() == "")
+                {
+                    detalle = string.Format("{0} - {1} {2}",
+                        reader["LOC_DETALLE"].ToString().Trim(),
+                        reader["HOTEL_CALLE"].ToString(),
+                        reader["HOTEL_NRO_CALLE"].ToString());
+                }
+                else
+                {
+                    detalle = reader["HOTEL_NOMBRE"].ToString();
+                }
                 textBox1.Text = detalle;
             }
             reader.Close();
@@ -131,6 +138,7 @@ namespace FrbaHotel.ABM_de_Habitacion
                     scCommand.Parameters.Add("@id_hab", SqlDbType.Int).Value = int.Parse(dataGridView1.SelectedCells[0].Value.ToString());
                     scCommand.Parameters.AddWithValue("@hab_piso", DBNull.Value);
                     scCommand.Parameters.AddWithValue("@ubi_hab", DBNull.Value);
+                    scCommand.Parameters.Add("@estado", SqlDbType.VarChar, 1).Value = "I";
                     scCommand.Parameters.AddWithValue("@obs", DBNull.Value);
                     scCommand.Parameters.AddWithValue("@id_hotel", DBNull.Value);
                     scCommand.Parameters.AddWithValue("@id_tipo_hab", DBNull.Value);

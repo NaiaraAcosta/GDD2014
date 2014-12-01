@@ -185,7 +185,10 @@ namespace FrbaHotel.Facturacion
                 SqlCommand scCommand2 = new SqlCommand("CONTROL_ZETA.SP_REALIZAR_FACTURACION", con2);
                 scCommand2.CommandType = CommandType.StoredProcedure;
                 scCommand2.Parameters.Add("@RESERVA_ID", SqlDbType.Int).Value = int.Parse(reservaID);
-                
+                int año = int.Parse(ConfigurationManager.AppSettings["Año"]);
+                int mes = int.Parse(ConfigurationManager.AppSettings["Mes"]);
+                int dia = int.Parse(ConfigurationManager.AppSettings["Dia"]);
+                scCommand2.Parameters.Add("@FECHA_SIST", SqlDbType.Date).Value = new DateTime(año, mes, dia);
                 if (radioButton1.Checked)
                 {
                     scCommand2.Parameters.Add("@FORMAPAGO", SqlDbType.VarChar, 2).Value = "E";

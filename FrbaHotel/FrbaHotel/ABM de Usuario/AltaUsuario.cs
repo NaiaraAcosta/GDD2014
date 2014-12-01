@@ -30,6 +30,7 @@ namespace FrbaHotel.ABM_de_Usuario
             actualizarChecked(user);
             llenarCombo();
             llenarText(user);
+            textBox1.Enabled = false;
             cargarHotel();
             modo = 2;
         }
@@ -220,13 +221,17 @@ namespace FrbaHotel.ABM_de_Usuario
             {
                 case 1:
                     {
-                        
                         conError = false;
                         break;
                     }
                 case 2:
                     {
                         MessageBox.Show("Error 2", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    }
+                case 3:
+                    {
+                        MessageBox.Show("Usuario duplicado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         break;
                     }
                 case 4:
@@ -241,47 +246,44 @@ namespace FrbaHotel.ABM_de_Usuario
                         break;
                     }
             }
-            
-            for (int i = 0; i < checkedListBox1.Items.Count; i++)
-            {
-                if (checkedListBox1.GetItemChecked(i))
-                {
-                    scCommand = new SqlCommand("CONTROL_ZETA.SP_USR_ROL_HOTEL", con, transaction);
-                    scCommand.CommandType = CommandType.StoredProcedure;
-                    scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = textBox1.Text;
-                    scCommand.Parameters.Add("@ROL_ID", SqlDbType.TinyInt).Value = i+1;
-                    scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
-                    if (scCommand.Connection.State == ConnectionState.Closed)
-                    {
-                        scCommand.Connection.Open();
-                    }
-                    scCommand.ExecuteNonQuery();
-                    //result = int.Parse(scCommand.Parameters["@ERROR"].Value.ToString());
-                    //if (result == 1)
-                    //{
-                    //    conError = false;
-                    //}
-                }
-            }
 
-            scCommand = new SqlCommand("CONTROL_ZETA.SP_DES_HAB_USUARIO", con, transaction);
-            scCommand.CommandType = CommandType.StoredProcedure;
-            scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = textBox1.Text;
-            scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
-            if (checkBox1.Checked)
+            if (!conError)
             {
-                scCommand.Parameters.Add("@HAB", SqlDbType.TinyInt).Value = 1;
+                for (int i = 0; i < checkedListBox1.Items.Count; i++)
+                {
+                    if (checkedListBox1.GetItemChecked(i))
+                    {
+                        scCommand = new SqlCommand("CONTROL_ZETA.SP_USR_ROL_HOTEL", con, transaction);
+                        scCommand.CommandType = CommandType.StoredProcedure;
+                        scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = textBox1.Text;
+                        scCommand.Parameters.Add("@ROL_ID", SqlDbType.TinyInt).Value = i + 1;
+                        scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
+                        if (scCommand.Connection.State == ConnectionState.Closed)
+                        {
+                            scCommand.Connection.Open();
+                        }
+                        scCommand.ExecuteNonQuery();
+                    }
+                }
+
+                scCommand = new SqlCommand("CONTROL_ZETA.SP_DES_HAB_USUARIO", con, transaction);
+                scCommand.CommandType = CommandType.StoredProcedure;
+                scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = textBox1.Text;
+                scCommand.Parameters.Add("@HOTEL_ID", SqlDbType.Int).Value = Login.Class1.hotel;
+                if (checkBox1.Checked)
+                {
+                    scCommand.Parameters.Add("@HAB", SqlDbType.TinyInt).Value = 1;
+                }
+                else
+                {
+                    scCommand.Parameters.Add("@HAB", SqlDbType.TinyInt).Value = 0;
+                }
+                if (scCommand.Connection.State == ConnectionState.Closed)
+                {
+                    scCommand.Connection.Open();
+                }
+                scCommand.ExecuteNonQuery();
             }
-            else
-            {
-                scCommand.Parameters.Add("@HAB", SqlDbType.TinyInt).Value = 0;
-            }
-            if (scCommand.Connection.State == ConnectionState.Closed)
-            {
-                scCommand.Connection.Open();
-            }
-            scCommand.ExecuteNonQuery();
-            
             if (conError)
             {
                 transaction.Rollback();
@@ -289,12 +291,36 @@ namespace FrbaHotel.ABM_de_Usuario
             else
             {
                 MessageBox.Show("Operacion realizada exitosamente", "Operacion realizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (modo == 1)
+                {
+                    limpiar();
+                }
                 transaction.Commit();
             }
             con.Close();
 
             back.refrescar();
+            if (modo == 2)
+            {
+                back.Show();
+                this.Close();
+            }
         }
+
+        private void limpiar()
+        {
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
+            textBox4.Text = "";
+            textBox6.Text = "";
+            textBox7.Text = "";
+            textBox8.Text = "";
+            textBox9.Text = "";
+            textBox11.Text = "";
+            comboBox1.Text = "";
+        }
+
         private string encriptarPass()
         {
             return SHA256Encrypt(textBox2.Text);
@@ -352,6 +378,11 @@ namespace FrbaHotel.ABM_de_Usuario
         private void textBox8_KeyPress(object sender, KeyPressEventArgs e)
         {
             AllowNumber(e);
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -183,7 +183,14 @@ namespace FrbaHotel.Registrar_Estadia
                     }
                 case 6:
                     {
-                        MessageBox.Show("No existe la reserva indicada o ya se hizo el check in/out de la reserva anteriormente", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (radioButton1.Checked)
+                        {
+                            MessageBox.Show("No existe la reserva indicada o ya se hizo el check in de la reserva anteriormente", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else
+                        {
+                            MessageBox.Show("No existe la reserva indicada o ya se hizo el check out de la reserva anteriormente", "Error en la reserva", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                         break;
                     }
                 case 7:
