@@ -32,7 +32,7 @@ BEGIN
 --Modificacion
 	IF EXISTS (SELECT * FROM CONTROL_ZETA.ROL WHERE ROL_ID=@id_rol)
 	BEGIN
-		IF  ((SELECT count(1) FROM CONTROL_ZETA.ROL WHERE ROL_NOMBRE=@nombre)<=1)
+		IF  ((SELECT count(1) FROM CONTROL_ZETA.ROL WHERE ROL_NOMBRE=@nombre and ROL_ID!=@id_rol)=0 )
 		BEGIN
 			UPDATE CONTROL_ZETA.ROL SET ROL_NOMBRE=@nombre,ROL_ESTADO=@estado where ROL_ID=@id_rol
 			DELETE CONTROL_ZETA.ROL_FUNC WHERE ROL_ID = @id_rol
@@ -789,7 +789,7 @@ INTO @V_USR ,@V_PASS ,@V_INTENTOS
 
 IF (@@fetch_status=0) 
 BEGIN
-	IF (@V_INTENTOS<4)
+	IF (@V_INTENTOS<3)
 		BEGIN
 			IF(@V_PASS=@pass)
 			begin
@@ -803,7 +803,13 @@ BEGIN
 				SET @error=6 --Pass incorrecta
 			END
 	END
-	ELSE set @error=5 --Ya hizo 3 intentos fallidos
+	ELSE 
+	begin
+		UPDATE CONTROL_ZETA.USR_ROL_HOTEL SET ESTADO='I'
+		WHERE USR_USERNAME=@usr
+		set @error=5 --Ya hizo 3 intentos fallidos
+	end
+	
 END
 ELSE SET @error=2 --No esta el usr
 
