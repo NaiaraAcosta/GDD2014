@@ -220,7 +220,10 @@ namespace FrbaHotel.ABM_de_Cliente
                 scCommand.Parameters.AddWithValue("@CLIENTE_ID", DBNull.Value);
 
                 scCommand.Parameters.Add("@CODIGO", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
-                scCommand.Parameters.Add("@CLIENTE_ID_NEW", SqlDbType.Int).Direction = ParameterDirection.Output;
+                if (!inconsistente)
+                {
+                    scCommand.Parameters.Add("@CLIENTE_ID_NEW", SqlDbType.Int).Direction = ParameterDirection.Output;
+                }
                 if (scCommand.Connection.State == ConnectionState.Closed)
                 {
                     scCommand.Connection.Open();
@@ -329,7 +332,10 @@ namespace FrbaHotel.ABM_de_Cliente
                 }
                 
                 scCommand.Parameters.Add("@CODIGO", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
-                scCommand.Parameters.Add("@CLIENTE_ID_NEW", SqlDbType.Int).Direction = ParameterDirection.Output;
+                if (!inconsistente)
+                {
+                    scCommand.Parameters.Add("@CLIENTE_ID_NEW", SqlDbType.Int).Direction = ParameterDirection.Output;
+                }
                 if (scCommand.Connection.State == ConnectionState.Closed)
                 {
                     scCommand.Connection.Open();

@@ -199,7 +199,14 @@ namespace FrbaHotel.ABM_de_Usuario
             scCommand.CommandType = CommandType.StoredProcedure;
             scCommand.Parameters.Add("@ACCION", SqlDbType.SmallInt).Value = modo;
             scCommand.Parameters.Add("@USUARIO", SqlDbType.VarChar, 50).Value = textBox1.Text;
-            scCommand.Parameters.Add("@PASS", SqlDbType.VarChar).Value = encriptarPass();
+            if (textBox2.Text != "")
+            {
+                scCommand.Parameters.Add("@PASS", SqlDbType.VarChar).Value = encriptarPass();
+            }
+            else
+            {
+                scCommand.Parameters.AddWithValue("@PASS", DBNull.Value);
+            }
             scCommand.Parameters.Add("@NOMBRE", SqlDbType.VarChar, 50).Value = textBox3.Text;
             scCommand.Parameters.Add("@APELLIDO", SqlDbType.VarChar, 50).Value = textBox4.Text;
             scCommand.Parameters.Add("@TIPO_DOC", SqlDbType.TinyInt).Value = tipoDoc[comboBox1.SelectedIndex];
