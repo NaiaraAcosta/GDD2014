@@ -84,7 +84,7 @@ namespace FrbaHotel.ABM_de_Cliente
                 scCommand.Parameters.AddWithValue("@CODIGO_ENTRADA", SqlDbType.TinyInt).Value = 3;
                 scCommand.Parameters.Add("@CLIENTE_ID", SqlDbType.Int).Value = int.Parse(dataGridView1.SelectedCells[0].Value.ToString());
                 scCommand.Parameters.Add("@CODIGO", SqlDbType.TinyInt).Direction = ParameterDirection.Output;
-                scCommand.Parameters.Add("@CLIENTE_ID_NEW", SqlDbType.Int).Direction = ParameterDirection.Output;
+             //   scCommand.Parameters.Add("@CLIENTE_ID_NEW", SqlDbType.Int).Direction = ParameterDirection.Output;
                 if (scCommand.Connection.State == ConnectionState.Closed)
                 {
                     scCommand.Connection.Open();
