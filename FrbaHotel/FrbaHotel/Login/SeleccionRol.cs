@@ -40,7 +40,8 @@ namespace FrbaHotel.Login
                 [GD2C2014].[CONTROL_ZETA].[LOCALIDAD] loc 
                 where usr.USR_USERNAME = '{0}' and usr.HOTEL_ID = hotel.HOTEL_ID 
                 and usr.ROL_ID = rol.ROL_ID and hotel.HOTEL_ID_LOC = loc.LOC_ID
-                and rol.ROL_ESTADO = 'H'", username);
+                and rol.ROL_ESTADO = 'H'
+                and usr.ESTADO = 'H'", username);
             SqlCommand cmd = new SqlCommand(sSel, conn);
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
@@ -146,6 +147,11 @@ namespace FrbaHotel.Login
                 func = new bool[15];
                 Login.Class1.hotel = 0;
             }
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

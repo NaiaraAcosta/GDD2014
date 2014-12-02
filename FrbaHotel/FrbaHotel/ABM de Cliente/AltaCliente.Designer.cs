@@ -265,6 +265,8 @@
             this.textBox11.Name = "textBox11";
             this.textBox11.Size = new System.Drawing.Size(185, 20);
             this.textBox11.TabIndex = 28;
+            this.textBox11.TextChanged += new System.EventHandler(this.textBox11_TextChanged);
+            this.textBox11.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox11_KeyPress);
             // 
             // comboBox1
             // 

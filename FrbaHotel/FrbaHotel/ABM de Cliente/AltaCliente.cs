@@ -560,6 +560,16 @@ namespace FrbaHotel.ABM_de_Cliente
             AllowNumber(e);
         }
 
+        private void textBox11_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox11_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            AllowNumber(e);
+        }
+
         
 
     }      

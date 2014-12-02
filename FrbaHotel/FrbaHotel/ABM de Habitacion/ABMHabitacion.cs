@@ -138,7 +138,7 @@ namespace FrbaHotel.ABM_de_Habitacion
                     scCommand.Parameters.Add("@id_hab", SqlDbType.Int).Value = int.Parse(dataGridView1.SelectedCells[0].Value.ToString());
                     scCommand.Parameters.AddWithValue("@hab_piso", DBNull.Value);
                     scCommand.Parameters.AddWithValue("@ubi_hab", DBNull.Value);
-                    scCommand.Parameters.Add("@estado", SqlDbType.VarChar, 1).Value = "I";
+                    scCommand.Parameters.AddWithValue("@estado", DBNull.Value);
                     scCommand.Parameters.AddWithValue("@obs", DBNull.Value);
                     scCommand.Parameters.AddWithValue("@id_hotel", DBNull.Value);
                     scCommand.Parameters.AddWithValue("@id_tipo_hab", DBNull.Value);
@@ -190,6 +190,7 @@ namespace FrbaHotel.ABM_de_Habitacion
                     scCommand.Parameters.Add("@id_hab", SqlDbType.Int).Value = int.Parse(dataGridView1.SelectedCells[0].Value.ToString());
                     scCommand.Parameters.Add("@hab_piso", SqlDbType.SmallInt).Value = int.Parse(dataGridView1.SelectedCells[3].Value.ToString());
                     scCommand.Parameters.Add("@ubi_hab", SqlDbType.VarChar, 70).Value = dataGridView1.SelectedCells[5].Value.ToString();
+                    scCommand.Parameters.Add("@estado", SqlDbType.VarChar, 1).Value = "H";
                     scCommand.Parameters.Add("@obs", SqlDbType.VarChar, 150).Value = dataGridView1.SelectedCells[6].Value.ToString();
                     scCommand.Parameters.Add("@id_hotel", SqlDbType.Int).Value = Login.Class1.hotel;
                     scCommand.Parameters.Add("@id_tipo_hab", SqlDbType.SmallInt).Value = dataGridView1.SelectedCells[4].Value.ToString();
