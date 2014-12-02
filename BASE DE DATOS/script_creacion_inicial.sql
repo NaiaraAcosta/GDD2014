@@ -1148,7 +1148,7 @@ BEGIN
 	ELSE
 		set @error=3
 END		
-ELSE IF @accion=2
+ELSE IF @accion=3
 BEGIN
 --Modificacion
 	IF EXISTS (SELECT * FROM CONTROL_ZETA.HABITACION H WHERE H.HAB_ID=@id_hab)
