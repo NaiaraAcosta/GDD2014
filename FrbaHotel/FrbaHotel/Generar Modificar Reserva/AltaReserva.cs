@@ -102,6 +102,9 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
                 reader.Close();
                 conn.Close();
+
+                informar(verificado, yaVerificado);
+
                 cargarHabitaciones(reserva);
             }
         }
@@ -562,8 +565,7 @@ namespace FrbaHotel.Generar_Modificar_Reserva
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            yaVerificado = false;
-            informar(verificado, yaVerificado);
+            
 
             comboBox2.Items.Clear();
             idReg.Clear();
@@ -583,6 +585,15 @@ namespace FrbaHotel.Generar_Modificar_Reserva
             }
             reader2.Close();
             conn2.Close();
+
+            comboBox2.SelectedIndex = comboBox2.FindString(comboBox2.Text);
+            if (comboBox2.SelectedIndex == -1)
+            {
+                comboBox2.Text = "";
+            }
+
+            yaVerificado = false;
+            informar(verificado, yaVerificado);
         }
 
         private bool sePuedeVerificar()
