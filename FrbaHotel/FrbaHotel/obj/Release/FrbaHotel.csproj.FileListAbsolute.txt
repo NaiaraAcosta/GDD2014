@@ -43,3 +43,13 @@ C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Release\Frb
 C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Release\FrbaHotel.Registrar_Consumible.ABMConsumible.resources
 C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Release\FrbaHotel.Registrar_Estadia.RegistrarEstadia.resources
 C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Release\FrbaHotel.csproj.GenerateResource.Cache
+C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Release\FrbaHotel.Facturacion.Factura.resources
+C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Release\FrbaHotel.Reservas_Inconsistentes.ReservasInconsistentes.resources
+C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\bin\Release\FrbaHotel.exe.config
+C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\bin\Release\FrbaHotel.exe
+C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\bin\Release\FrbaHotel.pdb
+C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Release\FrbaHotel.exe
+C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Release\FrbaHotel.pdb
+C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Release\FrbaHotel.desarrollador.resources
+C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Release\FrbaHotel.ABM_de_Cliente.InconsistenciasCliente.resources
+C:\Users\Provisoria\Documents\GitHub\GDD2014\FrbaHotel\FrbaHotel\obj\Release\FrbaHotel.Registrar_Estadia.cargarCliente.resources
